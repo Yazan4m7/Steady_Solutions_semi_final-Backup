@@ -1,0 +1,31 @@
+{
+  "ar": [
+    "site_name",
+    "call_type",
+    "is_urgent",
+    "upload_documnet",
+    "upload_pictures",
+    "no_data_found",
+    "check_credentials",
+    "login_failed",
+    "retry",
+    "connection_failed",
+    "please_check_your_connection",
+    "approvals",
+    "view",
+    "upload_picture",
+    "work_order_created_successfully",
+    "failed_to_create_work_order",
+    "category",
+    "departments",
+    "go_to_dashboard",
+    "steady_solutions",
+    "select_department",
+    "select_manafacturer",
+    "no_connection_failed",
+    "service_desc",
+    "back_to_form",
+    "rooms",
+    "create_work_order"
+  ]
+}
