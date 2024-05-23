@@ -53,7 +53,7 @@ class _QRScannerViewState extends State<QRScannerView> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       print("Scan data: $scanData");
-      _workOrdersController.getControlItem(equipmentID: "scanData");
+      _workOrdersController.getControlItem(controlNum: "scanData");
     });
   }
 

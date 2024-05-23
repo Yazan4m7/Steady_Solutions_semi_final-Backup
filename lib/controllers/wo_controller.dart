@@ -20,10 +20,14 @@ import 'package:steady_solutions/models/work_orders/category.dart';
 import 'package:steady_solutions/models/work_orders/control_item_model.dart';
 import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/pending_work_order.dart';
+
 class WorkOrdersController extends GetxController {
   int? lastWorkOrderJobId;
   RxMap<int, WorkOrder> workOrders = <int, WorkOrder>{}.obs;
-  final ApiAddressController _apiController = Get.find<ApiAddressController>(); 
+
+  final ApiAddressController _apiController = Get.find<ApiAddressController>();
+  final AuthController _authController = Get.find<AuthController>();
+
   RxMap<String, Site> siteNames = <String, Site>{}.obs;
   RxMap<String, CallType> callTypes = <String, CallType>{}.obs;
   RxMap<String, Category> categories = <String, Category>{}.obs;
@@ -37,32 +41,111 @@ class WorkOrdersController extends GetxController {
   RxList<PendingWorkOrder> pendingWorkOrders = <PendingWorkOrder>[].obs;
   Rx<bool> isLoading = false.obs;
 
-    void clearData(){
-        siteNames = <String, Site>{}.obs;
-        callTypes = <String, CallType>{}.obs;
-        categories = <String, Category>{}.obs;
-        departments = <String, Department>{}.obs;
-        rooms = <String, Room>{}.obs;
-        controlItem = ControlItem().obs;
-        serviceInfo = ServiceInfo().obs;
-        equipName = "".obs;
-        serialNumber = "".obs;
-        isLoading = false.obs;
-    }
+  // NEW METHOD
+  RxMap<String, Map<String, Department>> allDepartments =
+      <String, Map<String, Department>>{}.obs;
+  RxMap<String, Map<String, Room>> allRooms = <String, Map<String, Room>>{}.obs;
+  bool isDataLoaded = false;
+  void clearData() {
+    siteNames = <String, Site>{}.obs;
+    callTypes = <String, CallType>{}.obs;
+    categories = <String, Category>{}.obs;
+    departments = <String, Department>{}.obs;
+    rooms = <String, Room>{}.obs;
+    controlItem = ControlItem().obs;
+    serviceInfo = ServiceInfo().obs;
+    equipName = "".obs;
+    serialNumber = "".obs;
+    isLoading = false.obs;
+  }
 
+  onReady() {
+    if (_authController.isLoggedIn.value ?? false) {
+      fetchAllData();
+    }
+    _authController.isLoggedIn.listen((value) {
+      if (value ?? false) {
+        if (!isDataLoaded) {
+          fetchAllData();
+        }
+      }
+    });
+    //
+  }
+
+  Future<void> fetchDepartments()async{
+    siteNames.forEach(await (key, value) async {
+          print("fetching global deps: site : ${value.value}  ");
+          await Future.delayed(Duration(seconds: 2), () async {
+            allDepartments[value.value] =
+                await getDepartments(siteId: value.value!);
+          });
+
+          print(
+              "retarned to global deps:${allDepartments[value.value]} site: ${value.value}");
+        });
+
+  }
+  //   Future<void> fetchRooms() async {
+  //     allDepartments.entries.map(toElement: (e) async {
+  //       print("fetching global rooms: site : ${e.key}  ");
+  //       await Future.delayed(Duration(seconds: 2), () async {
+  //         allRooms[e.key] = await getRoomsList(departmentId: e.key);
+  //       });
+
+  //       print(
+  //           "retarned to global rooms:${allRooms[e.key]} site: ${e.key}");
+  //     });
+  //     for (var entry in allDepartments.entries.iterator) {
+  //           print("deppp : ${entry}");
+  //         allRooms[entry.key] = await getRoomsList(departmentId: entry.key);
+  //         print(allRooms[entry.key]!.entries.toList());
+  //     }
+
+
+
+  //     // print("fetching rooms ${departments.length}");
+  //     //   departments.forEach( (key, value)async  {
+  //     //     //await Future.delayed(Duration(seconds: 3));
+  //     //     allRooms[value.value!] =
+  //     //         await getRoomsList(departmentId: value.value!);
+  //     //   });
+  // }
+
+  Future<void> fetchAllData() async { 
+    if(isDataLoaded){
+      return;
+    }
+    print("<<<<<<<<<< LOADING ALL DATA>>>>>>>>");
+    await fetchNewWorkOrderOptions();
+    await Future.delayed(Duration(seconds: 3));
+    await fetchDepartments();
+    print(" <<<<<<<<<<<<<<<<<<< FETCHED DEPARTMENTS >>>>>>>>>>>>>>>>");
+   // await Future.delayed(Duration(seconds: 3));
+    //await fetchRooms();
+      print(" <<<<<<<<<<<<<<<<<<< FETCHED ROOMS >>>>>>>>>>>>>>>>");
+
+      print("<<<<<<<<<< FINISHED LOADING ALL DATA FUNCTION >>>>>>>>");
+      print(
+          "all data : departments : ${allDepartments.length} , rooms : ${allRooms.length}");
+    
+
+    isDataLoaded = true;
+  }
 
   Future<void> fetchPendingOrders() async {
-    
     isLoading.value = true;
     final Map<String, String> params = {
       'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(), /// todo CHANGE
+      'EquipmentTypeID': storageBox.read("role").toString(),
+
+      /// todo CHANGE
       'flag': '2' //today=0 ,week=1,month=2
     };
-    final response = await http.get(
-        Uri.parse("http://${_apiController.apiAddress.value}$getPendingOrdersEndPoint")
-            .replace(queryParameters: params));
-             print("Get pending orders response : " + response.body);
+    final response = await http.get(Uri.parse(
+            "http://${_apiController.apiAddress.value}$getPendingOrdersEndPoint")
+        .replace(queryParameters: params));
+    print("Get pending orders response : " + response.body);
     List temp = jsonDecode(response.body)['data'];
     for (var item in temp) {
       pendingWorkOrders.add(PendingWorkOrder.fromJson(item));
@@ -72,31 +155,42 @@ class WorkOrdersController extends GetxController {
     // return pendingWorkOrders;
   }
 
-  // Future<void> fetchWorkOrdersOptions() async {
-//
-  Future<void> getRoomsList({required String departmentId}) async {
+  Future<Map<String, Room>> getRoomsList({required String departmentId}) async {
+    //       print(allRooms.keys);
+    // if (allRooms.containsKey(departmentId)) {
+    //   print("Dep id : $departmentId  pre rooms  ${rooms.values.length} new rooms : ${allRooms[departmentId]!.values.length}" );
+    //   rooms.value = allRooms[departmentId]!;
+    //   print("returning from global list : ${rooms.length} rooms");
+    //   return rooms;
+    // }
     print("deparm id : $departmentId");
-     print(storageBox.read("role").toString());
-    
+    print(storageBox.read("role").toString());
+
     final Map<String, String> params = {
       'DepID': departmentId,
-      'EquipmentTypeID':  storageBox.read("role").toString(),
-      'UserID': storageBox.read("id").toString() ,
+      'EquipmentTypeID': storageBox.read("role").toString(),
+      'UserID': storageBox.read("id").toString(),
     };
-    
-    //Get Id from QR code
+
+   
     try {
-      final response = await http.get(
-          Uri.parse("http://${_apiController.apiAddress.value}$getRoomsListEndPoint")
-              .replace(queryParameters: params));
-       print("Get rooms response : " + response.body);
-      jsonDecode(response.body).forEach((item) {
-        rooms[item["Text"]] = Room.fromJson(item);
-      });
+      final response = await http.get(Uri.parse(
+              "http://${_apiController.apiAddress.value}$getRoomsListEndPoint")
+          .replace(queryParameters: params));
+      print(Uri.parse(
+              "http://${_apiController.apiAddress.value}$getRoomsListEndPoint")
+          .replace(queryParameters: params));
+      if (response.statusCode == 200) {
+        jsonDecode(response.body).forEach((item) {
+          rooms[item["Text"]] = Room.fromJson(item);
+        });
+      }
+      print("Get rooms response : " + response.body);
     } catch (e) {
-      rooms["No Rooms Found"] = Room(text: "None", value: "0");
+      rooms[departmentId] = Room(text: "None", value: "0");
+      rethrow;
     }
-  
+    return rooms;
   }
 
   Future<void> getServiceInfo(
@@ -108,18 +202,21 @@ class WorkOrdersController extends GetxController {
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
     final response = await http.get(
-      Uri.parse("http://${_apiController.apiAddress.value}${getInfoServiceEndPoint}")
+      Uri.parse(
+              "http://${_apiController.apiAddress.value}${getInfoServiceEndPoint}")
           .replace(queryParameters: params),
     );
+    print("Get service url : " +
+        Uri.parse(
+                "http://${_apiController.apiAddress.value}${getInfoServiceEndPoint}")
+            .replace(queryParameters: params)
+            .toString());
     print("Get Service info response : " + response.body);
-    if (response.statusCode == 200 ) {
-
+    if (response.statusCode == 200) {
       // SI Found
-  
+
       //SI Found
       serviceInfo.value = ServiceInfo.fromJson(jsonDecode(response.body));
-      
-
     } else {
       // Connection error
       serviceInfo.value = ServiceInfo(
@@ -128,33 +225,47 @@ class WorkOrdersController extends GetxController {
     debugPrint("Service info : $serviceInfo");
   }
 
-  Future<void> getDepartments({required String siteId}) async {
-    //debugPrintnt("Get departments");
-    //debugPrintnt("site id : $siteId");
+  Future<RxMap<String, Department>> getDepartments(
+      {required String siteId}) async {
+    print("GET DEPARTMENTS XXXXXXXXXXXXXXXXXXXXXXXX");
+    if (allDepartments.containsKey(siteId)) {
+      departments.value = allDepartments[siteId]!;
+      print("returning from global list : ${departments.length} DEPARTMENTS");
+      return departments;
+    }
+
+    debugPrint("Get departments");
+    debugPrint("site id : $siteId");
     final Map<String, String> params = {
       'SiteID': siteId,
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
-    final response = await http.get(
-        Uri.parse("http://${_apiController.apiAddress.value}$getDepartmentsEndpoint")
-            .replace(queryParameters: params));
-             print("Get departments response : " + response.body);
-    List temp = jsonDecode(response.body)["Departments"];
-    //debugPrintnt(temp.length.toString() + " departments");
-    temp.forEach((item) {
-      departments[item["Text"]] = Department.fromJson(item);
-    });
+    final response = await http.get(Uri.parse(
+            "http://${_apiController.apiAddress.value}$getDepartmentsEndpoint")
+        .replace(queryParameters: params));
+    print(
+        "Get departments response : ${Uri.parse("http://${_apiController.apiAddress.value}$getDepartmentsEndpoint").replace(queryParameters: params)} ===> " +
+            response.body);
+    print("Get departments response : " + response.body);
+    if (response.statusCode == 200) {
+      List temp = jsonDecode(response.body)["Departments"];
+      //debugPrintnt(temp.length.toString() + " departments");
+      temp.forEach((item) {
+        departments[item["Text"]] = Department.fromJson(item);
+      });
+      return departments;
+    }
+    return RxMap<String, Department>();
   }
 
   Future<void> getControlItem(
-      {String equipmentID = "0", String controlNum = ""}) async {
-        print(equipmentID);
+      {required String controlNum}) async {
     final Map<String, String> params = {
       'type': "1",
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
-      'EquipmentID': equipmentID,
+      'EquipmentID': "0",
       'ControlNo': controlNum
     };
     //Get Id from QR code
@@ -172,7 +283,6 @@ class WorkOrdersController extends GetxController {
     //create multipart request for POST or PATCH method
     var request = http.MultipartRequest("POST", Uri.parse("<url>"));
 
-    
     //add text fields
     request.fields["text_field"] = text;
     //create multipart using filepath, string or bytes
@@ -189,115 +299,109 @@ class WorkOrdersController extends GetxController {
   Future<void> fetchNewWorkOrderOptions() async {
     // if()
 
-     try {
-    final Map<String, String> params = {
-      'type': '1',
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID':  storageBox.read("role").toString(),
-    };
-    print(params.toString());
-    final response = await http.get(
-      Uri.parse(
-        "http://${_apiController.apiAddress.value}$getNewOrderOptionsEndPoint}",
-      ).replace(queryParameters: params),
-    );
+    try {
+      final Map<String, String> params = {
+        'type': '1',
+        'UserID': storageBox.read("id").toString(),
+        'EquipmentTypeID': storageBox.read("role").toString(),
+      };
+      print(params.toString());
+      final response = await http.get(
+        Uri.parse(
+          "http://${_apiController.apiAddress.value}$getNewOrderOptionsEndPoint}",
+        ).replace(queryParameters: params),
+      );
 
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      List<dynamic> siteNamesJson = jsonData['SiteList'];
-      List<dynamic> callTypesNamesJson = jsonData['CallTypeList'];
-      List<dynamic> categoriesJson = jsonData['CategoryList'];
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        List<dynamic> siteNamesJson = jsonData['SiteList'];
+        List<dynamic> callTypesNamesJson = jsonData['CallTypeList'];
+        List<dynamic> categoriesJson = jsonData['CategoryList'];
 
-      categoriesJson.forEach((item) {
-        categories[item["Text"]] = Category.fromJson(item);
-      });
-      siteNamesJson.forEach((item) {
-        siteNames[item["Text"]] = Site.fromJson(item);
-      });
-      siteNamesJson.forEach((item) {
-        siteNames[item["Text"]] = Site.fromJson(item);
-      });
+        categoriesJson.forEach((item) {
+          categories[item["Text"]] = Category.fromJson(item);
+        });
+        siteNamesJson.forEach((item) {
+          siteNames[item["Text"]] = Site.fromJson(item);
+        });
 
-      callTypesNamesJson.forEach((item) {
-        if (!item["Text"].isEmpty && item["Text"] != "") {
-          callTypes[item["Text"]] = CallType.fromJson(item);
-        }
-      });
-    }
-    } catch (e) {
-      if(foundation.kDebugMode){
-       rethrow;
-       
-      }else{
-        Get.snackbar("Error","Could not fetch WOs Options data");
-      
+        callTypesNamesJson.forEach((item) {
+          if (!item["Text"].isEmpty && item["Text"] != "") {
+            callTypes[item["Text"]] = CallType.fromJson(item);
+          }
+        });
+        categories.remove("--Please Select--");
+        callTypes.remove("--Please Select--");
+        siteNames.remove("--Please Select--");
+        print(categories.keys);
       }
-  
+    } catch (e) {
+      if (foundation.kDebugMode) {
+        rethrow;
+      } else {
+        Get.snackbar("Error", "Could not fetch WOs Options data");
+      }
     }
   }
 
   Future<CreateWorkOrderDTO> createWorkOrder(WorkOrder workOrder) async {
     print(workOrder.imageFile);
 
- 
-
-    var url = "http://${_apiController.apiAddress.value}${createWorkOrderEndpoint}"; // Replace with your URL
+    var url =
+        "http://${_apiController.apiAddress.value}${createWorkOrderEndpoint}"; // Replace with your URL
     var request = http.MultipartRequest('POST', Uri.parse(url));
     var multipartFile;
     // Prepare the image file for upload
-    if(workOrder.imageFile != null) {
-      multipartFile = await http.MultipartFile.fromPath('imageFile',  workOrder.imageFile!.path );
-    } else {
-      multipartFile = await http.MultipartFile.fromPath('imageFile',  "" );
-    }
-    request.files.add(multipartFile);
+    if (workOrder.imageFile != null) {
+      multipartFile = await http.MultipartFile.fromPath(
+          'imageFile', workOrder.imageFile!.path);
+              request.files.add(multipartFile);
+    } 
 
-      // Add other data (replace with your actual data fields)
-       request.fields['EquipmentID'] = workOrder.equipmentID ?? "";
-      request.fields['CallTypeID'] = workOrder.callTypeID ?? "";
-      request.fields['IsUrgent'] = workOrder.isUrgent.toString();
-      request.fields['FaultStatus'] = workOrder.faultStatues ?? "";
-      request.fields['RoomID'] = workOrder.roomId ?? "";
-      request.fields['Type'] = workOrder.type.toString();
-      request.fields['UserID'] = storageBox.read("id").toString();
-      request.fields['EquipmentTypeID'] = workOrder.equipTypeID ?? "";
-      request.fields['NewOrEdit'] = "0";
+
+    // Add other data (replace with your actual data fields)
+    request.fields['EquipmentID'] = controlItem.value.id ?? "0";
+    request.fields['CallTypeID'] = workOrder.callTypeID ?? "";
+    request.fields['IsUrgent'] = workOrder.isUrgent.toString();
+    request.fields['FaultStatus'] = workOrder.faultStatues ?? "";
+    request.fields['RoomID'] = workOrder.roomId ?? "";
+    request.fields['Type'] = workOrder.type.toString();
+    request.fields['UserID'] = storageBox.read("id").toString();
+    request.fields['EquipmentTypeID'] = workOrder.equipTypeID ?? "";
+    request.fields['NewOrEdit'] = "0";
 
     // Send the request
     var response = await request.send();
-    print("Response status: $response");
+    print("Response status: ${response.reasonPhrase}");
     // Handle the response (success, error)
-    
 
     if (response.statusCode == 200) {
-      
-    CreateWorkOrderDTO createWODTO =
-        CreateWorkOrderDTO(success: 0, message: "Connaction faliure");
-    if (response.statusCode == 200) {
-
-      // var data =responseData(response);
-      // print(response);
-      // print(response.runtimeType);
-      // print(await data);
-      // var d = await data;
-      // print(d.runtimeType);
-      // print("-----------------");
-      var data = await responseData(response);
-      return CreateWorkOrderDTO(success: 1, message: "Created successfully",jobNum: data["JobNO"] );
+      CreateWorkOrderDTO createWODTO =
+          CreateWorkOrderDTO(success: 0, message: "Connaction faliure");
+      if (response.statusCode == 200) {
+        var data =await responseData(response);
+        print(response);
+        print(response.runtimeType);
+        print(await data);
+        var d = await data;
+        print(d.runtimeType);
+        print("-----------------");
+        //var data = await responseData(response);
+        return CreateWorkOrderDTO(
+            success: 1, message: "Created successfully", jobNum: data["JobNO"]);
+      } else {
+        createWODTO.message = "MISSING DATA";
+      }
+      return createWODTO;
     } else {
-      createWODTO.message ="MISSING DATA";
-    }
-    return createWODTO;
-    } 
-    
-    else {
       return CreateWorkOrderDTO(success: 0, message: "Connaction faliure");
+    }
   }
-  
-}
-  Future<Map<String, dynamic>> responseData(http.StreamedResponse response) async {
-  final responseBody = await response.stream.bytesToString();
-  final data = jsonDecode(responseBody); // Assuming JSON response
-  return data; // Return the decoded data
-}
+
+  Future<Map<String, dynamic>> responseData(
+      http.StreamedResponse response) async {
+    final responseBody = await response.stream.bytesToString();
+    final data = jsonDecode(responseBody); // Assuming JSON response
+    return data; // Return the decoded data
+  }
 }

@@ -122,6 +122,11 @@ class WorkOrder {
     return this;
   }
 
+  setImageFile(XFile? imageFile) {
+    this.imageFile = imageFile;
+    return this;
+  }
+
   setEquipName(String? equipmentName) {
     this.equipName = equipmentName;
     return this;

@@ -17,12 +17,12 @@ class ApiAddressController extends GetxController {
 
     RxString apiAddress  = "" .obs;
     Rx<bool> isApiRunning = false.obs;
-    StreamSubscription<String>? lisenter;
+    //StreamSubscription<String>? lisenter;
     Rx<bool> isLoading = false.obs;
 
   Future<void> readUrlAddressFromLocalStorage() async {
     print("Read from local storage : ${storageBox.read("api_url")}");
-     apiAddress.value = storageBox.read("api_url");
+     apiAddress.value = storageBox.read("api_url") ??"";
     if (apiAddress.value.isEmpty || apiAddress.value == "" || storageBox.read("api_url").isEmpty || storageBox.read("api_url") == "") {
       Get.dialog(
         AlertDialog(

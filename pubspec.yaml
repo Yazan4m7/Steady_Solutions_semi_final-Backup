@@ -66,9 +66,11 @@ dependencies:
   simple_animated_icon: ^1.1.0
   url_launcher: ^6.2.6
   loader_overlay: ^4.0.0
+  geolocator: ^12.0.0
   flutter_spinkit: ^5.2.1
   flutter_localizations:
     sdk: flutter
+
 
 
 dev_dependencies:
@@ -86,7 +88,6 @@ flutter:
   assets:
     - assets/
     - assets/fonts/
-    - assets/icons/
     - assets/images/
     - assets/images/logos/
     - assets/json_animations/

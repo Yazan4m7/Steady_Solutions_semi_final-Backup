@@ -56,8 +56,9 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
 
   @override
   void initState() {
-    _workOrderController.fetchNewWorkOrderOptions();
     _workOrderController.clearData();
+    _workOrderController.fetchNewWorkOrderOptions();
+    
   
     //_workOrderController.controlItem.value = ControlItem();
     super.initState();

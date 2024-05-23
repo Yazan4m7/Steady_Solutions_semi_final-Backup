@@ -184,8 +184,8 @@ class _SteadySolutionsApplicationState
     );
   }
 
-  initalScreen()async  {
-    await _apiController.readUrlAddressFromLocalStorage();
+  initalScreen()  {
+     _apiController.readUrlAddressFromLocalStorage();
 
     if (_apiController.apiAddress.value == "" ||
         _apiController.apiAddress.value.isEmpty) {

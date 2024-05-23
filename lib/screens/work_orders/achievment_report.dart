@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/dialogs.dart';
 import 'package:material_dialogs/shared/types.dart';
@@ -445,12 +446,12 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                           String response = await _achievementReportController
                               .createAchievementReport(
                             jobNumber: jobNumTEController.text,
-                            travelTime: _travelTime.toString().substring(1,11),
+                            travelTime: _travelTime,
                             remedy: remedyTEController.text,
-                            startTime: _startTime.toString(),
-                            endTime: _endTime.toString(),
+                            startTime: _startTime,
+                            endTime: _endTime,
                           
-                            //repairDate: _selectedDateTime.toString(),
+                            repairDate: _selectedRepairDateTime ? DateFormat('HH:mm:ss').format(_selectedDateTime) : "",
                             reasonForNotClosingJob:
                                 reasonForNotClosingJobTEController.text,
                             actionTakenToClosePendingJob:

@@ -179,7 +179,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                             icon: const Icon(Icons.search),
                             onPressed: () {
                               _workOrderController.getControlItem(
-                                  equipmentID: controlNumberTEController.text);
+                                  controlNum: controlNumberTEController.text);
                             },
                           ),
                           validator: (value) {
@@ -416,7 +416,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                           .setCallTypeID(callType.value.value.toString())
                           .setIsUrgent(isUrgent.value.toString())
                           .setFaultStatues(faultStatusTEController.text)
-                      
+                          .setImageFile(document)
                           .setRoomId("0")
                           .setEquipTypeId(_authOrderController
                               .employee.value.role

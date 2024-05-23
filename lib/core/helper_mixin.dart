@@ -34,8 +34,15 @@ mixin Helper {
       return true;
     }
   }
-    bool isDeptsAndRoomsLoaded() {
-    if(_workOrdersController.rooms.isEmpty || _workOrdersController.departments.isEmpty ) {
+    bool isDeptsLoaded() {
+    if(_workOrdersController.allRooms.isEmpty || _workOrdersController.departments.isEmpty ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+   bool isRoomsLoaded(String deptId) {
+    if(_workOrdersController.allRooms.isEmpty || _workOrdersController.departments.isEmpty ) {
       return false;
     } else {
       return true;

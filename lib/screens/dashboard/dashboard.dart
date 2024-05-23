@@ -5,9 +5,10 @@ import 'package:steady_solutions/core/data/app_sizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:steady_solutions/core/gps_mixin.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/models/dashboard/chart_data.dart';
 import 'package:steady_solutions/screens/dashboard/dashboard_widgets/charts/bar_chart.dart';
@@ -27,7 +28,7 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<Dashboard>{
   final TooltipBehavior? _tooltipBehavior = TooltipBehavior(enable: true);
   final DashboardController _dashboardsController =
       Get.find<DashboardController>();

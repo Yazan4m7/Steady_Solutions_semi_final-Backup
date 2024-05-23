@@ -1,7 +1,6 @@
 {
     "files.exclude": {
         "assets": true,
-        "android": true,
         "build": true
     }
 }

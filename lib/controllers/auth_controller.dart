@@ -5,19 +5,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:steady_solutions/core/data/constants.dart';
+import 'package:steady_solutions/core/gps_mixin.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/models/DTOs/login_DTO.dart';
 import 'package:steady_solutions/models/employee.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-  class AuthController extends GetxController {
+
+class AuthController extends GetxController with GPSMixin {
   static AuthController get instance => Get.find();
 
-
-   Rx<bool?> isLoggedIn = false.obs;
+  Rx<bool?> isLoggedIn = false.obs;
   Rx<Employee> employee = Employee().obs;
   bool isLoggingOut = false;
-   Rx<bool> checkedIn = false.obs;
+  Rx<bool> checkedIn = false.obs;
 
   @override
   void onReady() {
@@ -28,7 +29,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
     employee.value.firstName = storageBox.read("firstName");
     employee.value.lastName = storageBox.read("lastName");
     //employee.value.email = storageBox.read("userAccount");
-    
+
     //isLoggedIn.value = storageBox.read("userAccount") ?? false;
     /*
      if (employee.value.role == null || employee.value.id == null) {
@@ -55,10 +56,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
     // });
   }
 
-login(String email, String password, String role,BuildContext context) async {
+  login(
+      String email, String password, String role, BuildContext context) async {
     var response = await http.post(
         Uri.parse("http://${storageBox.read('api_url')}$loginEndpoint?"),
-        body: {"Email": email, "Password": password, "EquipmentType":role});
+        body: {"Email": email, "Password": password, "EquipmentType": role});
     LoginDTO loginDTO = LoginDTO.fromJson(jsonDecode(response.body));
     var json = jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -84,21 +86,25 @@ login(String email, String password, String role,BuildContext context) async {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                 Center(
-                  child: Text(AppLocalizations.of(context).login_failed,style: TextStyle(fontSize: 54.sp),),
+                Center(
+                  child: Text(
+                    AppLocalizations.of(context).login_failed,
+                    style: TextStyle(fontSize: 54.sp),
+                  ),
                 ),
                 SizedBox(
                   height: 40.h,
                 ),
                 //Image.asset("assets/images/logo.png"),
-                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Center(
                     child: Text(
                       textAlign: TextAlign.center,
                       AppLocalizations.of(context).check_credentials,
-                      
-                    style: TextStyle(fontSize: 40.sp),),
+                      style: TextStyle(fontSize: 40.sp),
+                    ),
                   ),
                 ),
                 const Divider(
@@ -117,9 +123,9 @@ login(String email, String password, String role,BuildContext context) async {
                       decoration: const BoxDecoration(
                           color: Color.fromARGB(255, 194, 38, 26),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child:  Text(
-                       AppLocalizations.of(context).retry ,
-                        style: TextStyle(color : Colors.white, fontSize: 30.sp),
+                      child: Text(
+                        AppLocalizations.of(context).retry,
+                        style: TextStyle(color: Colors.white, fontSize: 30.sp),
                       ),
                     ),
                   ),
@@ -133,7 +139,7 @@ login(String email, String password, String role,BuildContext context) async {
       storageBox.write("isLoggedIn", false);
       Get.dialog(Dialog(
         backgroundColor: Colors.red,
-      child: Container(
+        child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20)),
@@ -141,14 +147,14 @@ login(String email, String password, String role,BuildContext context) async {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               Center(
+              Center(
                 child: Text(AppLocalizations.of(context).connection_failed),
               ),
               const SizedBox(
                 height: 10,
               ),
               Image.asset("assets/images/logo.png"),
-               Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   AppLocalizations.of(context).please_check_your_connection,
@@ -167,10 +173,10 @@ login(String email, String password, String role,BuildContext context) async {
                     height: 30,
                     width: 70,
                     alignment: Alignment.center,
-                    decoration:  BoxDecoration(
+                    decoration: BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child:  Text(
+                    child: Text(
                       AppLocalizations.of(context).retry,
                     ),
                   ),
@@ -184,8 +190,6 @@ login(String email, String password, String role,BuildContext context) async {
     }
   }
 
-
-
   Future<void> logout() async {
     storageBox.write("isLoggedIn", false);
     isLoggedIn.value = false;
@@ -193,23 +197,118 @@ login(String email, String password, String role,BuildContext context) async {
     //Get.offAll(() => LoginScreen());
   }
 
-   Future<void> checkIn() async {
-    //  Rx<bool> isLoading = true.obs;
-    //     final Map<String, String> params = {
-    //       'UserID' : storageBox.read("id").toString(),
-    //   'EquipmentTypeID': storageBox.read("role").toString(),
-    // };
+  Future<void> checkIn() async {
+    String url =
+        "http://${storageBox.read('api_url')}$checkInEndPoint";
+    List<double> location = await getCurrentLocation();
 
-    // try {
-    //   "http://${storageBox.read('api_url')}$getCMPerformanceChartEndPoint"; 
-    //   final response = await http.get(
-    //       Uri.parse(url)
-    //           .replace(queryParameters: params));}
-    //           catch(e){}
-    checkedIn.value = true;
-  }
-     Future<void> checkOut() async {
-      checkedIn.value = false;
+    final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+      'Longitude': location[1].toString(),
+      'Latitude': location[0].toString(),
+    };
+    final response =
+        await http.get(Uri.parse(url).replace(queryParameters: params));
+
+    var json = jsonDecode(response.body); 
+    if(json["success"] == false){
+      Get.dialog(Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  AppLocalizations.of(Get.context!).check_in_failed,
+                  style: TextStyle(fontSize: 54.sp),
+                ),
+              ),
+              SizedBox(
+                height: 40.h,
+              ),
+              //Image.asset("assets/images/logo.png"),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    json["Message"],
+                    style: TextStyle(fontSize: 40.sp),
+                  ),
+                ),
+              ),
+              const Divider(
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              InkWell(
+                onTap: () {
+                  Get.back();
+                },
+                child: Center(
+                  child: Container(
+                    height: 100.h,
+                    width: 220.w,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 194, 38, 26),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Text(
+                      AppLocalizations.of(Get.context!).retry,
+                      style: TextStyle(color: Colors.white, fontSize: 30.sp),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+    }
+    else{
+      checkedIn.value = true;
+    }
+
   }
 
+  Future<void> checkOut() async {
+        String url =
+        "http://${storageBox.read('api_url')}$checkOutEndPoint";
+    List<double> location = await getCurrentLocation();
+
+    final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+      'Longitude': location[1].toString(),
+      'Latitude': location[0].toString(),
+    };
+    final response =
+        await http.get(Uri.parse(url).replace(queryParameters: params));
+
+    var json = jsonDecode(response.body);
+    if(json['success'] == false)
+              Get.dialog(
+        AlertDialog(
+          title: const Text('Error'),
+          content:  Text('Check Out Failed , ${json["Message"]}'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    else
+    checkedIn.value = false;
+  }
 }

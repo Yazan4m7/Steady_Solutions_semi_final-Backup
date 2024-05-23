@@ -101,7 +101,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
                   Obx(
                     () => DropdownButton<String>(
                        iconSize: 30, // Set the size of the dropdown icon
-                     // isExpanded: true, // Set the dropdown to expand to the available width
+                      isExpanded: true, // Set the dropdown to expand to the available width
                       itemHeight: 50, 
                       hint: Text(
                         _assetsManagementController.departments.isEmpty

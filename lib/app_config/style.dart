@@ -83,6 +83,7 @@ ButtonStyle kPrimeryBtnStyle(BuildContext context) {
         horizontal: MediaQuery.of(context).size.width * .19,
         vertical: MediaQuery.of(context).size.height * .013)),
     // Adjust these colors to your preference
+    alignment: Alignment.center,
     foregroundColor:
         MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 255, 255)),
     backgroundColor:

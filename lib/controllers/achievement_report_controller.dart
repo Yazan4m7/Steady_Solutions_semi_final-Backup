@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
@@ -53,15 +56,18 @@ class AchievementReportsController extends GetxController {
 
   Future<String> createAchievementReport({
     required String jobNumber,
-       required String travelTime,
+       required TimeOfDay travelTime,
     required String remedy,
        String repairDate="",
-      String? startTime,
-      String? endTime,
+      TimeOfDay? startTime,
+      TimeOfDay? endTime,
    
     required String reasonForNotClosingJob,
     required String actionTakenToClosePendingJob,
   }) async {
+    print(repairDate);
+    print(startTime);
+     print(endTime);
     final response = await http.post(
         Uri.parse(
           "http://${storageBox.read('api_url')}$createAchievementReportEndPoint",
@@ -72,13 +78,13 @@ class AchievementReportsController extends GetxController {
           'EquipmentTypeID': storageBox.read("role").toString(),
 
           /// MAIGHT CHANGE  :
-          'StartDate': repairDate,
-          'EndDate': repairDate,
+          //'StartDate': repairDate,
+          //'EndDate': repairDate,
 
 
-          'StartTime': startTime,
-          'EndTime': endTime, 
-          'TravelTime': travelTime,
+          'StartTime': formatTimeOfDay(startTime ?? TimeOfDay(hour: 0, minute: 0)),
+          'EndTime': formatTimeOfDay(endTime ?? TimeOfDay(hour: 0, minute: 0)), 
+          'TravelTime':formatTimeOfDay(travelTime),
           'Remedy': remedy,
           'CMReportID': '0',
           'ShowSendEvalOrApprove': '0',
@@ -89,23 +95,32 @@ class AchievementReportsController extends GetxController {
     );
     // Rest of the code...
     try{
+      print(response.body);
     var json = jsonDecode(response.body);
+    
     String responseMsg = "No connection made";
     if(response.statusCode == 200){
     if (json["success"] == true) {
        return json['CMReportID'].toString();
     } else {
-      return "failed_to_create_report";
+      return json["Message"];
     }
     }
     else{
       return "connection_failed";
     }
     }catch(e){
-  //rethrow;
+      if(kDebugMode)
+     rethrow;
       return "connection_failed";
        
     }
   }
+  String formatTimeOfDay(TimeOfDay timeOfDay) {
+    final now = new DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final format = DateFormat.Hm(); 
+    return format.format(dt);
+  } 
 }
 
