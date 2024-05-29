@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/shared/types.dart';
@@ -12,6 +15,7 @@ import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
 import 'package:steady_solutions/models/department.dart';
+import 'package:steady_solutions/models/site_rooms.dart';
 import 'package:steady_solutions/models/work_orders/room.dart';
 import 'package:steady_solutions/models/work_orders/service_info.dart';
 import 'package:steady_solutions/models/work_orders/site.dart';
@@ -43,8 +47,8 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
   Rx<Category> category = Category().obs;
   Rx<Room> room = Room().obs;
   String? faultStatus;
-
-  PlatformFile? document;
+File? _image; 
+  final ImagePicker _picker = ImagePicker();
 
   /// Text editing controllers
   final TextEditingController controlNumberTEController =
@@ -53,19 +57,27 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
   final TextEditingController serialNumberTEController =
       TextEditingController();
   final TextEditingController faultStatusTEController = TextEditingController();
-
+  Rx roomId = "".obs;
   @override
   void initState() {
     _workOrderController.clearData();
     _workOrderController.fetchNewWorkOrderOptions();
-    
   
     //_workOrderController.controlItem.value = ControlItem();
     super.initState();
   }
 
   var QRResult = "";
+Future<void> _getImageFromCamera() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      // You can use the '_image' File object here to do something with the captured photo
+    }
+}
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -77,7 +89,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
           backgroundColor: Colors.transparent,
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF4e7ca2)),
-          title:  Text( AppLocalizations.of(context).create_work_order,
+          title:  Text( AppLocalizations.of(context).create,
               style: TextStyle(color: Color(0xFF4e7ca2, ),fontWeight: FontWeight.w600)),
         ),
         body: SingleChildScrollView(
@@ -108,6 +120,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                     prefixIcon: Icons.home,
                     options: _workOrderController.siteNames,
                     onChanged: (value) {
+                      
                       _workOrderController.getDepartments(
                           siteId: site.value.value!);
                     },
@@ -123,16 +136,18 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                     () => _autoCompleteTextField(
                       labelText:  AppLocalizations.of(context).departments,
                       prefixIcon: Icons.corporate_fare,
-                      options: _workOrderController.departments.value,
+                      options: _workOrderController.departments.value, // Value is needed to prevent getx error
                       onChanged: (value) {},
                     ),
                   ),
                    SizedBox(height: 30.h),
                   Obx(
-                    () => _autoCompleteTextField(
+                    () => site.value.value == null ?
+                    SizedBox(child:Text("Select SIte"))
+                    :_autoCompleteTextField(
                       labelText:  AppLocalizations.of(context).rooms,
                       prefixIcon: Icons.meeting_room,
-                      options: _workOrderController.rooms.value,
+                      options: SiteRoomsRepository().getRoomsList(site.value.value!),
                       onChanged: (value) {
                         // siteName.value = value!;
                       },
@@ -258,27 +273,20 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                         ],
                       ),
                      SizedBox(height: 10),
-                      ElevatedButton(
+                      _image == null ?   ElevatedButton(
                         style: kSmallSecondaryBtnStyle(context),
                         onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: ['pdf', 'doc'],
-                          );
-                      
-                          if (result != null) {
-                            document = result.files.first;
-                          } else {
-                            // User canceled the file selection
-                          }
+                        final image = await _getImageFromCamera();
+                        setState(() {
+                          _image = image as File?;
+                        });
                         },
                         //style: kSmallBtnStyle(context),
                         child:  Text(
                            AppLocalizations.of(context).upload_picture,
                           
                         ),
-                      ),
+                      ) : Image.file(_image!),
                     ],
                   ),
                   SizedBox(height: 50.h),
@@ -292,7 +300,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                             .setCallTypeID("0")
                             .setIsUrgent(isUrgent.value.toString())
                             .setFaultStatues(faultStatusTEController.text)
-                            .setImageFile(document)
+                            .setImageFile(_image)
                             .setRoomId(room.value.value)
                             .setEquipTypeId(_authOrderController
                                 .employee.value.role
@@ -398,7 +406,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
     required IconData prefixIcon,
     required TextInputType keyboardType,
     TextEditingController? controller,
-    bool enabled = true,
+    bool? enabled = true,
     Widget? suffexIcon,
     String? value,
     Null Function(dynamic value)? onChanged,
@@ -430,14 +438,17 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
   Widget _autoCompleteTextField({
     required String labelText,
     IconData? prefixIcon,
+      bool? enabled = true,
     required Map<String, dynamic> options,
     void Function(int?)? onChanged,
   }) {
     return Autocomplete<String>(
+      
       // ID needed to post : "Value"
       // Displayed to user : "Text"
       // Key of the map    : "Text"
       optionsBuilder: (TextEditingValue textEditingValue) {
+      
         if (textEditingValue.text == '') {
           return options.keys;
         }
@@ -461,8 +472,8 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
             //debugPrintnt("category Selected");
           } else if (object is Department) {
             department.value = object;
-            _workOrderController.getRoomsList(
-                departmentId: department.value.value!);
+            // _workOrderController.getRoomsList(
+            //     departmentId: department.value.value!);
             _workOrderController.getServiceInfo(
                 categoryId: category.value.value!,
                 departmentId: department.value.value!);
@@ -515,6 +526,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
           FocusNode focusNode,
           VoidCallback onFieldSubmitted) {
         return TextFormField(
+          enabled: enabled,
           controller: textEditingController,
           focusNode: focusNode,
           style: inputTextStyle,

@@ -17,7 +17,7 @@ class WorkOrder {
   String? callerName;
   String? tel;
   String? faultStatues;
-  XFile? imageFile;
+  File? imageFile;
   String? newOrEdit;
   String? type;
   WorkOrder({
@@ -33,7 +33,7 @@ class WorkOrder {
       this.callerName,
       this.tel,
       this.faultStatues,
-      //this.imageFile,
+      this.imageFile,
       this.newOrEdit,
       this.type});
 
@@ -122,7 +122,7 @@ class WorkOrder {
     return this;
   }
 
-  setImageFile(XFile? imageFile) {
+  setImageFile(File? imageFile) {
     this.imageFile = imageFile;
     return this;
   }
@@ -187,7 +187,7 @@ class WorkOrder {
       callerName: callerName,
       tel: tel,
       faultStatues: faultStatues,
-     // imageFile: imageFile,
+      imageFile: imageFile,
       newOrEdit: newOrEdit,
       type:   type
     );

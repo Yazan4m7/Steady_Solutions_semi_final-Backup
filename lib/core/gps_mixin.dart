@@ -11,6 +11,7 @@ mixin GPSMixin {
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+        print("Location services are disabled.");
            Get.dialog(
         AlertDialog(
           title: const Text('Error'),
@@ -35,6 +36,7 @@ mixin GPSMixin {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        print("Location permissions are denied.");
                 Get.dialog(
         AlertDialog(
           title: const Text('Error'),
@@ -57,6 +59,7 @@ mixin GPSMixin {
 
     if (permission == LocationPermission.deniedForever) {
      
+        print("Location services are denaid forever.");
       
           Get.dialog(
         AlertDialog(
@@ -75,7 +78,8 @@ mixin GPSMixin {
       return;
      
     }
-
+   
+        print("Location services are alowed, getting location.");
     // Get the current location
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     

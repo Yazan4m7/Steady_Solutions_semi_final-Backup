@@ -111,7 +111,7 @@
       "please_check_your_connection" : "Please check your connection",
 
       "enterUrl" :  "ادخل عنوان البوابة",
-      "portalAddress" : "لوحةالتحكم",
+      "portalAddress" : "Portal URL",
 "approvals" : " Untranlsate",
 
 "view" : "View",
@@ -136,7 +136,19 @@
 "wo_analysis_by_category" :"WO Analysis By Category",
 "inventory_part_consumbtion_by_current_year": "Inventory Part Consumbtion By Current Year",
 "work_wrders_by_current_year" :"Work Orders By Current Year",
-"check_in_failed" : "Check-In failed "
+"check_in_failed" : "Check-In failed ",
+"youre_to_far_away_from_workplace" : "You're far away from workplace",
+"error" : "Error",
+"cm" : "CM",
+"performance" : "Performance",
+"mttr" : "MTTR",
+"mtbf" : "MTBF",
+"avg_down_time" : "Average Down Time",
+"by_category" : "By Category",
+"by_current_year" : "By Current Year",
+"working_equipment" : "Working Equipment",
+"equipment" : "Equipment",
+"parts_consumption_by_current_year" : "Parts Consumption by Current Year"
  }
 
 

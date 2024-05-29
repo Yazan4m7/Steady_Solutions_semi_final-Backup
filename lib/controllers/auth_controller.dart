@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/gps_mixin.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 class AuthController extends GetxController with GPSMixin {
   static AuthController get instance => Get.find();
 
+ApiAddressController _apiController = Get.find<ApiAddressController>();
   Rx<bool?> isLoggedIn = false.obs;
   Rx<Employee> employee = Employee().obs;
   bool isLoggingOut = false;
@@ -58,6 +60,7 @@ class AuthController extends GetxController with GPSMixin {
 
   login(
       String email, String password, String role, BuildContext context) async {
+          print("api address : ${_apiController.apiAddress.value}");
     var response = await http.post(
         Uri.parse("http://${storageBox.read('api_url')}$loginEndpoint?"),
         body: {"Email": email, "Password": password, "EquipmentType": role});
@@ -73,7 +76,7 @@ class AuthController extends GetxController with GPSMixin {
         storageBox.write("role", role);
         storageBox.write("isLoggedIn", true);
         storageBox.write("userAccount", employee.value);
-        Get.to(() => const HomeScreen());
+        Get.to(() =>  HomeScreen());
       } else {
         storageBox.write("isLoggedIn", false);
         Get.dialog(Dialog(
@@ -89,7 +92,7 @@ class AuthController extends GetxController with GPSMixin {
                 Center(
                   child: Text(
                     AppLocalizations.of(context).login_failed,
-                    style: TextStyle(fontSize: 54.sp),
+                    style: TextStyle(fontSize: 54),
                   ),
                 ),
                 SizedBox(
@@ -103,7 +106,7 @@ class AuthController extends GetxController with GPSMixin {
                     child: Text(
                       textAlign: TextAlign.center,
                       AppLocalizations.of(context).check_credentials,
-                      style: TextStyle(fontSize: 40.sp),
+                      style: TextStyle(fontSize: 40),
                     ),
                   ),
                 ),
@@ -125,7 +128,7 @@ class AuthController extends GetxController with GPSMixin {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: Text(
                         AppLocalizations.of(context).retry,
-                        style: TextStyle(color: Colors.white, fontSize: 30.sp),
+                        style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     ),
                   ),
@@ -153,7 +156,7 @@ class AuthController extends GetxController with GPSMixin {
               const SizedBox(
                 height: 10,
               ),
-              Image.asset("assets/images/logo.png"),
+              Image.asset("assets/images/LightOMS.png"),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
@@ -210,9 +213,9 @@ class AuthController extends GetxController with GPSMixin {
     };
     final response =
         await http.get(Uri.parse(url).replace(queryParameters: params));
-
+ print("print check in response ${response.body}");
     var json = jsonDecode(response.body); 
-    if(json["success"] == false){
+    if(json["success"] == "false"){
       Get.dialog(Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -226,11 +229,18 @@ class AuthController extends GetxController with GPSMixin {
               Center(
                 child: Text(
                   AppLocalizations.of(Get.context!).check_in_failed,
-                  style: TextStyle(fontSize: 54.sp),
+                  style: TextStyle(fontSize: 54),
                 ),
               ),
               SizedBox(
                 height: 40.h,
+              ),
+               Center(
+                child: Text(
+                  AppLocalizations.of(Get.context!).check_in_failed
+                 ,
+                  style: TextStyle(fontSize: 54),
+                ),
               ),
               //Image.asset("assets/images/logo.png"),
               Padding(
@@ -239,8 +249,8 @@ class AuthController extends GetxController with GPSMixin {
                 child: Center(
                   child: Text(
                     textAlign: TextAlign.center,
-                    json["Message"],
-                    style: TextStyle(fontSize: 40.sp),
+                    AppLocalizations.of(Get.context!).youre_to_far_away_from_workplace,
+                    style: TextStyle(fontSize: 40),
                   ),
                 ),
               ),
@@ -261,8 +271,8 @@ class AuthController extends GetxController with GPSMixin {
                         color: Color.fromARGB(255, 194, 38, 26),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: Text(
-                      AppLocalizations.of(Get.context!).retry,
-                      style: TextStyle(color: Colors.white, fontSize: 30.sp),
+                      AppLocalizations.of(Get.context!).close,
+                      style: TextStyle(color: Colors.white, fontSize: 30),
                     ),
                   ),
                 ),
@@ -291,12 +301,12 @@ class AuthController extends GetxController with GPSMixin {
     };
     final response =
         await http.get(Uri.parse(url).replace(queryParameters: params));
-
+    print("print check out response ${response.body}");
     var json = jsonDecode(response.body);
     if(json['success'] == false)
               Get.dialog(
         AlertDialog(
-          title: const Text('Error'),
+          title:  Text(AppLocalizations.of(Get.context!).error),
           content:  Text('Check Out Failed , ${json["Message"]}'),
           actions: [
             TextButton(

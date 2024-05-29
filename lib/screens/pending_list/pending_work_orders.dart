@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:steady_solutions/app_config/style.dart';
+import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/screens/asset_management/table_structure.dart';
@@ -25,6 +26,10 @@ class PendingOrdersList extends StatefulWidget {
 class _PendingOrdersListState extends State<PendingOrdersList> {
   final WorkOrdersController _workOrderController =
       Get.find<WorkOrdersController>();
+  final AuthController _authController =
+      Get.find<AuthController>();
+
+      
   // Data to be sent to the server
 
   /// List after structuring it for the data grid
@@ -215,13 +220,16 @@ class _PendingOrdersListState extends State<PendingOrdersList> {
                                           ElevatedButton(
                                             style: kSmallBtnStyle(context),
                                             onPressed: () {
+                                               if(_authController.checkedIn.value)
                                               Get.to(() => NewAchievementReportFrom(
                                                   jobNum:
                                                       "${column[0].getCells().elementAt(0).value}"));
+                                            else{
+                                              Get.back();
+                                            }
                                             },
                                             child: Text(
-                                                 AppLocalizations.of(context).generate_achiev_report ??
-                                                    ''),
+                                                 _authController.checkedIn.value ? AppLocalizations.of(context).generate_achiev_report :" Youre not checked in"),
                                           ),
                                           ElevatedButton(
                                             style: kSmallSecondaryBtnStyle(context),

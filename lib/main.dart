@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +21,14 @@ import 'package:steady_solutions/screens/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent, 
+));
+SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent, // Set the status bar color to transparent
+  statusBarIconBrightness: Brightness.light, // Set the icon color (light or dark)
+));
   MainBindings().dependencies();
 
   //_auth.employee.value = Employee.fromJson(storageBox.read("userAccount"));
@@ -125,62 +133,56 @@ class _SteadySolutionsApplicationState
   @override
   Widget build(BuildContext context) {
     //clearData();
-    return ScreenUtilInit(
-      designSize: const Size(1080, 1920),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        /*Widget error = const Text('...rendering error...');
-        if (widget is Scaffold || widget is Navigator) {
-          error = Scaffold(body: Center(child: error));
-        }*/
-        /*  ErrorWidget.builder = (errorDetails) => error;
-        print(errorDetails);*/
-        //throw StateError('widget is null');
-        return GlobalLoaderOverlay(
-          useDefaultLoading: true,
-          overlayWidgetBuilder: (_) {
-            //ignored progress for the moment
-            return Center(
-                child: SpinKitCubeGrid(
-              color: kPrimaryColor3BrightBlue,
-              size: 50.0,
-            )
-                // child: Lottie.asset(
-                //   fit: BoxFit.contain,
-                //      // frameRate: FrameRate.max,
-                //      //repeat: true,
-                //      // reverse: false,
-                //      // animate: true,
-                //       filterQuality: FilterQuality.high,
-                //      // width: 200,
-                //      // height: 200,
-                //   'assets/json_animations/gradient_loading.json',
-
-                // ),
-                );
-          },
-          overlayColor: Color.fromARGB(255, 233, 233, 233).withOpacity(0.8),
-          child: GetMaterialApp(
-            locale: _locale,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            // ignore: prefer_const_literals_to_create_immutables,
-            supportedLocales: AppLocalizations.supportedLocales,
-            theme: defaultWhiteTheme,
-
-            // GetX Controller Binding is in the main method
-            debugShowCheckedModeBanner: false,
-            //navigatorKey: navigatorKey,
-            home: initalScreen(),
-            // home: Dashboard(),
-          ),
-        );
+          ScreenUtil.init(
+        BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(1080, 1920),
+       //w minTextAdapt: true,
+       );
+_locale = Locale("en","us");
+    return GlobalLoaderOverlay(
+      useDefaultLoading: true,
+      overlayWidgetBuilder: (_) {
+        //ignored progress for the moment
+        return Center(
+            child: SpinKitCubeGrid(
+          color: kPrimaryColor3BrightBlue,
+          size: 50.0,
+        )
+            // child: Lottie.asset(
+            //   fit: BoxFit.contain,
+            //      // frameRate: FrameRate.max,
+            //      //repeat: true,
+            //      // reverse: false,
+            //      // animate: true,
+            //       filterQuality: FilterQuality.high,
+            //      // width: 200,
+            //      // height: 200,
+            //   'assets/json_animations/gradient_loading.json',
+    
+            // ),
+            );
       },
+      overlayColor: Color.fromARGB(255, 233, 233, 233).withOpacity(0.8),
+      child: GetMaterialApp(
+        locale: _locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        // ignore: prefer_const_literals_to_create_immutables,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: defaultWhiteTheme,
+    
+        // GetX Controller Binding is in the main method
+        debugShowCheckedModeBanner: false,
+        //navigatorKey: navigatorKey,
+        home: initalScreen(),
+        // home: Dashboard(),
+      ),
     );
   }
 
@@ -194,7 +196,7 @@ class _SteadySolutionsApplicationState
 
     if (storageBox.read("isLoggedIn") == true) {
       _authController.isLoggedIn.value = true;
-      return const HomeScreen();
+      return  HomeScreen();
     } else {
       return LoginScreen();
     }

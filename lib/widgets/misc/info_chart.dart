@@ -58,7 +58,7 @@
 //           ),
 //           Positioned.fill(
 //               child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
+//             mainAxisAlignment: MainAxisAlignment.sp.center,
 //             children: [
 //               SizedBox(
 //                 height: sizes.defaultPaddingValue,

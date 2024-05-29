@@ -1,6 +1,5 @@
 {
   "ar": [
-    "site_name",
     "call_type",
     "is_urgent",
     "upload_documnet",
@@ -16,8 +15,6 @@
     "upload_picture",
     "work_order_created_successfully",
     "failed_to_create_work_order",
-    "category",
-    "departments",
     "go_to_dashboard",
     "steady_solutions",
     "select_department",
@@ -25,8 +22,19 @@
     "no_connection_failed",
     "service_desc",
     "back_to_form",
-    "rooms",
     "create_work_order",
-    "check_in_failed"
+    "check_in_failed",
+    "youre_to_far_away_from_workplace",
+    "error",
+    "cm",
+    "performance",
+    "mttr",
+    "mtbf",
+    "avg_down_time",
+    "by_category",
+    "by_current_year",
+    "working_equipment",
+    "equipment",
+    "parts_consumption_by_current_year"
   ]
 }

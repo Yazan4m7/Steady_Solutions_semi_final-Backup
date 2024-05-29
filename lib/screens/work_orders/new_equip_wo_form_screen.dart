@@ -25,7 +25,7 @@ import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_localizations/flutter_localizations.dart';
 class NewEquipWorkOrderFrom extends StatefulWidget {
-  const NewEquipWorkOrderFrom({Key? key}) : super(key: key);
+   NewEquipWorkOrderFrom({Key? key}) : super(key: key);
 
   @override
   State<NewEquipWorkOrderFrom> createState() => _NewEquipWorkOrderFromState();
@@ -47,8 +47,8 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
   String? faultStatus;
   // int? newOrEdit;
   // DateTime? failureDate = DateTime.now();
-  PlatformFile? document;
-  XFile? imageFile;
+    File? _image; 
+      final ImagePicker _picker = ImagePicker();
   /// Text editing controllers
   final TextEditingController controlNumberTEController =
       TextEditingController();
@@ -57,6 +57,16 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
       TextEditingController();
   final TextEditingController faultStatusTEController = TextEditingController();
   StreamSubscription<ControlItem>? lisenter;
+  Future<void> _getImageFromCamera() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      // You can use the '_image' File object here to do something with the captured photo
+    }
+}
   @override
   void initState() {
     _workOrderController.fetchNewWorkOrderOptions();
@@ -113,12 +123,12 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
   bool isLoading = false;
  // Function to capture image from camera
   Future<void> captureImage() async {
-    final imagePicker = ImagePicker();
-    final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
+    // final imagePicker = ImagePicker();
+    // final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
 
-    setState(() {
-      imageFile = pickedFile;
-    });
+    // setState(() {
+    //   imageFile = pickedFile;
+    // });
   }
  
   @override
@@ -132,7 +142,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
            backgroundColor: Colors.transparent,
           centerTitle: true,
           iconTheme:  IconThemeData(color: Color(0xFF4e7ca2)),
-          title:  Text("${AppLocalizations.of(context).create} ${AppLocalizations.of(context).create_work_order}",
+          title:  Text("${AppLocalizations.of(context).create_work_order}",
               style: TextStyle(color: Color(0xFF4e7ca2),fontWeight: FontWeight.w600)),
         ),
         body: SingleChildScrollView(
@@ -146,13 +156,13 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
               borderRadius: BorderRadius.circular(10.0), // Add rounded corners
               boxShadow: [
                 BoxShadow(
-                  color: const Color.fromARGB(255, 44, 44, 44).withOpacity(0.2), // Add subtle shadow
+                  color:  Color.fromARGB(255, 44, 44, 44).withOpacity(0.2), // Add subtle shadow
                   spreadRadius: 2.0, // Adjust shadow spread
                   blurRadius: 5.0, // Adjust shadow blur
                 )
               ],
             ),
-            margin: const EdgeInsets.all(16),
+            margin:  EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -176,7 +186,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                           prefixIcon: Icons.confirmation_number_outlined,
                           controller: controlNumberTEController,
                           suffexIcon: IconButton(
-                            icon: const Icon(Icons.search),
+                            icon:  Icon(Icons.search),
                             onPressed: () {
                               _workOrderController.getControlItem(
                                   controlNum: controlNumberTEController.text);
@@ -203,14 +213,14 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               MaterialStateProperty.all(Colors.white),
                           shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
-                                  side: const BorderSide(
+                                  side:  BorderSide(
                                       color: Color(0xFF4e7ca2)),
                                   borderRadius: BorderRadius.circular(20))),
                         ),
                         icon:
-                            const Icon(Icons.qr_code, color: Color(0xFF4e7ca2)),
+                             Icon(Icons.qr_code, color: Color(0xFF4e7ca2)),
                         onPressed: () async {
-                          Get.to(() => const QRScannerView());
+                          Get.to(() =>  QRScannerView());
                         }),
                   ],
                 ),
@@ -225,7 +235,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 10.w, vertical: 10.h),
-                          child: const Icon(
+                          child:  Icon(
                             Icons.desktop_access_disabled_rounded,
                             color: Color(0xFF4e7ca2),
                           ),
@@ -268,7 +278,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 10.w, vertical: 10.h),
-                          child: const Icon(
+                          child:  Icon(
                             Icons.numbers,
                             color: Color(0xFF4e7ca2),
                           ),
@@ -341,7 +351,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 child: Checkbox(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(2),
-                                    side: const BorderSide(
+                                    side:  BorderSide(
                                         width: 9, color: Color(0xFF4e7ca2)),
                                   ),
                                   fillColor:
@@ -363,7 +373,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               ),
                               Expanded(
                                   child: Container(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding:  EdgeInsets.only(left: 8.0),
                                 child: Text(AppLocalizations.of(context).is_urgent,
                                     style: GoogleFonts.nunitoSans(
                                         color: Color(0xFF4e7ca2),
@@ -374,35 +384,20 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 5,
-                        child: ElevatedButton(
-                          style: kSmallSecondaryBtnStyle(context),
-                          onPressed: () async {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ['pdf', 'doc'],
-                            );
-
-                            if (result != null) {
-                              document = result.files.first;
-                            } else {
-                              // User canceled the file selection
-                            }
-                          },
-                          //style: kSmallBtnStyle(context),
-                          child: (imageFile != null) ?
-                          Image.file(File(imageFile!.path)) :  // Display captured image if any
-                        ElevatedButton(
-                          onPressed: captureImage,
-                          child: Text(AppLocalizations.of(context).upload_picture),
-                              
-                           
-                            
-                          ),
+                      _image == null ?   ElevatedButton(
+                        style: kSmallSecondaryBtnStyle(context),
+                        onPressed: () async {
+                        final image = await _getImageFromCamera();
+                        setState(() {
+                          _image = image as File?;
+                        });
+                        },
+                        //style: kSmallBtnStyle(context),
+                        child:  Text(
+                           AppLocalizations.of(context).upload_picture,
+                          
                         ),
-                      ),
+                      ) : Image.file(_image!),
                     ],
                   ),
                 ),
@@ -416,14 +411,14 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                           .setCallTypeID(callType.value.value.toString())
                           .setIsUrgent(isUrgent.value.toString())
                           .setFaultStatues(faultStatusTEController.text)
-                          .setImageFile(document)
+                          .setImageFile(_image)
                           .setRoomId("0")
                           .setEquipTypeId(_authOrderController
                               .employee.value.role
                               .toString())
                           .setType("1")
                           .build();
-                          WO.imageFile = imageFile;
+                        
                       CreateWorkOrderDTO response =
                           await _workOrderController.createWorkOrder(WO);
                       if (response.success == 1) {
@@ -450,7 +445,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               //   text: 'Close',
                               //   iconData: Icons.copy,
                               //   color: Colors.blue,
-                              //   textStyle: const TextStyle(color: Colors.white),
+                              //   textStyle:  TextStyle(color: Colors.white),
                               //   iconColor: Colors.white,
                               // ),
                               IconsButton(
@@ -460,13 +455,13 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 text: AppLocalizations.of(context).close,
                                 iconData: Icons.done,
                                 color: Colors.blue,
-                                textStyle: const TextStyle(color: Colors.white),
+                                textStyle:  TextStyle(color: Colors.white),
                                 iconColor: Colors.white,
                               ),
                             ]);
                       } else {
                         Dialogs.materialDialog(
-                          titleStyle: TextStyle(fontSize:50.sp, color: Colors.red),
+                          titleStyle: TextStyle(fontSize:50, color: Colors.red),
                           msgStyle: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.redAccent),
                             //color: Colors.white,
                             msg:AppLocalizations.of(context).failed_to_create_work_order,
@@ -476,7 +471,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               fit: BoxFit.contain,
                             ),
                             customView:
-                                Container(child: Text(response.message,style: TextStyle(fontSize: 30.sp),)),
+                                Container(child: Text(response.message,style: TextStyle(fontSize: 30),)),
                             customViewPosition:
                                 CustomViewPosition.BEFORE_ACTION,
                             context: context,
@@ -488,7 +483,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 text: AppLocalizations.of(context).close,
                                 iconData: Icons.close,
                                 color: Colors.red,
-                                textStyle: const TextStyle(color: Colors.white),
+                                textStyle:  TextStyle(color: Colors.white),
                                 iconColor: Colors.white,
                               ),
                             ]);
@@ -497,7 +492,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                     // },
                     style: kPrimeryBtnStyle(context),
                     child: isLoading
-                        ? const CircularProgressIndicator(
+                        ?  CircularProgressIndicator(
                             strokeWidth: 1,
                             color: Colors.white,
                             backgroundColor: Colors.blueAccent,
@@ -505,7 +500,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                         : Text(
                             AppLocalizations.of(context).save,
                             style: GoogleFonts.nunitoSans(
-                                color: const Color.fromARGB(255, 255, 255, 255),
+                                color:  Color.fromARGB(255, 255, 255, 255),
                                 fontWeight: FontWeight.w600,
                                 fontSize: screenSize.width * .04),
                           ))
@@ -539,12 +534,12 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
       initialValue: value,
       decoration: kTextFieldDecoration.copyWith(
         labelText: labelText,
-        suffixIcon: suffexIcon ?? const SizedBox(),
+        suffixIcon: suffexIcon ??  SizedBox(),
         prefixIcon: prefixIcon == null
             ? null
             : Icon(
                 prefixIcon,
-                color: const Color(0xFF104065),
+                color:  Color(0xFF104065),
               ),
       ),
       validator: validator,
@@ -585,10 +580,10 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
       optionsViewBuilder: (context, onSelected, options) => Align(
         alignment: Alignment.topLeft,
         child: Material(
-          color: const Color.fromARGB(255, 255, 255, 255),
+          color:  Color.fromARGB(255, 255, 255, 255),
           elevation: 4.0,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
+            constraints:  BoxConstraints(
               maxHeight: 250.0,
               maxWidth: 250,
             ),
@@ -596,7 +591,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
               // height: 200.0,
               child: ListView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics:  NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemCount: options.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -606,7 +601,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                       onSelected(option);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding:  EdgeInsets.all(16.0),
                       child: Text((option)),
                     ),
                   );
@@ -631,7 +626,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
             labelText: labelText,
             prefixIcon: prefixIcon == null
                 ? null
-                : Icon(prefixIcon, color: const Color(0xFF104065)),
+                : Icon(prefixIcon, color:  Color(0xFF104065)),
           ),
         );
       },

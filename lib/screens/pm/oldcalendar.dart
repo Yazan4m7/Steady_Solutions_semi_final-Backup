@@ -165,22 +165,22 @@
 //         onViewChanged: viewChanged,
 //         allowViewNavigation: true,
 //         headerStyle: CalendarHeaderStyle(
-//           textStyle: TextStyle(fontSize: 45.sp),
+//           textStyle: TextStyle(fontSize: 45),
 //         ),
 //         scheduleViewSettings: ScheduleViewSettings(
 //           appointmentItemHeight: 100.h,
-//           appointmentTextStyle: TextStyle(fontSize: 12.sp),
+//           appointmentTextStyle: TextStyle(fontSize: 12),
 //           dayHeaderSettings: DayHeaderSettings(
 //             dayFormat: 'EEE',
-//             dateTextStyle: TextStyle(fontSize: 12.sp),
+//             dateTextStyle: TextStyle(fontSize: 12),
 //           ),
 //           monthHeaderSettings: MonthHeaderSettings(
 //             monthFormat: 'MMMM yyyy',
 //             height: 100.h,
-//             monthTextStyle: TextStyle(fontSize: 16.sp),
+//             monthTextStyle: TextStyle(fontSize: 16),
 //           ),
 //           weekHeaderSettings: WeekHeaderSettings(
-//             weekTextStyle: TextStyle(fontSize: 12.sp),
+//             weekTextStyle: TextStyle(fontSize: 12),
 //           ),
 //         ),
 //         monthCellBuilder: monthCellBuilder,
@@ -251,13 +251,13 @@
 //             border: Border.all(color: kPrimeryColor2NavyDark, width: 1, ),
 //           ),
 //           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
+//             mainAxisAlignment: MainAxisAlignment.sp.center,
 //             crossAxisAlignment: CrossAxisAlignment.center,
 //             children: [
 //               Text(
 //                 details.date.day.toString(),
 //                 textAlign: TextAlign.center,
-//                 style: TextStyle(color: kPrimeryColor2NavyDark,fontSize: 25.sp,fontWeight: FontWeight.bold),
+//                 style: TextStyle(color: kPrimeryColor2NavyDark,fontSize: 25,fontWeight: FontWeight.bold),
               
               
 //                   ),
@@ -286,7 +286,7 @@
 //   //       child: Text(
 //   //         details.date.day.toString(),
 //   //         textAlign: TextAlign.center,
-//   //         style: TextStyle(color: kPrimeryColor2NavyDark,fontSize: 42.sp,fontWeight: FontWeight.bold),
+//   //         style: TextStyle(color: kPrimeryColor2NavyDark,fontSize: 42,fontWeight: FontWeight.bold),
 //   //       ),
 //   //     ),
 //   //   ),

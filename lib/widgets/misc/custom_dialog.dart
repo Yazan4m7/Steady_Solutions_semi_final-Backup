@@ -143,12 +143,19 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               ],
             ),
             child: CircleAvatar(
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.white,
               radius: dialogAvatarRadius,
-              child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                      Radius.circular(dialogAvatarRadius)),
-                  child: Image.asset(widget.inBox ? "assets/images/in_box_green.png" :"assets/images/logo_white_bg.jpg")),
+              child: widget.inBox
+                  ? Icon(
+                      Icons.check,
+                      color: Colors.green,
+                      size: 50.sp,
+                    )
+                  : Icon(
+                      Icons.error,
+                      color: Colors.red,
+                      size: 50.sp,
+                    )
             ),
           ),
         ),

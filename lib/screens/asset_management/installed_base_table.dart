@@ -154,15 +154,15 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // show filtering dialog
       filterDialog();
-      lisenter = _assetsManagementController.isLoading.listen(
-        (value) {
-          if (value) {
-            context.loaderOverlay.show();
-          } else {
-            context.loaderOverlay.hide();
-          }
-        },
-      );
+      // lisenter = _assetsManagementController.isLoading.listen(
+      //   (value) {
+      //     if (value) {
+      //       context.loaderOverlay.show();
+      //     } else {
+      //       context.loaderOverlay.hide();
+      //     }
+      //   },
+      // );
     });
 
     super.initState();
@@ -365,7 +365,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
        
       
           print("no overlays, poping");
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomeScreen()), (route) => true);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>  HomeScreen()), (route) => true);
           return true;
         
        

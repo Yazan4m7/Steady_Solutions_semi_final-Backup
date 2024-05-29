@@ -34,19 +34,19 @@ mixin Helper {
       return true;
     }
   }
-    bool isDeptsLoaded() {
-    if(_workOrdersController.allRooms.isEmpty || _workOrdersController.departments.isEmpty ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-   bool isRoomsLoaded(String deptId) {
-    if(_workOrdersController.allRooms.isEmpty || _workOrdersController.departments.isEmpty ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  //   bool isDeptsLoaded() {
+  //   if(_workOrdersController.allRooms.isEmpty || _workOrdersController.departments.isEmpty ) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
+  //  bool isRoomsLoaded(String deptId) {
+  //   if(_workOrdersController.allRooms.isEmpty || _workOrdersController.departments.isEmpty ) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
   
 }

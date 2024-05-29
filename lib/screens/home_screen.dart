@@ -18,7 +18,7 @@ import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:steady_solutions/widgets/side_bar.dart';
 class HomeScreen extends StatefulWidget {
 
-  const HomeScreen({super.key});
+   HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300))
+        vsync: this, duration:  Duration(milliseconds: 300))
       ..addListener(() {
         setState(() {});
       });
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen>
           floatingActionButton: SpeedDial(
             spacing: 0,
             spaceBetweenChildren: 0,
-            backgroundColor: const Color(0xFF104267),
+            backgroundColor:  Color(0xFF104267),
             //animatedIcon: AnimatedIcons.arrow_menu,
             overlayColor: Colors.black,
             overlayOpacity: 0.6,
@@ -78,18 +78,18 @@ class _HomeScreenState extends State<HomeScreen>
       
             children: [
               SpeedDialChild(
-                  child: const Icon(FontAwesomeIcons.wrench),
+                  child:  Icon(FontAwesomeIcons.wrench),
                   label: AppLocalizations.of(context).service_work_order,
                   labelStyle:  TextStyle(color: kPrimeryBlack,fontSize:30.sp),
                   onTap: () {
-                    Get.to(() => const NewServiceWorkOrderFrom());
+                    Get.to(() =>  NewServiceWorkOrderFrom());
                   },),
               SpeedDialChild(
-                  child: const Icon(FontAwesomeIcons.microchip),
+                  child:  Icon(FontAwesomeIcons.microchip),
                   label: AppLocalizations.of(context).service_equip_order,
                   labelStyle:  TextStyle(color: kPrimeryBlack,fontSize:30.sp),
                   onTap: () {
-                    Get.to(() => const NewEquipWorkOrderFrom());
+                    Get.to(() =>  NewEquipWorkOrderFrom());
                   },)
             ],
             child: SimpleAnimatedIcon(
@@ -102,11 +102,11 @@ class _HomeScreenState extends State<HomeScreen>
           key: scaffoldKey,
           drawer: SideBar(),
           body: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:  EdgeInsets.all(8.0),
             child: SafeArea(
               child: Container(
                 decoration: BoxDecoration(
-                color: Colors.white,
+                
                 borderRadius: BorderRadius.circular(10),
                 ),
                 child: PageView(
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
                   },
                   children: [
                     Dashboard(context: context),
-                    //QRScannerView(),
+                    QRScannerView(),
                     SizedBox(child: Text(AppLocalizations.of(context).approvals),),
                   ],
                 ),
@@ -131,58 +131,8 @@ class _HomeScreenState extends State<HomeScreen>
         );
   }
 
-  Widget _dashboardHeader(BuildContext context) {
-    return Row(
-      children: [
-        if (!Responsive.isDesktop(context))
-          IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              scaffoldKey.currentState!.openDrawer();
-            },
-          ),
-        Text(
-          AppLocalizations.of(context).dashboard,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        if (!Responsive.isMobile(context))
-          Text(
-            AppLocalizations.of(context).dashboard,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        if (!Responsive.isMobile(context))
-          Spacer(
-            flex: Responsive.isDesktop(context) ? 2 : 1,
-          ),
-      ],
-    );
-  }
 
-  Widget _buttonsContainer({
-    required BuildContext context,
-  }) {
-    int crossAxisCount = Responsive.getResponsiveGridCrossAxis(context);
-    double aspectRatio = Responsive.getResponsiveAspectRatio(context);
-    AppSizes sizes = AppSizes(context);
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 0,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: sizes.defaultPaddingValue,
-        mainAxisSpacing: sizes.defaultPaddingValue,
-        childAspectRatio: aspectRatio,
-      ),
-      itemBuilder: (context, index) {
-        return SizedBox();
-      },
-    );
-  }
-
+ 
   void animate() {
     if (_isOpened) {
       _animationController?.reverse();
@@ -197,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _bottomNavigationBar(context) {
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
+      borderRadius:  BorderRadius.only(
         topLeft: Radius.circular(25.0),
         topRight: Radius.circular(25.0),
         bottomLeft: Radius.circular(0.0),
@@ -253,16 +203,55 @@ Widget DashboardAppBar() {
       title: Text(AppLocalizations.of(context).dashboard),
       centerTitle: true,
       actions: [
-        IconButton(
-          color: Color(0xFF4e7ca2),
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
+               Container(
+               // color: Colors.blue,
+                width: MediaQuery.of(context).size.width * 0.15,
+                 child: Center(
+                   child: IconButton(
+                             color: Color(0xFF4e7ca2),
+                             icon: Stack(
+                               children: [
+                                 Icon(Icons.notifications, size: 100.w,),
+                                 Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Transform.translate(
+                                     offset: Offset(7, -5),
+                                     child: Container(
+                        padding: EdgeInsets.all(18.w),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          "5", // Replace with the actual number of unseen notifications
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                                 ),
+                               ],
+                             ),
+                             onPressed: () {
+                               // Handle onPressed event
+                             },
+                           ),
+                 ),
+               ),
+        // IconButton(
+        //   color: Color(0xFF4e7ca2),
+        //   icon:  Icon(Icons.notifications, size: 100.w,),
+        //   onPressed: () {
         
-          },
-        ),
-        
+        //   },
+        // ),
+        Obx( () =>
         GestureDetector(
-          child: Obx( ()=>
+          child: 
            Container(
               margin: EdgeInsets.only(right: 20.w,left:20.w),
               decoration: BoxDecoration(
@@ -275,13 +264,14 @@ Widget DashboardAppBar() {
                   vertical: MediaQuery.of(context).size.height * 0.011, 
                   horizontal: MediaQuery.of(context).size.height * 0.027),
                     child: Text(_authController.checkedIn.value ? 
-                  AppLocalizations.of(context).check_in : AppLocalizations.of(context).check_out,
+                   AppLocalizations.of(context).check_out : AppLocalizations.of(context).check_in,
                   style: TextStyle(color: Colors.white,fontSize: 32.sp),
                 ),
               ),
             ),
+             onTap: () => _authController.checkedIn.value  ? _authController.checkOut() : _authController.checkIn(), 
           ),
-          onTap: () => _authController.checkedIn.value  ? _authController.checkOut() : _authController.checkIn(), 
+         
         )]);}
 }
 

@@ -84,7 +84,7 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
                       child: TextFormField(
                           style: inputTextStyle,
                           keyboardType: TextInputType.url,
-                          autofocus: true,
+                         // autofocus: true,
                           controller: _controller,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -122,7 +122,7 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
                     ElevatedButton(
                       style: kPrimeryBtnStyle(context),
                       onPressed: _saveApiAddress,
-                      child: const Text('Submit'),
+                      child:  Text('Submit',style: TextStyle(fontSize: 20),),
                     ),
                   ],
                 ),
@@ -143,7 +143,7 @@ Widget _logo(BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            "assets/images/logos/steadyOMS_Colored.png",
+            "assets/images/logos/DefaultOMS.png",
             width: MediaQuery.of(context).size.width / 1.4,
           ),
         ],

@@ -23,52 +23,52 @@ class ApiAddressController extends GetxController {
   Future<void> readUrlAddressFromLocalStorage() async {
     print("Read from local storage : ${storageBox.read("api_url")}");
      apiAddress.value = storageBox.read("api_url") ??"";
-    if (apiAddress.value.isEmpty || apiAddress.value == "" || storageBox.read("api_url").isEmpty || storageBox.read("api_url") == "") {
-      Get.dialog(
-        AlertDialog(
-          title: const Text('Error'),
-          content: const Text('Invalid API address detetected. Please enter a valid API address.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.offAll(const ApiAddressScreen());
-              },
-              child: const Text('Enter URL'),
-            ),
-          ],
-        ),
-      );
+    //  if(apiAddress.value.isEmpty || apiAddress.value == "" )
+    //  Get.to(ApiAddressScreen());
+    // // if (apiAddress.value.isEmpty || apiAddress.value == "" || storageBox.read("api_url").isEmpty || storageBox.read("api_url") == "") {
+    //   Get.dialog(
+    //     AlertDialog(
+    //       title: const Text('Error'),
+    //       content: const Text('Invalid API address detetected. Please enter a valid API address.'),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Get.offAll(const ApiAddressScreen());
+    //           },
+    //           child: const Text('Enter URL'),
+    //         ),
+    //       ],
+    //     ),
+    //   );
       
      
-    }
+    // }
   }
   
 
   @override
   void onReady() {
-   
-    apiAddress.listen((value) {
-      print("API LISTENER: $value");
-      if ( value.isEmpty || value.length < 2 || value == "") {
-        Get.dialog(
-          AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Invalid API address detetected. Please enter a valid API address.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.offAll(const ApiAddressScreen());
-                },
-                child: const Text('Enter URL'),
-              ),
-            ],
-          ),
-        );
-      }else{
-        print("Listned to api address : $value");
-      }
+      // String value = apiAddress.value;
+      // print("API LISTENER: $value");
+      // if ( value.isEmpty || value.length < 2 || value == "") {
+      //   Get.dialog(
+      //     AlertDialog(
+      //       title: const Text('Error'),
+      //       content: const Text('Invalid API address detetected. Please enter a valid API address.'),
+      //       actions: [
+      //         TextButton(
+      //           onPressed: () {
+      //             Get.offAll(const ApiAddressScreen());
+      //           },
+      //           child: const Text('Enter URL'),
+      //         ),
+      //       ],
+      //     ),
+      //   );
+      // }else{
+      //   print("Listned to api address : $value");
+      // }
 
-     });
    
     super.onReady();
   } 
@@ -111,29 +111,115 @@ class ApiAddressController extends GetxController {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
    
       } else {
-        CustomDialogBox(
-           title: AppLocalizations.of(context)!.wrongEntry,
-           descriptions: AppLocalizations.of(context)!.checkUrlMsg,
-           text: "OK",
-           inBox: false,
-           playSound: false,
-         );
+          Get.dialog(Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(AppLocalizations.of(context).connection_failed),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              //Image.asset("assets/images/.png"),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  AppLocalizations.of(context).checkUrlMsg,
+                ),
+              ),
+              const Divider(
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              InkWell(
+                onTap: () {
+                  Get.back();
+                },
+                child: Center(
+                  child: Container(
+                    height: 30,
+                    width: 70,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Text(
+                      AppLocalizations.of(context).retry,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+       
      
-     
+     Get.to(()=>ApiAddressScreen());
     }
       }
      catch (e) {
-      if(kDebugMode)
-      rethrow;
-      else {
-        CustomDialogBox(
-        title: "Error",
-        descriptions: e.toString(),
-        text: "OK",
-        inBox: false,
-        playSound: false,
-      );
-      }
+      //if(kDebugMode)
+      //rethrow;
+      
+        Get.dialog(Dialog(
+        backgroundColor: Colors.red,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(AppLocalizations.of(context).connection_failed),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              //Image.asset("assets/images/.png"),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  AppLocalizations.of(context).checkUrlMsg,
+                ),
+              ),
+              const Divider(
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              InkWell(
+                onTap: () {
+                  Get.back();
+                },
+                child: Center(
+                  child: Container(
+                    height: 30,
+                    width: 70,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Text(
+                      AppLocalizations.of(context).retry,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+      storageBox.write("isLoggedIn", false);
+      
     }
   }
 

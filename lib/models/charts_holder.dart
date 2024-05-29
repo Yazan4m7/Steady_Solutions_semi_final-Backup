@@ -236,7 +236,7 @@
 //                     return DropdownMenuItem<TextDirection>(
 //                         value: value,
 //                         child: Text(
-//                             value.toString().split('.')[1].toUpperCase(),
+//                             value.toString()lit('.')[1].toUpperCase(),
 //                             style: TextStyle(color: model.textColor)));
 //                   }).toList(),
 //                   onChanged: (TextDirection? value) {

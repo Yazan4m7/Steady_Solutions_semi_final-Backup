@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:steady_solutions/app_config/style.dart';
+import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 
@@ -14,10 +15,12 @@ class LoginScreen extends StatelessWidget  {
   LoginScreen({super.key});
   //static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthController _authController = Get.find<AuthController>();
-
+ final ApiAddressController _apiController = Get.find<ApiAddressController>();
   static TextEditingController _emailTFController = TextEditingController();
   static TextEditingController _passwordTFController = TextEditingController();
   static String? role;
+
+ 
   @override
   Widget build(BuildContext context) {
 
@@ -97,7 +100,7 @@ class LoginScreen extends StatelessWidget  {
             const Spacer(),
             Expanded(
               flex: 6,
-              child: Image.asset("assets/images/logos/steadyOMS_Colored.png"),
+              child: Image.asset("assets/images/logos/DefaultOMS.png"),
             ),
             const Spacer(),
           ],
