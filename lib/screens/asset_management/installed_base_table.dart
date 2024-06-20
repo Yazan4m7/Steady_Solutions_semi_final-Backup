@@ -13,7 +13,8 @@ import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/pm/manufacturer.dart';
 import 'package:steady_solutions/screens/asset_management/table_structure.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
-
+import 'package:syncfusion_flutter_datagrid_export/export.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row, Border;
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,7 +29,7 @@ class InstalledBaseList extends StatefulWidget {
 class _InstalledBaseListState extends State<InstalledBaseList> {
   final AssetsManagementController _assetsManagementController =
       Get.find<AssetsManagementController>();
-  // Data to be sent to the server
+  final GlobalKey<SfDataGridState> _key = GlobalKey<SfDataGridState>();
 
   /// List after structuring it for the data grid
   final Rx<InstalledBaseDataSource> _installedBaseDataSource =
@@ -406,6 +407,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
                                 headerHoverColor: Colors.yellow),
                             child: Obx(
                               () => SfDataGrid(
+                                  key: _key,
                                   sortingGestureType:
                                       SortingGestureType.doubleTap,
                                   headerRowHeight:
@@ -579,6 +581,21 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
   );
   }
 
+Future<void> exportDataGridToExcel() async {
+      final Workbook workbook = _key.currentState!.exportToExcelWorkbook(
+          cellExport: (DataGridCellExcelExportDetails details) {
+        if (details.cellType == DataGridExportCellType.columnHeader) {
+          final bool isRightAlign = details.columnName == 'Product No' ||
+              details.columnName == 'Shipped Date' ||
+              details.columnName == 'Price';
+          details.excelRange.cellStyle.hAlign =
+              isRightAlign ? HAlignType.right : HAlignType.left;
+        }
+      });
+      final List<int> bytes = workbook.saveAsStream();
+      workbook.dispose();
+      //await helper.FileSaveHelper.saveAndLaunchFile(bytes, 'DataGrid.xlsx');
+    }
 }
 
 

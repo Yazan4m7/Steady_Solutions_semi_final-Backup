@@ -165,22 +165,22 @@
 //         onViewChanged: viewChanged,
 //         allowViewNavigation: true,
 //         headerStyle: CalendarHeaderStyle(
-//           textStyle: TextStyle(fontSize: 45),
+//           textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(),
 //         ),
 //         scheduleViewSettings: ScheduleViewSettings(
 //           appointmentItemHeight: 100.h,
-//           appointmentTextStyle: TextStyle(fontSize: 12),
+//           appointmentTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(),
 //           dayHeaderSettings: DayHeaderSettings(
 //             dayFormat: 'EEE',
-//             dateTextStyle: TextStyle(fontSize: 12),
+//             dateTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(),
 //           ),
 //           monthHeaderSettings: MonthHeaderSettings(
 //             monthFormat: 'MMMM yyyy',
 //             height: 100.h,
-//             monthTextStyle: TextStyle(fontSize: 16),
+//             monthTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(),
 //           ),
 //           weekHeaderSettings: WeekHeaderSettings(
-//             weekTextStyle: TextStyle(fontSize: 12),
+//             weekTextStyle: Theme.of(context).textTheme.bodySmall?.copyWith(),
 //           ),
 //         ),
 //         monthCellBuilder: monthCellBuilder,
@@ -257,7 +257,7 @@
 //               Text(
 //                 details.date.day.toString(),
 //                 textAlign: TextAlign.center,
-//                 style: TextStyle(color: kPrimeryColor2NavyDark,fontSize: 25,fontWeight: FontWeight.bold),
+//                 style: Theme.of(context).textTheme.displayLarge?.copyWith(color: kPrimeryColor2NavyDark,),
               
               
 //                   ),
@@ -286,7 +286,7 @@
 //   //       child: Text(
 //   //         details.date.day.toString(),
 //   //         textAlign: TextAlign.center,
-//   //         style: TextStyle(color: kPrimeryColor2NavyDark,fontSize: 42,fontWeight: FontWeight.bold),
+//   //         style: Theme.of(context).textTheme.displayLarge?.copyWith(color: kPrimeryColor2NavyDark,),
 //   //       ),
 //   //     ),
 //   //   ),

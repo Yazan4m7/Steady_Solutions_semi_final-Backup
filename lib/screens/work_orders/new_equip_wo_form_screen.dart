@@ -15,6 +15,7 @@ import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
+import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/work_orders/site.dart';
 import 'package:steady_solutions/models/work_orders/work_order_model.dart';
 import 'package:steady_solutions/models/work_orders/call_type.dart';
@@ -25,8 +26,8 @@ import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_localizations/flutter_localizations.dart';
 class NewEquipWorkOrderFrom extends StatefulWidget {
-   NewEquipWorkOrderFrom({Key? key}) : super(key: key);
-
+   NewEquipWorkOrderFrom({Key? key,this.controlNumber}) : super(key: key);
+  String? controlNumber;
   @override
   State<NewEquipWorkOrderFrom> createState() => _NewEquipWorkOrderFromState();
 }
@@ -71,7 +72,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
   void initState() {
     _workOrderController.fetchNewWorkOrderOptions();
     _workOrderController.controlItem.value = ControlItem();
-
+    if(widget.controlNumber != null){
+   _workOrderController.getControlItem(
+                                  controlNum: widget.controlNumber!);
+      controlNumberTEController.text = widget.controlNumber!;              
+                    }
      WidgetsBinding.instance.addPostFrameCallback((_) {
       print("INIT LISTENER");
       print(lisenter?.isPaused);
@@ -94,7 +99,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 text: "Continue",
                 iconData: Icons.check,
                 color: Colors.green,
-                textStyle: TextStyle(color: Colors.white),
+                textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                 ),
                 IconsButton(
                 onPressed: () {
@@ -103,7 +108,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 text: "Cancel",
                 iconData: Icons.cancel,
                 color: Colors.red,
-                textStyle: TextStyle(color: Colors.white),
+                textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                 ),
               ],
               barrierDismissible: false,
@@ -143,7 +148,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
           centerTitle: true,
           iconTheme:  IconThemeData(color: Color(0xFF4e7ca2)),
           title:  Text("${AppLocalizations.of(context).create_work_order}",
-              style: TextStyle(color: Color(0xFF4e7ca2),fontWeight: FontWeight.w600)),
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -185,8 +190,9 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                           labelText: AppLocalizations.of(context).control_number,
                           prefixIcon: Icons.confirmation_number_outlined,
                           controller: controlNumberTEController,
+                         // enabled: widget.controlNumber != null ? true : false,
                           suffexIcon: IconButton(
-                            icon:  Icon(Icons.search),
+                            icon:  Icon(Icons.search ,color: widget.controlNumber != null ? Color.fromARGB(255, 95, 95, 95): Color(0xFF4e7ca2)),
                             onPressed: () {
                               _workOrderController.getControlItem(
                                   controlNum: controlNumberTEController.text);
@@ -206,6 +212,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                       width: 15.w,
                     ),
                     IconButton(
+                      
                         style: ButtonStyle(
                           padding:
                               MaterialStateProperty.all(EdgeInsets.all(50.w)),
@@ -218,8 +225,8 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                   borderRadius: BorderRadius.circular(20))),
                         ),
                         icon:
-                             Icon(Icons.qr_code, color: Color(0xFF4e7ca2)),
-                        onPressed: () async {
+                             Icon(Icons.qr_code, color: widget.controlNumber != null ? Color.fromARGB(255, 42, 42, 42): Color(0xFF4e7ca2)),
+                        onPressed: widget.controlNumber != null ?  null: () async {
                           Get.to(() =>  QRScannerView());
                         }),
                   ],
@@ -387,9 +394,10 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                       _image == null ?   ElevatedButton(
                         style: kSmallSecondaryBtnStyle(context),
                         onPressed: () async {
-                        final image = await _getImageFromCamera();
+                         await _getImageFromCamera();
                         setState(() {
-                          _image = image as File?;
+                         
+                          print("Image is ${_image?.path}");
                         });
                         },
                         //style: kSmallBtnStyle(context),
@@ -445,7 +453,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               //   text: 'Close',
                               //   iconData: Icons.copy,
                               //   color: Colors.blue,
-                              //   textStyle:  TextStyle(color: Colors.white),
+                              //   textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                               //   iconColor: Colors.white,
                               // ),
                               IconsButton(
@@ -455,13 +463,13 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 text: AppLocalizations.of(context).close,
                                 iconData: Icons.done,
                                 color: Colors.blue,
-                                textStyle:  TextStyle(color: Colors.white),
+                                textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                 iconColor: Colors.white,
                               ),
                             ]);
                       } else {
                         Dialogs.materialDialog(
-                          titleStyle: TextStyle(fontSize:50, color: Colors.red),
+                          titleStyle: Theme.of(context).textTheme.displayLarge!.copyWith(color: Colors.red,),
                           msgStyle: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.redAccent),
                             //color: Colors.white,
                             msg:AppLocalizations.of(context).failed_to_create_work_order,
@@ -471,7 +479,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               fit: BoxFit.contain,
                             ),
                             customView:
-                                Container(child: Text(response.message,style: TextStyle(fontSize: 30),)),
+                                Container(child: Text(response.message,style: Theme.of(context).textTheme.displayLarge?.copyWith(),)),
                             customViewPosition:
                                 CustomViewPosition.BEFORE_ACTION,
                             context: context,
@@ -483,7 +491,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 text: AppLocalizations.of(context).close,
                                 iconData: Icons.close,
                                 color: Colors.red,
-                                textStyle:  TextStyle(color: Colors.white),
+                                textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                 iconColor: Colors.white,
                               ),
                             ]);
@@ -575,6 +583,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
           if (object is CallType) {
             callType.value = object;
           }
+          if (object is Department) {
+            _workOrderController.getRoomsList(departmentId: object.value ?? '0');
+          }
+
+
         }
       },
       optionsViewBuilder: (context, onSelected, options) => Align(

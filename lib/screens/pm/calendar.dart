@@ -61,7 +61,7 @@ class _AgendaViewCalendarState extends State<AgendaViewCalendar> {
         centerTitle: true,
         iconTheme: const IconThemeData(color: Color(0xFF4e7ca2)),
         title: Text(AppLocalizations.of(context).calendar,
-            style: const TextStyle(color: Color(0xFF4e7ca2))),
+            style:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Color(0xFF4e7ca2,))),
       ),
       body: SafeArea(
         child: Container(
@@ -125,11 +125,9 @@ class _AgendaViewCalendarState extends State<AgendaViewCalendar> {
             dataSource:_PMWODataSource(_pmController.calendarItems.value.values.toList()),
             allowAppointmentResize: true,
            // monthCellBuilder: (context, details) => CalenderCell(details),
-            headerStyle: const CalendarHeaderStyle(
+            headerStyle:  CalendarHeaderStyle(
               textAlign: TextAlign.center,
-              textStyle: TextStyle(
-                fontSize: 18,
-                color: Color.fromARGB(255, 7, 138, 90),
+              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Color.fromARGB(255, 7, 138, 90,),
                 fontWeight: FontWeight.w400,
               ),
             ),

@@ -1,3 +1,5 @@
+
+ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,16 +7,26 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
+import 'package:steady_solutions/models/charts_models.dart';
+import 'package:steady_solutions/models/dashboard/chart_data.dart';
 import 'package:steady_solutions/models/dashboard/dashboard_widget.dart';
+import 'package:steady_solutions/models/dashboard/doughnut_chart_dat.dart';
 import 'package:steady_solutions/models/dashboards/pm_cm_performance.dart';
+import 'package:steady_solutions/screens/auth/api_address_screen.dart';
+import 'package:steady_solutions/screens/dashboard/dashboard.dart';
 import 'dart:convert';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_datagrid_export/export.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row, Border;
 
 import 'package:steady_solutions/screens/home_screen.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DashboardController extends GetxController {
   RxMap<String, dynamic> dashboardWidgets = <String, dynamic>{}.obs;
   final selectedWidgets = <DashboardWidgets>[].obs;
-
+ 
   RxMap<String, bool> loading = <String, bool>{
     'PM': false,
     'CM': false,
@@ -27,38 +39,59 @@ class DashboardController extends GetxController {
     "min": "00:00",
     "max": "00:00",
   }.obs;
-  RxMap<String, String> WOByYear = <String, String>{
-    "Jan": "14",
-    "Feb": "21",
-    "Mar": "18",
-    "Apr": "16",
-    "May": "21",
-    "Jun": "6",
-    "Jul": "6",
-    "Aug": "12",
-    "Sep": "14",
-    "Oct": "28",
-    "Nov": "15",
-    "Dec": "23"
+   RxMap<String, String> workingEquipmentData = <String, String>{
   }.obs;
+  List<ChartSampleData> e_by_class = <ChartSampleData>[
+    ];
   Rx<DashboardWidgetModel> pmPerformance = DashboardWidgetModel().obs;
   Rx<DashboardWidgetModel> cmPerformance = DashboardWidgetModel().obs;
   Rx<String> MTTR = "".obs;
   Rx<String> MTBF = "".obs;
+  RxList<PartsConsumptionChartData> partsConsumptionChartData = <PartsConsumptionChartData>[].obs;
+  List<ChartData> chartData = [];
 
+  final List<WOByYearChartData> woByYearChartData = [
+  ];
+
+
+
+   RxList<ChartData>? byCategoryChartData = <ChartData>[].obs;
   @override
   onInit() {
  
     super.onInit();
-    _fetchChartsData();
-  }
+    fetchChartsData();
+      
 
-  void _fetchChartsData() async{
+    
+  }
+   static RxBool isDataLoaded = false.obs;
+
+  void fetchChartsData() async{
+    if (storageBox.read('api_url') != null && !isDataLoaded.value && storageBox.read("id") != null) {
     await fetchCMPerformance(1);
+    // await Future.delayed(Duration(seconds: 1));
     await fetchCMPerformance(2);
+   //  await Future.delayed(Duration(seconds: 1));
     await fetchMTTR();
+   //  await Future.delayed(Duration(seconds: 1));
     await fetchMTBF();
+   //  await Future.delayed(Duration(seconds: 1));
     await fetchAvgDownTime();
+   //  await Future.delayed(Duration(seconds: 1));
+    await fetchWObyYear();
+   //  await Future.delayed(Duration(seconds: 1));
+    await fetchWObyCategory();
+   //  await Future.delayed(Duration(seconds: 1));
+    await fetchPartsConsumption();
+   //  await Future.delayed(Duration(seconds: 1));
+    await workingEquipment();
+    // await Future.delayed(Duration(seconds: 1));
+    await equipByClass();
+  
+    isDataLoaded = true.obs;
+    }
+  
   //   await fetchWObyCategory();
   //   await fetchPartsConsumption();
   //   await workingEquipment();
@@ -73,7 +106,7 @@ class DashboardController extends GetxController {
     }
     saveSelectedWidgets();
   }
-    void addSelectedWidget(DashboardWidgets type) {
+  void addSelectedWidget(DashboardWidgets type) {
 
       selectedWidgets.add(type);
     
@@ -102,23 +135,11 @@ class DashboardController extends GetxController {
   // Function to fetch data for a specific ID
   Future<void> fetchCMPerformance(int type) async {
   
-    // 1= PM , 2= CM
-    if (type == 1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-      loading['PM'] = true;
-      });
-    
-     
-    }
-    if (type == 2) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-      loading['CM'] = true;
-       });
-       
-    }
+  
     // ignore: unused_local_variable
     Rx<bool> isLoading = true.obs;
     final Map<String, String> params = {
+       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
 
@@ -156,26 +177,13 @@ class DashboardController extends GetxController {
       loading['CM'] = false;
     } catch (e) {
       if (kDebugMode) {
-        rethrow;
+        print("Cannot connect to API-----------------------");
+        //rethrow;
       } else {
-        Get.to(HomeScreen());
+        Get.to(ApiAddressScreen());
       }
     }
-     if (type == 1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-      loading['PM'] = false;
     
-      });
-    
-        
-    }
-    if (type == 2) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-      loading['CM'] = false;
-   
-       });
-        
-    }
     //storageBox.write("dashboardWidgets", dashboardWidgets);
   }
 
@@ -321,20 +329,230 @@ class DashboardController extends GetxController {
   }
 
   Future<void> fetchWObyCategory() async {
- 
-  }
+  try {
+  final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+      String url = "http://${storageBox.read('api_url')}$getWOByCategoryEndPoint";
+      print(Uri.parse(url).replace(queryParameters: params));
+      final response =
+          await http.get(Uri.parse(url).replace(queryParameters: params));
 
+      print("WO BY Category Response : " + response.body);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+       
+        final List<String> categories = List<String>.from(jsonData['IChartCategoryName']);
+        final List<int> jobCounts = List<int>.from(jsonData['IChartJobNOCount']);
+        final List<double> performances = List<double>.from(jsonData['IChartPerformance']);
+
+        if (categories.length != jobCounts.length || jobCounts.length != performances.length) {
+          throw ArgumentError('Lists in JSON have different lengths');
+        }
+
+        
+        for (int i = 0; i < categories.length; i++) {
+          print("add");
+          byCategoryChartData!.add(ChartData(category: categories[i], jobCount:jobCounts[i],performance: performances[i]));
+          }
+
+
+        dashboardWidgets["wo_by_category"] = byCategoryChartData;
+      } else {
+      //  print("FALSE2");R
+
+      }
+     
+    }
+    catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      } else {
+        Get.snackbar("Error 193", "(WO BY Cat) Exep.data fetching");
+       // Get.to(HomeScreen());
+      }
+    }
+  }
+ Future<void> fetchWObyYear() async {
+ try {
+  final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+      String url = "http://${storageBox.read('api_url')}$getWOByYearEndPoint";
+      print(Uri.parse(url).replace(queryParameters: params));
+      final response =
+          await http.get(Uri.parse(url).replace(queryParameters: params));
+
+      print("WO BY YEAR Response : " + response.body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+         
+          List<String> monthNames = List<String>.from(data['IMonthName']);
+           List<int> monthdata = List<int>.from(data['IYearData']);
+         
+
+
+
+           
+          print("add");
+          for (int i = 0; i < monthNames.length; i++) {
+            woByYearChartData.add(WOByYearChartData(monthNumber: i, WOCount: monthdata[i],monthName: monthNames[i]));
+          }
+          
+    
+      } else {
+      //  print("FALSE2");
+
+      }
+     
+    }
+    catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      } else {
+        Get.snackbar("Error 010", "(WO BY YEAR) Exep.data fetching");
+       // Get.to(HomeScreen());
+      }
+    }
+  }
   Future<void> fetchPartsConsumption() async {
     
+     final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+
+    try {
+    
+      final response = await http.get(
+          Uri.parse("http://${storageBox.read('api_url')}$getPartsConsumptionEndPoint")
+              .replace(queryParameters: params));
+
+      print("fetchPartsConsumption Response : " + response.body);
+     
+   
+      if (response.statusCode == 200) {
+         final Map<String, dynamic> jsonData = jsonDecode(response.body);
+            List<int> quantites = List<int>.from(jsonData['InventoryPartConsumbtionData1']);
+       List<int> costPrices = List<int>.from(jsonData['InventoryPartConsumbtionData2']);
+       List<String> monthNames = [
+         "Jan",
+         "Feb",
+         "Mar",
+         "Apr",
+         "May",
+         "Jun",
+         "Jul",
+         "Aug",
+         "Sep",
+         "Oct",
+         "Nov",
+         "Dec"
+       ];
+          for (int i = 0; i < quantites.length; i++) {
+          partsConsumptionChartData.add(PartsConsumptionChartData(quantity: quantites[i], costPrice:costPrices[i],montNumber: i, monthName: monthNames[i]));
+          }
+
+      } else {
+        // loading['MTBF'] = false;
+        Get.snackbar("Error 066",
+            "PartsConsumption |  Server resposned with status code ${response.statusCode}");
+      }
+
+      // loading['MTBF'] = false;
+    } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      } else {
+        Get.snackbar("Error 066", "(PartsConsumption) Exep. in data fetching");
+       // Get.to(HomeScreen());
+      }
+    }
+
+
   }
 
   Future<void> workingEquipment() async {
- 
-       toggleWidgetSelection(DashboardWidgets.workingEquipmentIndicator);
+     final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+
+    try {
+      print(Uri.parse("http://${storageBox.read('api_url')}$getWorkingEquipmentEndPoint")
+          .replace(queryParameters: params));
+      final response = await http.get(
+          Uri.parse("http://${storageBox.read('api_url')}$getWorkingEquipmentEndPoint")
+              .replace(queryParameters: params));
+
+      print(" Working equip Response : " + response.body);
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        workingEquipmentData["Working"]=data["Working"];
+        workingEquipmentData["Condem"]=data["Condem"];
+        workingEquipmentData["CondemPercent"]=data["CondemPercent"];
+      } else {
+        // loading['MTBF'] = false;
+        Get.snackbar("Error 066",
+            "Server resposned with status code ${response.statusCode}");
+      }
+
+      // loading['MTBF'] = false;
+    } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      } else {
+        Get.snackbar("Error 066", "(Working equip) Exep. in data fetching");
+       // Get.to(HomeScreen());
+      }
+    }
   }
 
   Future<void> equipByClass() async {
-   
-       toggleWidgetSelection(DashboardWidgets.equipByClassChart);
+   final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+       try {
+      print(Uri.parse("http://${storageBox.read('api_url')}$getEquipmentByClassEndPoint")
+          .replace(queryParameters: params));
+      final response = await http.get(
+          Uri.parse("http://${storageBox.read('api_url')}$getEquipmentByClassEndPoint")
+              .replace(queryParameters: params));
+
+      print(" equipByClass Response : " + response.body);
+      if (response.statusCode == 200) {
+         final Map<String, dynamic> jsonData = jsonDecode(response.body);
+          final List<dynamic> pieDataList = jsonData['success'];
+
+            e_by_class = pieDataList.map((item) {
+              return ChartSampleData(
+                x: item['name'],
+                y: item['value'],
+                text: item['parent'],
+              );
+            }).toList();
+            e_by_class = e_by_class.where((item) => item.x != '0.0').toList();
+                } else {
+        // loading['MTBF'] = false;
+        Get.snackbar("Error 066",
+            "equipByClass resposned with status code ${response.statusCode}");
+      }}
+      catch(e){
+        if(kDebugMode) {
+          rethrow;
+      }
+
+    } 
+
+
   }
+}
+class _ChartData {
+  _ChartData(this.x, this.y, this.y2);
+  final double x;
+  final double y;
+  final double y2;
 }

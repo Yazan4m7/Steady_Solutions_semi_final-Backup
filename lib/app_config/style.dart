@@ -30,7 +30,7 @@ Color kTFsecondaryColor = Color.fromARGB(255, 107, 107, 107);
 ////////// Text Widgets font color //////////
 Color bodyColor = Color.fromARGB(255, 105, 122, 144);
 
-Color greyTextColor = const Color(0xffc7c5cc);
+Color greyTextColor = Color.fromARGB(255, 132, 132, 132);
 
 ////////////////// TEXT STYLES ///////////////////////
 TextStyle inputTextStyle =
@@ -44,7 +44,7 @@ TextStyle inputHintStyle = TextStyle(color: Colors.grey, fontSize: 45.sp);
 TextStyle dialogInnerDetailsTextStyle =
     TextStyle(color: Color.fromARGB(255, 48, 48, 48), fontSize: 43.sp,fontWeight: FontWeight.w300);
 TextStyle dialogValueTitlesDetailsTextStyle =
-    TextStyle(color: Color.fromARGB(255, 25, 25, 25), fontSize: 45.sp,fontWeight: FontWeight.w400);
+    TextStyle(color: Color.fromARGB(255, 25, 25, 25), fontSize: 45.sp,fontWeight: FontWeight.w600);
 TextStyle dialogTitleTextStyle = TextStyle(
     color: kPrimeryColor2NavyDark,
     fontSize: 65.sp,
@@ -53,7 +53,7 @@ TextStyle dialogTitleTextStyle = TextStyle(
 InputDecoration kTextFieldDecoration = InputDecoration(
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
-        color: kTFprimaryColor
+        color: Colors.white
             .withOpacity(0.7)), // Change this color to your preference
     borderRadius: const BorderRadius.all(Radius.circular(20)),
   ),
@@ -65,7 +65,7 @@ InputDecoration kTextFieldDecoration = InputDecoration(
   ),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(
-        color: kTFsecondaryColor), // Change this color to your preference
+        color: Colors.white), // Change this color to your preference
     borderRadius: const BorderRadius.all(Radius.circular(10)),
   ),
   prefixIcon: const Icon(Icons.link),
@@ -73,30 +73,58 @@ InputDecoration kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10)),
   ),
   labelText: '',
-  labelStyle: TextStyle(color: kTFprimaryColor, fontSize: 45.sp),
+  labelStyle: TextStyle(color: Colors.white, fontSize: 45.sp),
 );
 
 ////////////////// Buttons Styles ///////////////////////
 ButtonStyle kPrimeryBtnStyle(BuildContext context) {
   return ButtonStyle(
-    padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0), // Adjust border radius
+        side: BorderSide(color: Colors.white),
+      ),
+    ),
+    padding: WidgetStateProperty .all(EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * .19,
         vertical: MediaQuery.of(context).size.height * .013)),
     // Adjust these colors to your preference
     alignment: Alignment.center,
     foregroundColor:
-        MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 255, 255)),
+        WidgetStateProperty .all<Color>(Colors.white),
     backgroundColor:
-        MaterialStateProperty.all<Color>(Color(0xFF00a853)), // Blue color
-    overlayColor: MaterialStateProperty.all<Color>(Color(0xFF1f2e38)),
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        WidgetStateProperty .all<Color>(Colors.transparent), // Blue color
+    overlayColor: WidgetStateProperty .all<Color>(Color(0xFF1f2e38)),
+    
+    // shape: WidgetStateProperty .all<RoundedRectangleBorder>(
+  
+    //   RoundedRectangleBorder(
+        
+    //     borderRadius: BorderRadius.circular(20.0), // Adjust border radius
+      
+    //   ),
+    //),
+  );
+}
+ButtonStyle kPrimeryBtnNoPaddingStyle(BuildContext context) {
+  return ButtonStyle(
+    padding: WidgetStateProperty .all(EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * .08,
+        vertical: MediaQuery.of(context).size.height * .013)),
+    // Adjust these colors to your preference
+    alignment: Alignment.center,
+    foregroundColor:
+        WidgetStateProperty .all<Color>(Color.fromARGB(255, 255, 255, 255)),
+    backgroundColor:
+        WidgetStateProperty .all<Color>(Color(0xFF00a853)), // Blue color
+    overlayColor: WidgetStateProperty .all<Color>(Color(0xFF1f2e38)),
+    shape: WidgetStateProperty .all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0), // Adjust border radius
       ),
     ),
   );
 }
-
 ButtonStyle kSmallBtnStyle(BuildContext context) {
   return ButtonStyle(
     padding: MaterialStateProperty.all(EdgeInsets.symmetric(

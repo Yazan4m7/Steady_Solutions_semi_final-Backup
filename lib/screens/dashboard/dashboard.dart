@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:glossy/glossy.dart';
 import 'package:steady_solutions/controllers/dashboard_controller.dart';
 import 'package:steady_solutions/core/data/app_sizes.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,563 +14,843 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/gps_mixin.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
+import 'package:steady_solutions/models/charts_models.dart';
 import 'package:steady_solutions/models/dashboard/chart_data.dart';
-import 'package:steady_solutions/screens/dashboard/dashboard_widgets/charts/bar_chart.dart';
-import 'package:steady_solutions/screens/dashboard/dashboard_widgets/categories_grid/categories_grid.dart';
-import 'package:steady_solutions/screens/dashboard/dashboard_widgets/charts/circular_chart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:steady_solutions/controllers/notifications_controller.dart';
+import 'package:card_swiper/card_swiper.dart';
 
-class Dashboard extends StatefulWidget {
-  Dashboard({
+class DashboardScreen extends StatefulWidget {
+  DashboardScreen({
     super.key,
-    required this.context,
   });
 
-  final BuildContext context;
-
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardScreenState extends State<DashboardScreen> {
   final TooltipBehavior? _tooltipBehavior = TooltipBehavior(enable: true);
-  static final  DashboardController _dashboardsController =
+  static final DashboardController _dashboardsController =
       Get.find<DashboardController>();
+  NotificationsController _notificationsController =
+      Get.find<NotificationsController>();
   @override
   initState() {
+    _notificationsController.fetchNotifications();
     _dashboardsController.loadSelectedWidgets();
+    if (DashboardController.isDataLoaded.value)
+      _dashboardsController.fetchChartsData();
     super.initState();
   }
 
-final Map<DashboardWidgets, Widget Function(BuildContext)> widgetBuilders = {
-  DashboardWidgets.CMPerformanceChart: (context) => CMPerformanceChart(context),
-    DashboardWidgets.PMPerformanceChart : (context) => PMPerformanceChart(context),
-  DashboardWidgets.MTTRIndicator : (context) => MTTRContainer(context),
-  DashboardWidgets.MTBFIndicator : (context) => MTBFContainer(context),
-  DashboardWidgets.AvgDownTimeIndicator : (context) => AvgDownTimeContainer(context),
-
-
-  // DashboardWidgets.WOByCategoryChart : (context) => CMPerformanceChart(context),
-  // DashboardWidgets.WOByYearTable : (context) => CMPerformanceChart(context),
-  // DashboardWidgets.PartsConsumptionChart : (context) => CMPerformanceChart(context),
-  // DashboardWidgets.workingEquipmentIndicator : (context) => CMPerformanceChart(context),
-};
-
+  final Map<DashboardWidgets, Widget Function(BuildContext)> widgetBuilders = {
+    DashboardWidgets.CMPerformanceChart: (context) =>
+        CMPerformanceChart(context),
+    DashboardWidgets.PMPerformanceChart: (context) =>
+        PMPerformanceChart(context),
+    DashboardWidgets.MTTRIndicator: (context) => MTTRContainer(context),
+    DashboardWidgets.MTBFIndicator: (context) => MTBFContainer(context),
+    DashboardWidgets.AvgDownTimeIndicator: (context) =>
+        AvgDownTimeContainer(context),
+    DashboardWidgets.WOByCategoryChart: (context) => WOByCategory(context),
+    DashboardWidgets.WOByYearTable: (context) => WOByYearChart(context),
+    DashboardWidgets.PartsConsumptionChart: (context) =>
+        fetchPartsConsumption(context),
+    DashboardWidgets.workingEquipmentIndicator: (context) =>
+        workingEquipmentIndicator(context),
+    DashboardWidgets.equipByClassChart: (context) => fetchEquipByClass(context),
+  };
+  List pmPerformanceCharts = [
+    Container(
+      color: Colors.red,
+    ),
+    Container(
+      color: Colors.blue,
+    ),
+    Container(
+      color: Colors.green,
+    ),
+    Container(
+      color: Colors.yellow,
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
-     
-    List<String> elements = readDashboardElementsList();
-    final currentCount = (MediaQuery.of(context).size.width ~/ 250).toInt();
-    crossAxisCount:
-    (MediaQuery.of(context).size.width ~/ 250).toInt();
-    late String _selectedTooltipPosition;
-    late TooltipPosition _tooltipPosition;
-    late double duration;
-    final minCount = 4;
-    final List<ChartData> chartData = [
-      ChartData(x: 'David', y: 25, color: const Color.fromRGBO(9, 0, 136, 1)),
-      ChartData(x: 'Steve', y: 38, color: const Color.fromRGBO(147, 0, 119, 1)),
-      ChartData(x: 'Jack', y: 34, color: const Color.fromRGBO(228, 0, 124, 1)),
-      ChartData(
-          x: 'Others', y: 52, color: const Color.fromRGBO(255, 189, 57, 1))
+    // List selectedWidgetsCopy = _dashboardsController.selectedWidgets;
+    List cmPerformanceCharts = [
+      TitledChartContainer(
+          child: CMPerformanceChart(context), title: "Performance"),
+      TitledChartContainer(child: MTBFContainer(context), title: "MTBF"),
+      TitledChartContainer(child: MTTRContainer(context), title: "MTTR"),
+      TitledChartContainer(
+          child: AvgDownTimeContainer(context), title: "Avg Down Time"),
+      TitledChartContainer(
+          child: WOByCategory(context), title: "W.O. By Category"),
+      TitledChartContainer(
+          child: WOByYearChart(context), title: "W.O. By Year"),
     ];
-     print("build selectedWidgetsCopy ${_dashboardsController.selectedWidgets}");
-    List selectedWidgetsCopy = _dashboardsController.selectedWidgets;
-      print("build selectedWidgetsCopy $selectedWidgetsCopy");
-     
+    List assetManagementCharts = [
+      TitledChartContainer(
+          child: workingEquipmentIndicator(context),
+          title: "Working Equipemtn"),
+      TitledChartContainer(
+          child: fetchEquipByClass(context), title: "Equipment By Class"),
+    ];
+    List pmCharts = [
+      TitledChartContainer(
+          child: PMPerformanceChart(context), title: "Performance"),
+    ];
+    List stockManagementCharts = [
+      TitledChartContainer(
+          child: fetchPartsConsumption(context), title: "Parts Consum. /year"),
+    ];
+// MTTRContainer
+// MTBFContainer
+// AvgDownTimeContainer
+// WOByCategory
+// WOByYearChart
+// workingEquipmentIndicator
+// fetchPartsConsumption
+// fetchEquipByClass
+    // if (DashboardController.isDataLoaded.value)
+    //   _dashboardsController.fetchChartsData();
     return SingleChildScrollView(
-        //padding: sizes.defaultPadding,
-        child: Obx(
-            () {
-              selectedWidgetsCopy = _dashboardsController.selectedWidgets.toList();
-              print("build selectedWidgetsCopy $selectedWidgetsCopy");
-               _dashboardsController.saveSelectedWidgets();
-              Future.delayed(Duration(seconds: 2), () {
-                
-              });
-              return selectedWidgetsCopy.isEmpty
-                  ? Center(child: Text("Select an option from the drawer"))
-                  : StaggeredGrid.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 4,
-                      crossAxisSpacing: 4,
-                      children: selectedWidgetsCopy.map((widgetType) {
-                        print("widType $widgetType");
-                        return widgetBuilders[widgetType]!(context);
-                      }).toList(),
-                    );
-            },
-
-              //           [
-
-              // StaggeredGridTile.count(
-              //   crossAxisCellCount: 2,
-              //   mainAxisCellCount: 2,
-              //   child: CircularChart(chartData: chartData,),
-              // ),
-
-              // StaggeredGridTile.count(
-              //   crossAxisCellCount: 2,
-              //   mainAxisCellCount: 2,
-              //   child: SfCircularChart(
-              //                     series: <CircularSeries>[
-              //                         // Renders doughnut chart
-              //                         DoughnutSeries<ChartData, String>(
-              //                             dataSource: chartData,
-              //                             pointColorMapper:(ChartData data,  _) => data.color,
-              //                             xValueMapper: (ChartData data, _) => data.x,
-              //                             yValueMapper: (ChartData data, _) => data.y
-              //                         )
-              //                     ]
-              //                 ),
-              // ),
-
-              //   StaggeredGridTile.count(
-              //     crossAxisCellCount:2,
-              //     mainAxisCellCount: 2,
-              //     child:  SfCartesianChart(
-              //     plotAreaBorderWidth: 0,
-              //     title: ChartTitle(
-              //         text: 'Work Orders By Current Year',textStyle: Theme.of(context).textTheme.labelSmall),
-              //     primaryXAxis: const CategoryAxis(
-              //       majorGridLines: MajorGridLines(width: 0),
-              //     ),
-              //     primaryYAxis: const NumericAxis(
-              //         axisLine: AxisLine(width: 0),
-              //         labelFormat: '{value}%',
-              //         majorTickLines: MajorTickLines(size: 0)),
-              //     series: _getDefaultColumnSeries(),
-              //     tooltipBehavior: _tooltipBehavior,
-              //   ),
-              //   ),
-
-              //   StaggeredGridTile.count(
-              //     crossAxisCellCount: 2,
-              //     mainAxisCellCount: 2,
-              //     child: SfCircularChart(
-              //     title: ChartTitle(
-              //         text: 'PM Performance'),
-              //     legend: Legend(
-              //         isVisible:  true,
-              //         overflowMode: LegendItemOverflowMode.wrap),
-              //     series: _getPieSeries(),
-
-              //     /// To enabe the tooltip and its behaviour.
-              //     tooltipBehavior: TooltipBehavior(
-              //       enable: true,
-              //       tooltipPosition: TooltipPosition.pointer,
-              //       duration: 2 * 1000,
-              //     ),
-              //   ),
-              //   ),
-
-              //   StaggeredGridTile.count(
-              //       crossAxisCellCount: 4, mainAxisCellCount: 2, child: BarChart()),
-
-              //   StaggeredGridTile.count(
-              //     crossAxisCellCount: 4,
-              //     mainAxisCellCount: 4,
-              //     child: StylingDataGrid(),
-              //   ),
-              // ],
-            ),
-    
-    );
-  }
-
-  static StaggeredGridTile CMPerformanceChart(BuildContext context) {
-       print("cm container");
-    //  if (_dashboardsController.dashboardWidgets["CM"]== null)
-    // _dashboardsController.fetchCMPerformance(2);
-  //    _dashboardsController.toggleWidgetSelection(DashboardWidgets.PMPerformanceChart);
-    return StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 2,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: SfCircularChart(
-            title: ChartTitle(
-                text: 'CM Performance',
-                textStyle: Theme.of(context).textTheme.labelSmall,
-                alignment: ChartAlignment.near),
-            legend: const Legend(
-              isVisible: false,
-              position: LegendPosition.bottom,
-              // ...
-            ),
-            annotations: <CircularChartAnnotation>[
-              CircularChartAnnotation(
-                widget: Container(
-                  // Your custom center widget
-                  child: Text(
-                    "${_dashboardsController.dashboardWidgets["CM"]?.text ?? "0"}%",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
+      //padding: sizes.defaultPadding,
+      child: Obx(
+        () {
+          // selectedWidgetsCopy = _dashboardsController.selectedWidgets.toList();
+          _dashboardsController.saveSelectedWidgets();
+          return Column(children: [
+            Row(
+              mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: Text(
+                      "Welcome To Steady App!",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 100.sp),
+                    ),
                   ),
                 ),
-              ),
-            ],
-            tooltipBehavior: TooltipBehavior(
-              color: Colors.blueAccent,
-              enable: true,
-              duration: 500,
-              // ...
+                // IconButton(
+                //     onPressed: () {}, icon: Icon(Icons.access_alarms_rounded,color: Colors.white,))
+              ],
             ),
-            series: <CircularSeries>[
-              DoughnutSeries<ChartData, String>(
-                dataSource: [
-                  ChartData(
-                      //text: "hi",
-                      x: "Pending",
-                      y: _dashboardsController.dashboardWidgets["CM"]?.x ??  0.00,
-                      color: Color.fromARGB(255, 11, 115, 149)),
-                  ChartData(
-                      x: "Done",
-                      y: _dashboardsController.dashboardWidgets["CM"]?.y ??  0.00,
-                      color: Color.fromARGB(255, 128, 184, 204))
+            SizedBox(height: 50.h,),
+            GlossyContainer(
+              strengthX: 3,
+              strengthY: 3,
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width,
+              // padding: EdgeInsets.only(bottom: 40),
+              child: Column(
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.height / 3 * 0.2,
+                      child: Row(
+                        children: [
+                          Text(
+                            " CM Performance",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          )
+                        ],
+                      )),
+                 
+                   
+                     Expanded(
+                       child: Swiper(
+                        itemBuilder: (context, index) {
+                          // final image = images[index];
+                          return cmPerformanceCharts[index];
+                        },
+                        indicatorLayout: PageIndicatorLayout.COLOR,
+                        // itemHeight: 100,
+                        // itemWidth: 400,
+                        autoplay: false,
+                        itemCount: cmPerformanceCharts.length,
+                        pagination: const SwiperPagination(
+                            builder: SwiperPagination.rect),
+                        control: const SwiperControl(size: 0),
+                        outer: true,
+                        fade: .0,
+                        viewportFraction: 0.7,
+                        scale: 0.9,
+                                           ),
+                     ),
+                  
                 ],
-                xValueMapper: (ChartData data, _) => data.x,
-                yValueMapper: (ChartData data, _) => data.y,
-                pointColorMapper: (datum, index) => datum.color,
-                dataLabelSettings: const DataLabelSettings(
-                  isVisible: true, // Show data labels
-                  labelPosition: ChartDataLabelPosition.inside,
-                  textStyle:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              )
-            ]),
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width,
+              // padding: EdgeInsets.only(bottom: 40),
+              child: Column(
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.height / 3 * 0.2,
+                      child: Row(
+                        children: [
+                          Text(
+                            
+                            " Stock Management",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          )
+                        ],
+                      )),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 3 * 0.7,
+                    child: Swiper(
+                      itemBuilder: (context, index) {
+                        // final image = images[index];
+                        return cmPerformanceCharts[index];
+                      },
+                      indicatorLayout: PageIndicatorLayout.COLOR,
+                      // itemHeight: 100,
+                      // itemWidth: 400,
+                      autoplay: false,
+                      itemCount: cmPerformanceCharts.length,
+                      pagination: const SwiperPagination(
+                          builder: SwiperPagination.rect),
+                      control: const SwiperControl(size: 0),
+                      outer: true,
+                      fade: .0,
+                      viewportFraction: 0.7,
+                      scale: 0.9,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]);
+        },
       ),
     );
   }
 
-  static StaggeredGridTile PMPerformanceChart(BuildContext context) {
+  static CMPerformanceChart(BuildContext context) {
+    print("cm container");
+    return SfCircularChart(
+        // title: ChartTitle(
+        //     text: 'CM Performance',
+        //     textStyle: Theme.of(context).textTheme.bodySmall,
+        //     alignment: ChartAlignment.near),
+        legend: const Legend(
+          isVisible: false,
+          position: LegendPosition.bottom,
+          // ...
+        ),
+        annotations: <CircularChartAnnotation>[
+          CircularChartAnnotation(
+            widget: Container(
+              // Your custom center widget
+              child: Text(
+                "${_dashboardsController.dashboardWidgets["CM"]?.text ?? "0"}%",
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+        tooltipBehavior: TooltipBehavior(
+          color: Colors.blueAccent,
+          enable: true,
+          duration: 500,
+          // ...
+        ),
+        series: <CircularSeries>[
+          DoughnutSeries<ChartData, String>(
+            dataSource: [
+              ChartData(
+                  //text: "hi",
+                  x: "Pending",
+                  y: _dashboardsController.dashboardWidgets["CM"]?.x ?? 0.00,
+                  color: Color.fromARGB(255, 11, 115, 149)),
+              ChartData(
+                  x: "Done",
+                  y: _dashboardsController.dashboardWidgets["CM"]?.y ?? 0.00,
+                  color: Color.fromARGB(255, 128, 184, 204))
+            ],
+            xValueMapper: (ChartData data, _) => data.x,
+            yValueMapper: (ChartData data, _) => data.y,
+            pointColorMapper: (datum, index) => datum.color,
+            dataLabelSettings: DataLabelSettings(
+              isVisible: true, // Show data labels
+              labelPosition: ChartDataLabelPosition.inside,
+              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(),
+            ),
+          )
+        ]);
+  }
+
+  static PMPerformanceChart(BuildContext context) {
     print("pm container");
     print("pm data :  ${_dashboardsController.dashboardWidgets["PM"]}");
     // if (_dashboardsController.dashboardWidgets["PM"]== null)
     // _dashboardsController.fetchCMPerformance(1);
-   //_dashboardsController.toggleWidgetSelection(DashboardWidgets.CMPerformanceChart);
-    return StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 2,
+    //_dashboardsController.toggleWidgetSelection(DashboardWidgets.CMPerformanceChart);
+    return Obx(() => SfCircularChart(
+          // title: ChartTitle(
+          //   textStyle: Theme.of(context).textTheme.labelSmall,
+          //   alignment: ChartAlignment.near,
+          // ),
+          legend: const Legend(
+            isVisible: false,
+            position: LegendPosition.bottom,
+          ),
+          annotations: <CircularChartAnnotation>[
+            CircularChartAnnotation(
+              widget: Container(
+                child: Text(
+                  "${_dashboardsController.dashboardWidgets["PM"]?.text}%" ??
+                      "",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+          tooltipBehavior: TooltipBehavior(
+            color: Colors.blueAccent,
+            enable: true,
+            duration: 500,
+          ),
+          series: <CircularSeries>[
+            DoughnutSeries<ChartData, String>(
+              dataSource: [
+                ChartData(
+                  x: "Pending",
+                  y: _dashboardsController.dashboardWidgets["PM"]?.x ?? 0.00,
+                  color: Color.fromARGB(255, 11, 115, 149),
+                ),
+                ChartData(
+                  x: "Done",
+                  y: _dashboardsController.dashboardWidgets["PM"]?.y ?? 0.00,
+                  color: Color.fromARGB(255, 128, 184, 204),
+                ),
+              ],
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              pointColorMapper: (datum, index) => datum.color,
+              dataLabelSettings: DataLabelSettings(
+                isVisible: true,
+                labelPosition: ChartDataLabelPosition.inside,
+                textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  static MTTRContainer(BuildContext context) {
+    //      if (_dashboardsController.dashboardWidgets["MTTR"]== null)
+    // _dashboardsController.fetchMTTR();
+    return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,
         ),
-        child: Obx(()=>
-           SfCircularChart(
-            title: ChartTitle(
-              text: 'PM Performance',
-              textStyle: Theme.of(context).textTheme.labelSmall,
-              alignment: ChartAlignment.near,
-            ),
-            legend: const Legend(
-              isVisible: false,
-              position: LegendPosition.bottom,
-            ),
-            annotations: <CircularChartAnnotation>[
-              CircularChartAnnotation(
-                widget: Container(
-                  child: Text(
-                    "${_dashboardsController.dashboardWidgets["PM"]?.text}%"?? "",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ],
-            tooltipBehavior: TooltipBehavior(
-              color: Colors.blueAccent,
-              enable: true,
-              duration: 500,
-            ),
-            series: <CircularSeries>[
-              DoughnutSeries<ChartData, String>(
-                dataSource: [
-                  ChartData(
-                    x: "Pending",
-                    y: _dashboardsController.dashboardWidgets["PM"]?.x ?? 0.00,
-                    color: Color.fromARGB(255, 11, 115, 149),
-                  ),
-                  ChartData(
-                    x: "Done",
-                    y: _dashboardsController.dashboardWidgets["PM"]?.y ?? 0.00,
-                    color: Color.fromARGB(255, 128, 184, 204),
-                  ),
-                ],
-                xValueMapper: (ChartData data, _) => data.x,
-                yValueMapper: (ChartData data, _) => data.y,
-                pointColorMapper: (datum, index) => datum.color,
-                dataLabelSettings: const DataLabelSettings(
-                  isVisible: true,
-                  labelPosition: ChartDataLabelPosition.inside,
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          )),
-        ),
-      );
-   
- 
-  }
-
-  static StaggeredGridTile MTTRContainer(BuildContext context) {
-    //      if (_dashboardsController.dashboardWidgets["MTTR"]== null)
-    // _dashboardsController.fetchMTTR();
-    return StaggeredGridTile.count(
-        crossAxisCellCount: 2,
-        mainAxisCellCount: 1,
-        child: SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            child: Column(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "MTTR [H]",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue,
-                      ),
-                      child: Icon(
-                        Icons.monitor_heart_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+                Text(
+                  "MTTR [H]",
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                Row(
-                  children: [
-                    Obx(()=>
-                       Text(
-                        _dashboardsController.MTTR.value,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      )
-                    )
-                  ],
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.blue,
+                  ),
+                  child: Icon(
+                    Icons.monitor_heart_outlined,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
-          ),
-        ));
+            Row(
+              children: [
+                Obx(() => Text(
+                      _dashboardsController.MTTR.value,
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ))
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  static StaggeredGridTile MTBFContainer(BuildContext context) {
+  static MTBFContainer(BuildContext context) {
     //   if (_dashboardsController.dashboardWidgets["MTBF"]== null)
     // _dashboardsController.fetchMTBF();
-    return StaggeredGridTile.count(
-        crossAxisCellCount: 2,
-        mainAxisCellCount: 1,
-        child: SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "MTBF [D]",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue,
-                      ),
-                      child: Icon(
-                        Icons.monitor_heart_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "MTBF [D]",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
                 ),
-                Row(
-                  children: [
-                    Obx(()=>
-                       Text(
-                        _dashboardsController.MTBF.value,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      )
-                    )
-                  ],
+                child: Icon(
+                  Icons.monitor_heart_outlined,
+                  color: Colors.white,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+          Row(
+            children: [
+              Obx(() => Text(
+                    _dashboardsController.MTBF.value,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ))
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
-  static StaggeredGridTile AvgDownTimeContainer(BuildContext context) {
+  static AvgDownTimeContainer(BuildContext context) {
     print("returning Avg down time container");
-    return StaggeredGridTile.count(
-        crossAxisCellCount: 2,
-        mainAxisCellCount: 2,
-        child: SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Avg Down Time [D]",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Avg Down Time [D]",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _dashboardsController.avgDownTime["avg"]!,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue,
+                            ),
+                            child: Icon(
+                              Icons.timer_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Min",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.green[700]),
+                          ),
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Text(
+                            _dashboardsController.avgDownTime["min"]!,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Max",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.red),
+                          ),
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Text(
+                            _dashboardsController.avgDownTime["max"]!,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  static WOByCategory(BuildContext context) {
+    return SingleChildScrollView(
+      child: SfCartesianChart(
+        // title: ChartTitle(
+        //     text: 'WO/Category',
+        //     textStyle: Theme.of(context).textTheme.labelLarge,
+        //     alignment: ChartAlignment.center),
+        primaryXAxis: CategoryAxis(
+          labelPosition: ChartDataLabelPosition.outside,
+          labelIntersectAction: AxisLabelIntersectAction.rotate45,
+          labelStyle: Theme.of(context).textTheme.labelSmall,
+        ),
+        primaryYAxis: NumericAxis(
+          minimum: 0,
+          maximum: 100,
+          interval: 25,
+          majorGridLines: MajorGridLines(width: 1), // Hide major grid lines
+        ),
+        // isTransposed: true,
+        series: <ColumnSeries<ChartData, String>>[
+          ColumnSeries<ChartData, String>(
+            dataSource: _dashboardsController.byCategoryChartData != null
+                ? _dashboardsController.byCategoryChartData!
+                : [],
+            xValueMapper: (ChartData data, _) => data.category, // Use category
+            yValueMapper: (ChartData data, _) => data.jobCount, // Use job count
+            dataLabelSettings: DataLabelSettings(isVisible: true),
+            color: const Color.fromARGB(255, 38, 166, 79),
+            borderRadius: BorderRadius.circular(0),
+            width: 0.5,
+          )
+        ],
+      ),
+    );
+  }
+
+  static WOByYearChart(BuildContext context) {
+    int total = 0;
+    _dashboardsController.woByYearChartData.forEach((element) {
+      total += element.WOCount!;
+    });
+    return SfCartesianChart(
+      // title: ChartTitle(
+      //     text: 'WO/Year',
+      //     textStyle: Theme.of(context).textTheme.labelLarge,
+      //     alignment: ChartAlignment.center),
+      primaryXAxis: CategoryAxis(
+        labelPosition: ChartDataLabelPosition.outside,
+        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+      ),
+      primaryYAxis: NumericAxis(
+        minimum: 0,
+        maximum: 25,
+        interval: 5,
+
+        majorGridLines: MajorGridLines(width: 0), // Hide major grid lines
+        labelFormat: '{value}',
+      ),
+      // isTransposed: true,
+      series: <ColumnSeries<WOByYearChartData, String>>[
+        ColumnSeries<WOByYearChartData, String>(
+          dataSource: _dashboardsController.woByYearChartData,
+          xValueMapper: (WOByYearChartData data, _) => data.monthName,
+          yValueMapper: (WOByYearChartData data, _) => data.WOCount,
+          dataLabelMapper: (WOByYearChartData data, _) =>
+              "${data.WOCount} / ${(data.WOCount / total * 100).toStringAsFixed(0)}%",
+          color: Color.fromARGB(255, 22, 36, 83),
+          borderRadius: BorderRadius.circular(3),
+          width: 0.5,
+          dataLabelSettings: DataLabelSettings(
+            isVisible: false,
+          ),
+        )
+      ],
+    );
+  }
+
+  static workingEquipmentIndicator(BuildContext context) {
+    print("returning working eqcontainer");
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Working Equipment",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SingleChildScrollView(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  _dashboardsController.avgDownTime["avg"]!,
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 10),
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.blue,
-                                  ),
-                                  child: Icon(
-                                    Icons.timer_outlined,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              _dashboardsController
+                                      .workingEquipmentData["Working"] ??
+                                  "...",
+                              style: Theme.of(context).textTheme.headlineLarge,
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Min",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium!
-                                      .copyWith(color: Colors.green[700]),
-                                ),
-                                SizedBox(
-                                  width: 30.w,
-                                ),
-                                Text(
-                                  _dashboardsController.avgDownTime["min"]!,
-                                  style:
-                                      Theme.of(context).textTheme.labelMedium,
-                                ),
-                              ],
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue,
+                              ),
+                              child: Icon(
+                                Icons.timer_outlined,
+                                color: Colors.white,
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Max",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium!
-                                      .copyWith(color: Colors.red),
-                                ),
-                                SizedBox(
-                                  width: 30.w,
-                                ),
-                                Text(
-                                  _dashboardsController.avgDownTime["max"]!,
-                                  style:
-                                      Theme.of(context).textTheme.labelMedium,
-                                ),
-                              ],
-                            )
                           ],
                         ),
                       ),
-                    )
-                  ],
+                      Row(
+                        children: [
+                          Text(
+                            "Count all",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.green[700]),
+                          ),
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Text(
+                            _dashboardsController
+                                    .workingEquipmentData["Working"] ??
+                                "Loading..",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Condem count",
+                            style: Theme.of(context).textTheme.labelMedium!,
+                          ),
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Expanded(
+                            child: _dashboardsController
+                                        .workingEquipmentData["Condem"] ==
+                                    null
+                                ? Text("Loading...")
+                                : Row(
+                                    children: [
+                                      Text(
+                                        _dashboardsController
+                                            .workingEquipmentData["Condem"]!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium,
+                                      ),
+                                      SizedBox(
+                                        width: 15.w,
+                                      ),
+                                      Text(
+                                        _dashboardsController
+                                            .workingEquipmentData["Condem"]!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .copyWith(color: Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  static fetchPartsConsumption(BuildContext context) {
+    List<CartesianSeries<dynamic, dynamic>> list =
+        <LineSeries<PartsConsumptionChartData, num>>[
+      LineSeries<PartsConsumptionChartData, num>(
+          dataSource: _dashboardsController.partsConsumptionChartData,
+          xValueMapper: (PartsConsumptionChartData sales, _) => sales.costPrice,
+          yValueMapper: (PartsConsumptionChartData sales, _) => sales.quantity,
+          name: 'Quantity',
+          markerSettings: const MarkerSettings(isVisible: true)),
+      LineSeries<PartsConsumptionChartData, num>(
+          dataSource: _dashboardsController.partsConsumptionChartData,
+          name: 'Cost Price',
+          xValueMapper: (PartsConsumptionChartData sales, _) => sales.costPrice,
+          yValueMapper: (PartsConsumptionChartData sales, _) => sales.costPrice,
+          markerSettings: const MarkerSettings(isVisible: true))
+    ];
+
+    SfCartesianChart chart = SfCartesianChart(
+      plotAreaBorderWidth: 0,
+      title: ChartTitle(
+          text: 'Inventory Part Consumbtion',
+          textStyle: Theme.of(context).textTheme.labelMedium),
+      legend:
+          Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
+      primaryXAxis: const NumericAxis(
+          edgeLabelPlacement: EdgeLabelPlacement.shift,
+          interval: 2,
+          majorGridLines: MajorGridLines(width: 0)),
+      primaryYAxis: const NumericAxis(
+          labelFormat: '{value}%',
+          axisLine: AxisLine(width: 0),
+          majorTickLines: MajorTickLines(color: Colors.transparent)),
+      series: list,
+      tooltipBehavior: TooltipBehavior(enable: true),
+    );
+
+    return chart;
+  }
+
+  static fetchEquipByClass(BuildContext context) {
+    var series1 = <DoughnutSeries<ChartSampleData, String>>[
+      DoughnutSeries<ChartSampleData, String>(
+          explode: true,
+          dataSource: _dashboardsController.e_by_class,
+          xValueMapper: (ChartSampleData data, _) => data.x as String,
+          yValueMapper: (ChartSampleData data, _) => data.y,
+          dataLabelMapper: (ChartSampleData data, _) => data.x,
+          dataLabelSettings: const DataLabelSettings(
+            isVisible: true,
+            labelPosition: ChartDataLabelPosition.outside,
+            labelAlignment: ChartDataLabelAlignment.outer,
+            useSeriesColor: true,
+            showCumulativeValues: true,
+            showZeroValue: false,
+            borderColor: CupertinoColors.black,
+            borderWidth: 1.0,
+            overflowMode: OverflowMode.shift,
+          ))
+    ];
+    return SfCircularChart(
+      title: ChartTitle(
+          text: 'Equipment By Class',
+          textStyle: Theme.of(context).textTheme.labelLarge,
+          alignment: ChartAlignment.center),
+      series: series1,
+      legend: Legend(
+        padding: 10,
+        isVisible: true,
+        position: LegendPosition.auto,
+        alignment: ChartAlignment.near,
+        overflowMode: LegendItemOverflowMode.wrap,
+      ),
+    );
+  }
+}
+
+class TitledChartContainer extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  const TitledChartContainer({
+    super.key,
+    required this.title,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Child Widget
+        // child,
+    
+        // Gradient Shadow Container
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                //   color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                // gradient: LinearGradient(
+                //   begin: Alignment.bottomCenter,
+                //   end: Alignment.center,
+                //   colors: [
+                //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
+                //     Colors.transparent,
+                //   ],
+                // ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
+                child: child,
+              ),
             ),
           ),
-        ));
-  }
-
-  List<PieSeries<ChartData, String>> _getPieSeries() {
-    return <PieSeries<ChartData, String>>[
-      PieSeries<ChartData, String>(
-          dataSource: <ChartData>[
-            ChartData(x: 'Argentina', y: 505370, text: '45%'),
-            ChartData(x: 'Belgium', y: 551500, text: '53.7%'),
-            ChartData(x: 'Cuba', y: 312685, text: '59.6%'),
-            // ChartData(x: 'Dominican Republic', y: 350000, text: '72.5%'),
-            // ChartData(x: 'Egypt', y: 301000, text: '85.8%'),
-            // ChartData(x: 'Kazakhstan', y: 300000, text: '90.5%'),
-            // ChartData(x: 'Somalia', y: 357022, text: '95.6%')
-          ],
-          xValueMapper: (ChartData data, _) => data.x as String,
-          yValueMapper: (ChartData data, _) => data.y,
-          dataLabelMapper: (ChartData data, _) => data.x as String,
-          startAngle: 100,
-          endAngle: 50,
-          //pointRadiusMapper: (ChartData data, _) => data.text,
-          dataLabelSettings: const DataLabelSettings(
-              isVisible: true, labelPosition: ChartDataLabelPosition.outside))
-    ];
-  }
-
-  List<ColumnSeries<ChartData, String>> _getDefaultColumnSeries() {
-    return <ColumnSeries<ChartData, String>>[
-      ColumnSeries<ChartData, String>(
-        dataSource: <ChartData>[
-          // ChartData(x: 'China', y: 0.541),
-          ChartData(
-              x: '${DateTime.now().month.toString().padLeft(2, '0')}',
-              y: 0.541),
-          ChartData(x: 'Brazil', y: 0.818),
-          // ChartData(x: 'Bolivia', y:1.51),
-          //ChartData(x:'Mexico',   y: 1.302),
-          //ChartData(x: 'Egypt',   y: 2.017),
-          // ChartData(x:'Mongolia', y:1.683),
-        ],
-        xValueMapper: (ChartData sales, _) => sales.x as String,
-        yValueMapper: (ChartData sales, _) => sales.y,
-        dataLabelSettings: const DataLabelSettings(
-            isVisible: true, textStyle: TextStyle(fontSize: 10)),
-      )
-    ];
+        ),
+    
+        // Title Text
+        Positioned(
+          bottom: 10,
+          left: 16,
+          child: Text(title,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Colors.white,
+                  )),
+        ),
+      ],
+    );
   }
 }

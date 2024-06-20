@@ -1,6 +1,2 @@
 {
-    "files.exclude": {
-        "assets": true,
-        "build": true
-    }
 }

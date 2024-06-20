@@ -15,7 +15,6 @@ import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
 import 'package:steady_solutions/models/department.dart';
-import 'package:steady_solutions/models/site_rooms.dart';
 import 'package:steady_solutions/models/work_orders/room.dart';
 import 'package:steady_solutions/models/work_orders/service_info.dart';
 import 'package:steady_solutions/models/work_orders/site.dart';
@@ -60,7 +59,7 @@ File? _image;
   Rx roomId = "".obs;
   @override
   void initState() {
-    _workOrderController.clearData();
+   // _workOrderController.clearData();
     _workOrderController.fetchNewWorkOrderOptions();
   
     //_workOrderController.controlItem.value = ControlItem();
@@ -89,8 +88,8 @@ Future<void> _getImageFromCamera() async {
           backgroundColor: Colors.transparent,
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF4e7ca2)),
-          title:  Text( AppLocalizations.of(context).create,
-              style: TextStyle(color: Color(0xFF4e7ca2, ),fontWeight: FontWeight.w600)),
+          title:  Text( AppLocalizations.of(context).create_work_order,
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Color(0xFF4e7ca2),fontWeight: FontWeight.w600)),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -137,7 +136,9 @@ Future<void> _getImageFromCamera() async {
                       labelText:  AppLocalizations.of(context).departments,
                       prefixIcon: Icons.corporate_fare,
                       options: _workOrderController.departments.value, // Value is needed to prevent getx error
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        _workOrderController.getRoomsList(departmentId:value.toString() );
+                      },
                     ),
                   ),
                    SizedBox(height: 30.h),
@@ -147,7 +148,7 @@ Future<void> _getImageFromCamera() async {
                     :_autoCompleteTextField(
                       labelText:  AppLocalizations.of(context).rooms,
                       prefixIcon: Icons.meeting_room,
-                      options: SiteRoomsRepository().getRoomsList(site.value.value!),
+                      options: _workOrderController.rooms,
                       onChanged: (value) {
                         // siteName.value = value!;
                       },
@@ -276,9 +277,10 @@ Future<void> _getImageFromCamera() async {
                       _image == null ?   ElevatedButton(
                         style: kSmallSecondaryBtnStyle(context),
                         onPressed: () async {
-                        final image = await _getImageFromCamera();
+                         await _getImageFromCamera();
                         setState(() {
-                          _image = image as File?;
+                         
+                          print("Image is ${_image?.path}");
                         });
                         },
                         //style: kSmallBtnStyle(context),
@@ -301,7 +303,7 @@ Future<void> _getImageFromCamera() async {
                             .setIsUrgent(isUrgent.value.toString())
                             .setFaultStatues(faultStatusTEController.text)
                             .setImageFile(_image)
-                            .setRoomId(room.value.value)
+                            .setRoomId(room.value.id)
                             .setEquipTypeId(_authOrderController
                                 .employee.value.role
                                 .toString())
@@ -332,7 +334,7 @@ Future<void> _getImageFromCamera() async {
                                   text: AppLocalizations.of(context).back_to_form,
                                   iconData: Icons.arrow_back_rounded,
                                   color: Colors.blue,
-                                  textStyle: const TextStyle(color: Colors.white),
+                                  textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                   iconColor: Colors.white,
                                 ),
                                 IconsButton(
@@ -342,7 +344,7 @@ Future<void> _getImageFromCamera() async {
                                   text:  AppLocalizations.of(context).close,
                                   iconData: Icons.done,
                                   color: Colors.blue,
-                                  textStyle: const TextStyle(color: Colors.white),
+                                  textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                   iconColor: Colors.white,
                                 ),
                               ]);
@@ -367,7 +369,7 @@ Future<void> _getImageFromCamera() async {
                                   text:AppLocalizations.of(context).back_to_form,
                                   iconData: Icons.arrow_back_rounded,
                                   color: const Color.fromARGB(255, 75, 75, 75),
-                                  textStyle: const TextStyle(color: Colors.white),
+                                  textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                   iconColor: Colors.white,
                                 ),
                                 IconsButton(
@@ -377,7 +379,7 @@ Future<void> _getImageFromCamera() async {
                                   text: AppLocalizations.of(context).go_to_dashboard,
                                   iconData: Icons.dashboard,
                                   color: Colors.blue,
-                                  textStyle: const TextStyle(color: Colors.white),
+                                  textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                   iconColor: Colors.white,
                                 ),
                               ]);
@@ -472,8 +474,8 @@ Future<void> _getImageFromCamera() async {
             //debugPrintnt("category Selected");
           } else if (object is Department) {
             department.value = object;
-            // _workOrderController.getRoomsList(
-            //     departmentId: department.value.value!);
+            _workOrderController.getRoomsList(
+                 departmentId: department.value.value!);
             _workOrderController.getServiceInfo(
                 categoryId: category.value.value!,
                 departmentId: department.value.value!);

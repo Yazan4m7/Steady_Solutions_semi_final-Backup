@@ -1,27 +1,22 @@
 class Room {
-  String? disabled;
-  String? group;
-  String? selected;
-  String? text;
-  String? value;
+  String? id;
+  String? name;
+  String? deptId;
 
-  Room({this.disabled, this.group, this.selected, this.text, this.value});
+  Room({this.id, this.name, this.deptId});
 
   Room.fromJson(Map<String, dynamic> json) {
-    disabled = json['Disabled'].toString() ?? "";
-    group = json['Group'].toString()  ?? "";
-    selected = json['Selected'].toString() ?? "";
-    text = json['Text'].toString() ?? "";
-    value = json['Value'].toString() ?? "";
+    id = json['RoomID'].toString() ;
+    name = json['RoomName'].toString() ;
+    deptId = json['DepartmentID'].toString() ;
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Disabled'] = this.disabled;
-    data['Group'] = this.group;
-    data['Selected'] = this.selected;
-    data['Text'] = this.text;
-    data['Value'] = this.value;
+    data['RoomID'] = this.id;
+    data['RoomName'] = this.name;
+    data['DepartmentID'] = this.deptId;
     return data;
   }
 }

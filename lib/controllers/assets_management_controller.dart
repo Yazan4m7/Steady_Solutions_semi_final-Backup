@@ -31,7 +31,7 @@ class AssetsManagementController extends GetxController  {
     if(departments.isEmpty) {
       // Fetch departments and manufacturers only if they are empty (to avoid fetching them multiple times
      response = await http.get(
-        Uri.parse("http://${_apiController.apiAddress.value}$getAllDepartmentsEndPoint")
+        Uri.parse("http://${storageBox.read('api_url')}$getAllDepartmentsEndPoint")
             .replace(queryParameters: params));
     
      temp = jsonDecode(response.body);
@@ -41,7 +41,7 @@ class AssetsManagementController extends GetxController  {
     }
  if(manufacturers.isEmpty) {
    response = await http.get(
-        Uri.parse("http://${_apiController.apiAddress.value}$getAllManufacturersEndPoint")
+        Uri.parse("http://${storageBox.read('api_url')}$getAllManufacturersEndPoint")
             .replace(queryParameters: params));
 
     temp = jsonDecode(response.body);
@@ -76,7 +76,7 @@ class AssetsManagementController extends GetxController  {
     print(params.toString());
     final response = await http.get(
       Uri.parse(
-        "http://${_apiController.apiAddress.value}$getInstalledBaseEndPoint",
+        "http://${storageBox.read('api_url')}$getInstalledBaseEndPoint",
       ).replace(queryParameters: params),
     );
     print("Get Installed Base response : " + response.body);

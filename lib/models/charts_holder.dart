@@ -85,10 +85,7 @@
 //         children: <Widget>[
 //           Text(this is DirectionalitySampleViewState ? 'Language' : 'Locale',
 //               softWrap: false,
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 color: model.textColor,
-//               )),
+//               style: Theme.of(context).textTheme.displayLarge?.copyWith()),
 //           Container(
 //               padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
 //               width: dropDownWidth,
@@ -113,7 +110,7 @@
 //                     return DropdownMenuItem<Locale>(
 //                         value: value,
 //                         child: Text(localeString,
-//                             style: TextStyle(color: model.textColor)));
+//                             style: Theme.of(context).textTheme.displayLarge?.copyWith(color: model.textColor,)));
 //                   }).toList(),
 //                   onChanged: (Locale? value) {
 //                     if (model.locale != value) {
@@ -218,10 +215,7 @@
 //               maxLines: 2,
 //               textAlign: TextAlign.left,
 //               softWrap: false,
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 color: model.textColor,
-//               )),
+//               style: Theme.of(context).textTheme.displayLarge?.copyWith()),
 //           Container(
 //               padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
 //               width: dropDownWidth,
@@ -237,7 +231,7 @@
 //                         value: value,
 //                         child: Text(
 //                             value.toString()lit('.')[1].toUpperCase(),
-//                             style: TextStyle(color: model.textColor)));
+//                             style: Theme.of(context).textTheme.displayLarge?.copyWith(color: model.textColor,)));
 //                   }).toList(),
 //                   onChanged: (TextDirection? value) {
 //                     if (model.textDirection != value) {

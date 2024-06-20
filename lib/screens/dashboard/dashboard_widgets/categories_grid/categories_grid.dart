@@ -67,15 +67,15 @@ class _StylingDataGridState extends State<StylingDataGrid> {
   }
 
   List<GridColumn> getColumns() {
-    const TextStyle textStyle =
-        TextStyle(color: Color.fromRGBO(255, 255, 255, 1));
+     TextStyle? textStyle =
+        Theme.of(context).textTheme.displayLarge?.copyWith(color: Color.fromRGBO(255, 255, 255, 1,));
     return  <GridColumn>[
             GridColumn(
               columnName: 'category',
               label: Container(
                 padding: const EdgeInsets.all(8),
                 alignment: Alignment.centerRight,
-                child: const Text(
+                child:  Text(
                   'Category',
                   style: textStyle,
                   overflow: TextOverflow.ellipsis,
@@ -87,7 +87,7 @@ class _StylingDataGridState extends State<StylingDataGrid> {
               label: Container(
                 padding: const EdgeInsets.all(8),
                 alignment: Alignment.centerLeft,
-                child: const Text(
+                child:  Text(
                   'All',
                   style: textStyle,
                   overflow: TextOverflow.ellipsis,
@@ -102,7 +102,7 @@ class _StylingDataGridState extends State<StylingDataGrid> {
               label: Container(
                 padding: const EdgeInsets.all(8),
                 alignment: Alignment.centerLeft,
-                child: const Text(
+                child:  Text(
                   '% Performance',
                   style: textStyle,
                   overflow: TextOverflow.ellipsis,
@@ -154,7 +154,7 @@ class _StylingDataGridState extends State<StylingDataGrid> {
             Text(
               'Grid lines visibility',
               softWrap: false,
-              style: TextStyle(fontSize: 16.0),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
             ),
             Theme(
               data: ThemeData(
@@ -169,7 +169,7 @@ class _StylingDataGridState extends State<StylingDataGrid> {
                         value: (value != null) ? value : 'none',
                         child: Text(value,
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: const Color.fromRGBO(51, 51, 51, 1))));
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: const Color.fromRGBO(51, 51, 51, 1,))));
                   }).toList(),
                   onChanged: (dynamic value) {
                     _onGridLinesVisibilityChanges(value);

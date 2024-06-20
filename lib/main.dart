@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:shimmer/main.dart';
 import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
@@ -16,21 +17,22 @@ import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/core/utils/main_bindings.dart';
 import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/screens/auth/login_screen.dart';
+import 'package:steady_solutions/screens/dashboard/dashboard.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  statusBarColor: Colors.transparent, 
-));
-SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  statusBarColor: Colors.transparent, // Set the status bar color to transparent
-  statusBarIconBrightness: Brightness.light, // Set the icon color (light or dark)
-));
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+//   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+//   statusBarColor: Colors.transparent, 
+// ));
+// SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+//   statusBarColor: Colors.transparent, // Set the status bar color to transparent
+ // statusBarIconBrightness: Brightness.light, // Set the icon color (light or dark)
+//));
   MainBindings().dependencies();
-
+  //MainBindings().overloadAPI();
   //_auth.employee.value = Employee.fromJson(storageBox.read("userAccount"));
  
   //print(_auth.employee.value.id);
@@ -114,7 +116,7 @@ class _SteadySolutionsApplicationState
 
   @override
   void initState() {
-    ;
+    
     super.initState();
     _fetchLocale().then((locale) {
       _locale = locale;
@@ -132,13 +134,10 @@ class _SteadySolutionsApplicationState
 
   @override
   Widget build(BuildContext context) {
-    //clearData();
           ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: Size(1080, 1920),
-       //w minTextAdapt: true,
+            context, designSize: Size(1080, 1920), 
+        
+        minTextAdapt: true,
        );
 _locale = Locale("en","us");
     return GlobalLoaderOverlay(
@@ -180,61 +179,46 @@ _locale = Locale("en","us");
         // GetX Controller Binding is in the main method
         debugShowCheckedModeBanner: false,
         //navigatorKey: navigatorKey,
-        home: initalScreen(),
+        home:ApiAddressScreen() ,
         // home: Dashboard(),
       ),
     );
   }
 
-  initalScreen()  {
-     _apiController.readUrlAddressFromLocalStorage();
 
-    if (_apiController.apiAddress.value == "" ||
-        _apiController.apiAddress.value.isEmpty) {
-      return const ApiAddressScreen();
     }
+// class FatalErrorScreen extends StatelessWidget {
+//   final FlutterErrorDetails details;
+//   const FatalErrorScreen({super.key, required this.details});
 
-    if (storageBox.read("isLoggedIn") == true) {
-      _authController.isLoggedIn.value = true;
-      return  HomeScreen();
-    } else {
-      return LoginScreen();
-    }
-  }
-}
-
-class FatalErrorScreen extends StatelessWidget {
-  final FlutterErrorDetails details;
-  const FatalErrorScreen({super.key, required this.details});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Dialog.fullscreen(
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text(
-                    "FATAL ERROR OCCOURED", //AppLocalizations.of(context).fatal_error,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  Text(
-                    '${details.exceptionAsString()}\n${details.stack.toString()}',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ]))),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       home: Scaffold(
+//         body: Center(
+//           child: Card(
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(10),
+//             ),
+//             child: Padding(
+//                 padding: const EdgeInsets.all(16.0),
+//                 child: Dialog.fullscreen(
+//                     child: Column(mainAxisSize: MainAxisSize.min, children: [
+//                   Text(
+//                     "FATAL ERROR OCCOURED", //AppLocalizations.of(context).fatal_error,
+//                     style: Theme.of(context).textTheme.bodyMedium,
+//                   ),
+//                   Text(
+//                     '${details.exceptionAsString()}\n${details.stack.toString()}',
+//                     style: Theme.of(context).textTheme.bodySmall,
+//                   ),
+//                 ]))),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 
 // class SplashScreen extends StatelessWidget {

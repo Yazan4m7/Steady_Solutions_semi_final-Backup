@@ -35,6 +35,18 @@
     "by_current_year",
     "working_equipment",
     "equipment",
-    "parts_consumption_by_current_year"
+    "parts_consumption_by_current_year",
+    "approve",
+    "send_evaluation",
+    "approve_report",
+    "view_photo",
+    "view_report",
+    "stock_management",
+    "wo_by_category",
+    "wo_by_current_year",
+    "cm_report_id",
+    "failure_status",
+    "approved_successfully",
+    "select_an_option_from_the_drawer"
   ]
 }

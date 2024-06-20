@@ -28,9 +28,14 @@ String getWOByYearEndPoint = "/OMS/ChartWOByYear?";
 String getMTBFEndPoint = "/OMS/ChartMTBF?";
 String getAvgDownTimeEndPoint = "/OMS/ChartAvgDownTime?";
 String getPartsConsumptionEndPoint = "/OMS/ChartInventoryPartConsumbtion?";
-
+String getWorkingEquipmentEndPoint = "/OMS/ChartWorkingEquipments?";
+String getEquipmentByClassEndPoint = "/OMS/ChartEquipmentByClass?";
+String sendApprovOrEvalEndPoint = "/OMS/SendEvalOrApprove?";
 String getNotificationsEndPoint = "/OMS/GetNotifications?";
 String getAllRoomsEndPoint = '/OMS/GetRoomListBySiteID?';
+String getEquipTypeIdsEndPoint = '/OMS/GetEquipmentTypeList';
+ String kMainSuccessIconPath = 'assets/json_animations/success_blue.json';
+String getAchievementReportEndPoint = '/OMS/GetAchievmentReport?';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

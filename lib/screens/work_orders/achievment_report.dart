@@ -67,7 +67,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF4e7ca2)),
           title: Text(AppLocalizations.of(context).generate_achiev_report,
-              style: TextStyle(color: Color(0xFF4e7ca2))),
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Color(0xFF4e7ca2,))),
         ),
         body: Form(
           child: Container(
@@ -485,7 +485,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                                   //   text: 'Close',
                                   //   iconData: Icons.copy,
                                   //   color: Colors.blue,
-                                  //   textStyle: const TextStyle(color: Colors.white),
+                                  //   textStyle: const Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                   //   iconColor: Colors.white,
                                   // ),
                                   IconsButton(
@@ -496,7 +496,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                                     iconData: Icons.done,
                                     color: Colors.blue,
                                     textStyle:
-                                        const TextStyle(color: Colors.white),
+                                         Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                     iconColor: Colors.white,
                                   ),
                                 ]);
@@ -523,7 +523,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                                     iconData: Icons.close,
                                     color: Colors.red,
                                     textStyle:
-                                        const TextStyle(color: Colors.white),
+                                         Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
                                     iconColor: Colors.white,
                                   ),
                                 ]);

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
+import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/screens/auth/login_screen.dart';
 import 'package:steady_solutions/widgets/misc/custom_dialog.dart';
 import 'package:steady_solutions/widgets/utils/background.dart';
@@ -29,6 +30,7 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
 
   @override
   initState() {
+    
     if (mounted) {
       lisenter = isLoading.listen((value) {
         if (value) {
@@ -41,23 +43,6 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
     super.initState();
   }
 
-  Future<void> _saveApiAddress() async {
-   
-    if (_formKey.currentState!.validate()) {
-      print("starting");
-
-      ////////////   TESTING PURPOSES  ////////////
-     
-      // await Future.delayed(const Duration(seconds: 3), (){
-      //  _authController.saveApiAddres("oms-livedemo.com");
-      // });
-      ////////////   PRODUCTION CODE  ////////////
-      await _apiController.saveApiAddres (_controller.text,context);
-  
-    }
-  
-    isLoading.value = false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +106,10 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
                     SizedBox(height: 60.h),
                     ElevatedButton(
                       style: kPrimeryBtnStyle(context),
-                      onPressed: _saveApiAddress,
-                      child:  Text('Submit',style: TextStyle(fontSize: 20),),
+                      onPressed:() async  {
+                        
+                        await _apiController.testAndSaveAPI(_controller.text , context);},
+                      child:  Text('Submit',style: Theme.of(context).textTheme.displayLarge?.copyWith(),),
                     ),
                   ],
                 ),
@@ -143,7 +130,7 @@ Widget _logo(BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            "assets/images/logos/DefaultOMS.png",
+            "assets/images/logos/Logo.png",
             width: MediaQuery.of(context).size.width / 1.4,
           ),
         ],

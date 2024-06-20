@@ -148,7 +148,19 @@
 "by_current_year" : "By Current Year",
 "working_equipment" : "Working Equipment",
 "equipment" : "Equipment",
-"parts_consumption_by_current_year" : "Parts Consumption by Current Year"
+"parts_consumption_by_current_year" : "Parts Consumption/ Year",
+"approve" : "Approve",
+"send_evaluation" : "Send Evaluation",
+"approve_report": "Approve Report",
+"view_photo" : "View Photo",
+"view_report" : "View Report",
+"stock_management" : "Stock Management",
+"wo_by_category" : "WO By Category",
+"wo_by_current_year" : "WO By Current Year",
+"cm_report_id" : "CM Report ID",
+"failure_status" : "Failure Status",
+"approved_successfully" : "Approved Successfully",
+"select_an_option_from_the_drawer" : "Select an option from the drawer"
  }
 
 

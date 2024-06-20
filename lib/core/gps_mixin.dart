@@ -81,7 +81,7 @@ mixin GPSMixin {
    
         print("Location services are alowed, getting location.");
     // Get the current location
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
     
       return [position.latitude,position.longitude];
     
