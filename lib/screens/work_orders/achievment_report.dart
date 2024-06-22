@@ -90,7 +90,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start, // Thi
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                    children: [
                   SizedBox(height: 50.h),
                   _textFormField(
                     keyboardType: TextInputType.number,

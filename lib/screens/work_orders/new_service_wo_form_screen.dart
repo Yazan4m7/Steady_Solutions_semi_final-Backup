@@ -322,7 +322,9 @@ Future<void> _getImageFromCamera() async {
                               ),
                               customView: Container(
                                   child: Text(
-                                      "${ AppLocalizations.of(context).job_no}:  ${response.jobNum ?? "N/A"}")),
+                                      "${ AppLocalizations.of(context).job_no}:  ${response.jobNum ?? "N/A"}",style:
+                                      Theme.of(context).textTheme.displayLarge,
+                                      )),
                               customViewPosition:
                                   CustomViewPosition.BEFORE_ACTION,
                               context: context,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:steady_solutions/app_config/app_theme.dart';
 
 String fontFamily = 'ProductSans';
 
@@ -26,7 +27,7 @@ Color drawerBgColor = Color.fromARGB(255, 65, 77, 112);
 Color kTFprimaryColor = Color.fromARGB(255, 55, 137, 67); // Your primary color
 Color kTFsecondaryColor = Color.fromARGB(255, 107, 107, 107);
 // Equipment Type font color
-
+ Color secondary_light_blue = Color(0xffd1e4f8);
 ////////// Text Widgets font color //////////
 Color bodyColor = Color.fromARGB(255, 105, 122, 144);
 
@@ -51,29 +52,30 @@ TextStyle dialogTitleTextStyle = TextStyle(
     fontWeight: FontWeight.w700);
 ////////////////// Text Fields Styles ///////////////////////
 InputDecoration kTextFieldDecoration = InputDecoration(
+  
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
-        color: Colors.white
-            .withOpacity(0.7)), // Change this color to your preference
+        color:primery_blue_grey_color
+            .withOpacity(0.8)), // Change this color to your preference
     borderRadius: const BorderRadius.all(Radius.circular(20)),
+    
   ),
   disabledBorder: const OutlineInputBorder(
     borderSide: BorderSide(
-        color: Color.fromARGB(
-            255, 249, 249, 249)), // Change this color to your preference
+        color: Color.fromARGB(255, 116, 116, 116)), // Change this color to your preference
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(
-        color: Colors.white), // Change this color to your preference
+        color:primery_blue_grey_color), // Change this color to your preference
     borderRadius: const BorderRadius.all(Radius.circular(10)),
   ),
   prefixIcon: const Icon(Icons.link),
   border: const OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10)),
   ),
-  labelText: '',
-  labelStyle: TextStyle(color: Colors.white, fontSize: 45.sp),
+  // labelText: '',
+  labelStyle: TextStyle(color: const Color.fromARGB(255, 26, 26, 26), fontSize: 45.sp),
 );
 
 ////////////////// Buttons Styles ///////////////////////
@@ -82,7 +84,7 @@ ButtonStyle kPrimeryBtnStyle(BuildContext context) {
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0), // Adjust border radius
-        side: BorderSide(color: Colors.white),
+        side: BorderSide(color: grey_bg_color),
       ),
     ),
     padding: WidgetStateProperty .all(EdgeInsets.symmetric(
@@ -93,8 +95,8 @@ ButtonStyle kPrimeryBtnStyle(BuildContext context) {
     foregroundColor:
         WidgetStateProperty .all<Color>(Colors.white),
     backgroundColor:
-        WidgetStateProperty .all<Color>(Colors.transparent), // Blue color
-    overlayColor: WidgetStateProperty .all<Color>(Color(0xFF1f2e38)),
+        WidgetStateProperty .all<Color>(primery_blue_color), // Blue color
+    overlayColor: WidgetStateProperty .all<Color>(primery_blue_color),
     
     // shape: WidgetStateProperty .all<RoundedRectangleBorder>(
   
@@ -116,7 +118,7 @@ ButtonStyle kPrimeryBtnNoPaddingStyle(BuildContext context) {
     foregroundColor:
         WidgetStateProperty .all<Color>(Color.fromARGB(255, 255, 255, 255)),
     backgroundColor:
-        WidgetStateProperty .all<Color>(Color(0xFF00a853)), // Blue color
+        WidgetStateProperty .all<Color>(primery_blue_color), // Blue color
     overlayColor: WidgetStateProperty .all<Color>(Color(0xFF1f2e38)),
     shape: WidgetStateProperty .all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
@@ -152,9 +154,9 @@ ButtonStyle kSmallSecondaryBtnStyle(BuildContext context) {
         vertical: MediaQuery.of(context).size.height * .01)),
     // Adjust these colors to your preference
     foregroundColor:
-        MaterialStateProperty.all<Color>(Color.fromARGB(255, 55, 55, 55)),
+        MaterialStateProperty.all<Color>(primery_blue_color),
     backgroundColor:
-        MaterialStateProperty.all<Color>(Color.fromARGB(255, 226, 226, 226)),
+        MaterialStateProperty.all<Color>(secondary_light_blue),
     overlayColor: MaterialStateProperty.all<Color>(
         Color.fromARGB(255, 229, 229, 229)), // Blue color
     //overlayColor: MaterialStateProperty.all<Color>(Color(0xFF4272aa)),

@@ -47,6 +47,7 @@
     "cm_report_id",
     "failure_status",
     "approved_successfully",
-    "select_an_option_from_the_drawer"
+    "select_an_option_from_the_drawer",
+    "service"
   ]
 }

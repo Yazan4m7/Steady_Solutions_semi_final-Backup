@@ -35,9 +35,9 @@ class DashboardController extends GetxController {
     "AvgDownTime": false,
   }.obs;
   RxMap<String, String> avgDownTime = <String, String>{
-    'avg': "00:00",
-    "min": "00:00",
-    "max": "00:00",
+    'avg':"",
+    "min": "",
+    "max": "",
   }.obs;
    RxMap<String, String> workingEquipmentData = <String, String>{
   }.obs;

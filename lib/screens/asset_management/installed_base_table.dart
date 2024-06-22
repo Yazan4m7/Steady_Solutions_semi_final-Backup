@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/assets_management_controller.dart';
 import 'package:steady_solutions/models/department.dart';
@@ -98,7 +99,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
               //     .choose_how_to_filter_installed_base),
               Column(
                 children: [
-                  Text(AppLocalizations.of(context).manufacturer,style:Theme.of(context).textTheme.displayMedium ,),
+                  Text(AppLocalizations.of(context).manufacturer,style:Theme.of(context).textTheme.titleSmall ,),
                   Obx(
                     () => DropdownButton<String>(
                        iconSize: 30, // Set the size of the dropdown icon
@@ -128,15 +129,24 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
               ),
             ],
           ),
+          alignment: Alignment.center,
           actions: [
-            TextButton(
-              style: kPrimeryBtnStyle(context),
-              onPressed: () {
-                structureDataForDataGrid();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                  "${AppLocalizations.of(context).all} ${AppLocalizations.of(context).installed_base}"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  iconAlignment: IconAlignment.start,
+                
+                  style: kPrimeryBtnNoPaddingStyle(context),
+                  onPressed: () {
+                    structureDataForDataGrid();
+                    Navigator.of(context).pop();
+                  },
+                  
+                  child: Text(
+                      "${AppLocalizations.of(context).all} ${AppLocalizations.of(context).installed_base}"),
+                ),
+              ],
             ),
             // Add more options as needed
           ],
@@ -197,7 +207,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
 // 'All'
             ListTile(
               
-              tileColor: Colors.blueGrey,
+              tileColor: primery_dark_blue_color,
               textColor: Colors.white,
               title: Text("Department"),
               onTap: () {
@@ -308,13 +318,13 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
     Size screenSize = MediaQuery.of(context).size;
     Alignment culumnAlignment = Alignment.centerLeft;
     Map<String, double> maxColumnWidths = {
-      'controlNO': screenSize.width / 3.5,
+      'controlNO': screenSize.width / 2.5,
       "equipName": screenSize.width / 1.6,
       'serNO': screenSize.width / 2.5,
       'modelNO': screenSize.width / 4.5,
       'manufacturer': screenSize.width / 2.5,
-      'departmentDesc': screenSize.width / 1.5,
-      "warrenty": screenSize.width / 3.5,
+      'departmentDesc': screenSize.width / 3.0,
+      "warrenty": screenSize.width / 3.0,
     };
 
     if (Get.locale?.languageCode == "ar") {
@@ -331,7 +341,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
     }
 
     TextStyle headerTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
-        color: Colors.white, fontSize: 36.sp, fontWeight: FontWeight.bold);
+        color: Colors.white, fontSize:40.sp, fontWeight: FontWeight.bold);
 
     return WillPopScope(
 
@@ -395,19 +405,28 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
                       : Expanded(
                           flex: 10,
                           child: SfDataGridTheme(
-                            data: const SfDataGridThemeData(
+                            data:  SfDataGridThemeData(
                                 //sortIcon: SizedBox(width: 0, height: 0),
                                 gridLineColor: Color(0xFF3E3E3E),
                                 gridLineStrokeWidth: 1.0,
-                                filterIconColor: Colors.blueGrey,
-                                filterIconHoverColor: Colors.purple,
+                                filterIconColor: const Color.fromARGB(255, 255, 255, 255),
+                                filterIconHoverColor: Color.fromARGB(255, 206, 206, 206),
                                 sortIconColor: Colors.blueGrey,
                                 sortIcon: SizedBox(),
-                                headerColor: Color(0xFF383838),
+                                headerColor: secondary_dark_blue,
                                 headerHoverColor: Colors.yellow),
                             child: Obx(
                               () => SfDataGrid(
                                   key: _key,
+                                  
+                                  gridLinesVisibility: GridLinesVisibility.none,
+                                  rowsPerPage: 20,
+                                 
+                                 
+                                  columnWidthMode: ColumnWidthMode.none,
+                              
+                                  navigationMode: GridNavigationMode.row,
+                                 
                                   sortingGestureType:
                                       SortingGestureType.doubleTap,
                                   headerRowHeight:
@@ -421,9 +440,10 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
                                       List<DataGridRow> row) {},
                                   selectionMode: SelectionMode.single,
                                   allowMultiColumnSorting: true,
-                                  columnWidthMode: ColumnWidthMode.none,
+                                
                                   headerGridLinesVisibility:
-                                      GridLinesVisibility.both,
+                                      GridLinesVisibility.horizontal,
+                                      isScrollbarAlwaysShown: true,
                                   showColumnHeaderIconOnHover: true,
                                   columns: [
                                     GridColumn(
@@ -515,13 +535,25 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
   Container header(BuildContext context) {
        
     return Container(
-    color: kPrimeryColor2NavyDark,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+           
+            Colors.white,
+             primery_blue_color.withOpacity(0.2),
+          ],
+          stops: [0.7,1]
+        ),),
+    //color: Colors.white,
     child: Row(
       children: [
         Expanded(
           flex: 1,
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: kPrimerWhite),
+            icon: Icon(Icons.home_outlined, color: Colors.black87),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -538,31 +570,32 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
                           .installed_base_screen_title,
                       style: Theme.of(context)
                           .textTheme
-                          .headlineMedium!
+                          .titleMedium!
                           .copyWith(
-                              color: Colors.white,
-                              fontSize: 50.sp,
-                              fontWeight: FontWeight.bold))),
-              Container(
-                child: Center(
-                    child: Text(
-                        textAlign: TextAlign.center,
-                        AppLocalizations.of(context)
-                            .double_check_to_sort_click_to_generate_report,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))),
-              ),
+                            letterSpacing: 0.2,
+                              color: primery_dark_blue_color,
+                              fontSize: 55.sp,
+                              fontWeight: FontWeight.normal))),
+              // Container(
+              //   child: Center(
+              //       child: Text(
+              //           textAlign: TextAlign.center,
+              //           AppLocalizations.of(context)
+              //               .double_check_to_sort_click_to_generate_report,
+              //           style: Theme.of(context)
+              //               .textTheme
+              //               .labelMedium!
+              //               .copyWith(
+              //                   color: Colors.white,
+              //                   fontWeight: FontWeight.bold))),
+              // ),
             ],
           ),
         ),
         Expanded(
           flex: 1,
           child: IconButton(
-            icon: Icon(Icons.filter_alt, color: kPrimerWhite),
+            icon: Icon(Icons.filter_alt, color: Colors.black87),
             onPressed: () {
               _showFilterSelectionDropDown();
             },

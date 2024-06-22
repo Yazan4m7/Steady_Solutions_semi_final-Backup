@@ -1,0 +1,21 @@
+# This is a YAML file. Pay attention to indentation!
+flutter_native_splash:
+
+  # Background color for the splash screen
+  color: "#FFFFFF"
+
+  # Path to your logo image, relative to this file
+  image: "assets/images/logos/DefaultOMS.png
+
+  # Optional: Background image for the splash screen
+  # background_image: "assets/images/background.png"
+
+  # Platforms to apply the splash screen settings to
+  android: true
+  ios: true
+  web: true
+
+  # Additional settings for fine-grained control (optional)
+  android_gravity: center # Centering logo on Android
+  ios_content_mode: center # Centering logo on iOS
+  fullscreen: true # Use entire screen for splash

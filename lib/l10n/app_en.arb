@@ -160,7 +160,8 @@
 "cm_report_id" : "CM Report ID",
 "failure_status" : "Failure Status",
 "approved_successfully" : "Approved Successfully",
-"select_an_option_from_the_drawer" : "Select an option from the drawer"
+"select_an_option_from_the_drawer" : "Select an option from the drawer",
+            "service" : "Service"
  }
 
 

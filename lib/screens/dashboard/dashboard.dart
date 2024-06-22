@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:glossy/glossy.dart';
+import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/controllers/dashboard_controller.dart';
 import 'package:steady_solutions/core/data/app_sizes.dart';
 import 'package:flutter/cupertino.dart';
@@ -140,9 +142,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
             SizedBox(height: 50.h,),
-            GlossyContainer(
-              strengthX: 3,
-              strengthY: 3,
+            Container(
+            
               height: MediaQuery.of(context).size.height / 3,
               width: MediaQuery.of(context).size.width,
               // padding: EdgeInsets.only(bottom: 40),
@@ -233,57 +234,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   static CMPerformanceChart(BuildContext context) {
     print("cm container");
-    return SfCircularChart(
-        // title: ChartTitle(
-        //     text: 'CM Performance',
-        //     textStyle: Theme.of(context).textTheme.bodySmall,
-        //     alignment: ChartAlignment.near),
-        legend: const Legend(
-          isVisible: false,
-          position: LegendPosition.bottom,
-          // ...
-        ),
-        annotations: <CircularChartAnnotation>[
-          CircularChartAnnotation(
-            widget: Container(
-              // Your custom center widget
-              child: Text(
-                "${_dashboardsController.dashboardWidgets["CM"]?.text ?? "0"}%",
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
+    return Obx( ()=> _dashboardsController.dashboardWidgets["CM"] ==null ? SpinKitThreeBounce( color: Colors.blue, size: 50.w, ) : SfCircularChart(
+          // title: ChartTitle(
+          //     text: 'CM Performance',
+          //     textStyle: Theme.of(context).textTheme.bodySmall,
+          //     alignment: ChartAlignment.near),
+          legend: const Legend(
+            isVisible: false,
+            position: LegendPosition.bottom,
+            // ...
+          ),
+          annotations: <CircularChartAnnotation>[
+            CircularChartAnnotation(
+              widget: Container(
+                // Your custom center widget
+                child: Text(
+                  "${_dashboardsController.dashboardWidgets["CM"]?.text ?? "0"}%",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
+          ],
+          tooltipBehavior: TooltipBehavior(
+            color: Colors.blueAccent,
+            enable: true,
+            duration: 500,
+            // ...
           ),
-        ],
-        tooltipBehavior: TooltipBehavior(
-          color: Colors.blueAccent,
-          enable: true,
-          duration: 500,
-          // ...
-        ),
-        series: <CircularSeries>[
-          DoughnutSeries<ChartData, String>(
-            dataSource: [
-              ChartData(
-                  //text: "hi",
-                  x: "Pending",
-                  y: _dashboardsController.dashboardWidgets["CM"]?.x ?? 0.00,
-                  color: Color.fromARGB(255, 11, 115, 149)),
-              ChartData(
-                  x: "Done",
-                  y: _dashboardsController.dashboardWidgets["CM"]?.y ?? 0.00,
-                  color: Color.fromARGB(255, 128, 184, 204))
-            ],
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.y,
-            pointColorMapper: (datum, index) => datum.color,
-            dataLabelSettings: DataLabelSettings(
-              isVisible: true, // Show data labels
-              labelPosition: ChartDataLabelPosition.inside,
-              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(),
-            ),
-          )
-        ]);
+          series: <CircularSeries>[
+            DoughnutSeries<ChartData, String>(
+              dataSource: [
+                ChartData(
+                    //text: "hi",
+                    x: "Pending",
+                    y: _dashboardsController.dashboardWidgets["CM"]?.x ?? 0.00,
+                    color: Color.fromARGB(255, 11, 115, 149)),
+                ChartData(
+                    x: "Done",
+                    y: _dashboardsController.dashboardWidgets["CM"]?.y ?? 0.00,
+                    color: Color.fromARGB(255, 128, 184, 204))
+              ],
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              pointColorMapper: (datum, index) => datum.color,
+              dataLabelSettings: DataLabelSettings(
+                isVisible: true, // Show data labels
+                labelPosition: ChartDataLabelPosition.inside,
+                textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(),
+              ),
+            )
+          ]),
+    );
   }
 
   static PMPerformanceChart(BuildContext context) {
@@ -305,8 +307,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             CircularChartAnnotation(
               widget: Container(
                 child: Text(
-                  "${_dashboardsController.dashboardWidgets["PM"]?.text}%" ??
-                      "",
+                  "${_dashboardsController.dashboardWidgets["PM"]?.text}%",
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -323,12 +324,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               dataSource: [
                 ChartData(
                   x: "Pending",
-                  y: _dashboardsController.dashboardWidgets["PM"]?.x ?? 0.00,
+                  y: _dashboardsController.dashboardWidgets["PM"]?.x,
                   color: Color.fromARGB(255, 11, 115, 149),
                 ),
                 ChartData(
                   x: "Done",
-                  y: _dashboardsController.dashboardWidgets["PM"]?.y ?? 0.00,
+                  y: _dashboardsController.dashboardWidgets["PM"]?.y,
                   color: Color.fromARGB(255, 128, 184, 204),
                 ),
               ],
@@ -355,38 +356,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
           color: Colors.white,
         ),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "MTTR [H]",
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
+        child: Obx(
+          ()=> _dashboardsController.MTTR.value.isEmpty ?  SpinKitThreeBounce( color: Colors.blue, size: 50.w, )  : Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "MTTR [H]",
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  child: Icon(
-                    Icons.monitor_heart_outlined,
-                    color: Colors.white,
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
+                    ),
+                    child: Icon(
+                      Icons.monitor_heart_outlined,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Obx(() => Text(
-                      _dashboardsController.MTTR.value,
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ))
-              ],
-            ),
-          ],
-        ),
+                ],
+              ),
+              Row(
+                children: [
+                  Obx(() => Text(
+                        _dashboardsController.MTTR.value,
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ))
+                ],
+              ),
+            ],
+          ),
+        ) ,
       ),
     );
   }
@@ -450,68 +453,70 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Expanded(
                 child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _dashboardsController.avgDownTime["avg"]!,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 10),
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blue,
+                  child: Obx(()=>
+                    _dashboardsController.avgDownTime["avg"]!.isEmpty ?  SpinKitThreeBounce( color: Colors.blue, size: 50.w, )  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _dashboardsController.avgDownTime["avg"]!,
+                              style: Theme.of(context).textTheme.headlineLarge,
                             ),
-                            child: Icon(
-                              Icons.timer_outlined,
-                              color: Colors.white,
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue,
+                              ),
+                              child: Icon(
+                                Icons.timer_outlined,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Min",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(color: Colors.green[700]),
-                          ),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-                          Text(
-                            _dashboardsController.avgDownTime["min"]!,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Max",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(color: Colors.red),
-                          ),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-                          Text(
-                            _dashboardsController.avgDownTime["max"]!,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ],
-                      )
-                    ],
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Min",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: Colors.green[700]),
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            Text(
+                              _dashboardsController.avgDownTime["min"]!,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Max",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: Colors.red),
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            Text(
+                              _dashboardsController.avgDownTime["max"]!,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -812,31 +817,28 @@ class TitledChartContainer extends StatelessWidget {
         // child,
     
         // Gradient Shadow Container
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-          child: Container(
+        Container(
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: DecoratedBox(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
+              //   color: Colors.white,
               borderRadius: BorderRadius.circular(10),
+              // gradient: LinearGradient(
+              //   begin: Alignment.bottomCenter,
+              //   end: Alignment.center,
+              //   colors: [
+              //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
+              //     Colors.transparent,
+              //   ],
+              // ),
             ),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                //   color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                // gradient: LinearGradient(
-                //   begin: Alignment.bottomCenter,
-                //   end: Alignment.center,
-                //   colors: [
-                //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
-                //     Colors.transparent,
-                //   ],
-                // ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
-                child: child,
-              ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
+              child: child,
             ),
           ),
         ),
@@ -847,7 +849,7 @@ class TitledChartContainer extends StatelessWidget {
           left: 16,
           child: Text(title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Colors.white,
+                    color: primery_blue_grey_color,
                   )),
         ),
       ],

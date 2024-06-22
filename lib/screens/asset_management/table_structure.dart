@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/models/assets_management/installed_base.dart';
 
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -46,7 +47,7 @@ class InstalledBaseDataSource extends DataGridSource {
     return DataGridRowAdapter(
         color: effectiveRows.indexOf(row) % 2 != 0
             ? Colors.white
-            : Colors.grey[200],
+            : Color(0xffddeffc),
         cells: row.getCells().map<Widget>((dataGridCell) {
           // BUILD PAGES FOR STATUS
           // if (dataGridCell.columnName == 'statusDesc') {
@@ -76,7 +77,7 @@ class InstalledBaseDataSource extends DataGridSource {
           return Container(
              alignment: 
               (dataGridCell.columnName == 'controlNO')?
-                   Alignment.center
+                   Alignment.centerLeft
                   : culomnAlignment,
               padding: EdgeInsets.only(left: 0.0),
               child: Text(

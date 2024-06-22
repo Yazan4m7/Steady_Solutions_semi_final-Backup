@@ -25,6 +25,9 @@ import 'package:steady_solutions/widgets/utils/qr_scanner.dart';
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+// required paramaters from user roomID, EquipmentID, Call type
+// required paramaters for API : uisUrgent,  roomID, EquipmentID, CallTypeID, Type
 class NewEquipWorkOrderFrom extends StatefulWidget {
    NewEquipWorkOrderFrom({Key? key,this.controlNumber}) : super(key: key);
   String? controlNumber;
@@ -58,6 +61,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
       TextEditingController();
   final TextEditingController faultStatusTEController = TextEditingController();
   StreamSubscription<ControlItem>? lisenter;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<void> _getImageFromCamera() async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
@@ -78,9 +82,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
       controlNumberTEController.text = widget.controlNumber!;              
                     }
      WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("INIT LISTENER");
-      print(lisenter?.isPaused);
-       print(lisenter.toString());
+
       if(lisenter == null )
       lisenter = _workOrderController.controlItem.listen((value) {
         print("LISENING TO CONTROL ITEM");
@@ -148,10 +150,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
           centerTitle: true,
           iconTheme:  IconThemeData(color: Color(0xFF4e7ca2)),
           title:  Text("${AppLocalizations.of(context).create_work_order}",
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
         ),
         body: SingleChildScrollView(
           child: Form(
+            key: _formKey,
               child: Container(
             width: double.infinity,
             height: screenSize.height * .81,
@@ -175,6 +178,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 _autoCompleteTextField(
                   labelText: AppLocalizations.of(context).site_name,
                   prefixIcon: Icons.home,
+                  required: true,
                   options: _workOrderController.siteNames,
                   onChanged: (value) {
                     // siteName.value = value!;
@@ -188,9 +192,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                     Expanded(
                       child: _textFormField(
                           labelText: AppLocalizations.of(context).control_number,
+                          required: true,
                           prefixIcon: Icons.confirmation_number_outlined,
                           controller: controlNumberTEController,
                          // enabled: widget.controlNumber != null ? true : false,
+                         
                           suffexIcon: IconButton(
                             icon:  Icon(Icons.search ,color: widget.controlNumber != null ? Color.fromARGB(255, 95, 95, 95): Color(0xFF4e7ca2)),
                             onPressed: () {
@@ -198,14 +204,9 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                   controlNum: controlNumberTEController.text);
                             },
                           ),
-                          validator: (value) {
-                            if (value!.isEmpty || value.length < 2) {
-                              return "Empty or too short fault status";
-                            } else {
-                              return "null";
-                            }
-                          },
-                          keyboardType: TextInputType.name),
+                         
+                          keyboardType: TextInputType.text,
+                          ),
                       //width:  mediaQuery.width*0.7,
                     ),
                     SizedBox(
@@ -253,10 +254,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               children: [
                                 Text(
                                   AppLocalizations.of(context).equip_name,
-                                  style: GoogleFonts.nunitoSans(
-                                      color: Colors.grey[500],
-                                      fontSize: 40.sp,
-                                      fontWeight: FontWeight.w600),
+                                  style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
@@ -332,13 +330,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 _textFormField(
                     labelText: AppLocalizations.of(context).fault_status,
                     prefixIcon: Icons.error_outline,
-                    validator: (value) {
-                      if (value!.isEmpty || value.length < 2) {
-                        return "Empty or too short fault status";
-                      } else {
-                        return "null";
-                      }
-                    },
+                    
                     keyboardType: TextInputType.name),
 
                 SizedBox(height: 50.h),
@@ -357,7 +349,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 scale: 1.3,
                                 child: Checkbox(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(2),
+                                    borderRadius: BorderRadius.circular(5),
                                     side:  BorderSide(
                                         width: 9, color: Color(0xFF4e7ca2)),
                                   ),
@@ -414,6 +406,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 //Save Btn
                 ElevatedButton(
                     onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
                       WorkOrder WO = WorkOrder()
                           .setEquipmentID(controlNumberTEController.text)
                           .setCallTypeID(callType.value.value.toString())
@@ -496,7 +489,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               ),
                             ]);
                       }
-                    },
+                    }},
                     // },
                     style: kPrimeryBtnStyle(context),
                     child: isLoading
@@ -526,10 +519,12 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
     required TextInputType keyboardType,
     TextEditingController? controller,
     bool enabled = true,
+    bool required = false,
     Widget? suffexIcon,
     String? value,
     Null Function(dynamic value)? onChanged,
-    String Function(String?)? validator,
+  
+   
   }) {
     return TextFormField(
       enabled: enabled,
@@ -550,7 +545,13 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 color:  Color(0xFF104065),
               ),
       ),
-      validator: validator,
+       validator:required ?  (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a value';
+                      }
+                      return null;
+                    }
+                   : null,
     );
   }
 
@@ -558,9 +559,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
     required String labelText,
     IconData? prefixIcon,
     required Map<String, dynamic> options,
+    bool required = false,
     void Function(int?)? onChanged,
   }) {
     return Autocomplete<String>(
+      
       // ID needed to post : "Value"
       // Displayed to user : "Text"
       // Key of the map    : "Text"
@@ -593,7 +596,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
       optionsViewBuilder: (context, onSelected, options) => Align(
         alignment: Alignment.topLeft,
         child: Material(
-          color:  Color.fromARGB(255, 255, 255, 255),
+          color:  Color.fromARGB(255, 241, 241, 241),
           elevation: 4.0,
           child: ConstrainedBox(
             constraints:  BoxConstraints(
@@ -615,7 +618,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                     },
                     child: Padding(
                       padding:  EdgeInsets.all(16.0),
-                      child: Text((option)),
+                      child: Text((option),style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.black,)),
                     ),
                   );
                 },
@@ -628,10 +631,39 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
           TextEditingController textEditingController,
           FocusNode focusNode,
           VoidCallback onFieldSubmitted) {
-        return TextFormField(
+            if(options.length == 1 && options.keys.first != ''){
+               site.value = options.entries.first.value;
+            return TextFormField(
           controller: textEditingController,
+          //initialValue: options.keys.first,
           focusNode: focusNode,
           style: inputTextStyle,
+           enabled: false,
+         
+          onFieldSubmitted: (String value) {
+            onFieldSubmitted();
+          },
+          decoration: kTextFieldDecoration.copyWith(
+            labelText: options.keys.first,
+            prefixIcon: prefixIcon == null
+                ? null
+                : Icon(prefixIcon, color:  Color(0xFF104065)),
+          ),
+        );
+            }
+     else{
+        return TextFormField(
+          controller: textEditingController,
+       
+          focusNode: focusNode,
+          style: inputTextStyle,
+          validator:required ?  (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a value';
+                      }
+                      return null;
+                    }
+                   : null,
           onFieldSubmitted: (String value) {
             onFieldSubmitted();
           },
@@ -642,6 +674,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 : Icon(prefixIcon, color:  Color(0xFF104065)),
           ),
         );
+     }
       },
     );
   }

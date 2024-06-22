@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,7 +27,8 @@ class AuthController extends GetxController with GPSMixin {
   Rx<bool> checkedIn = false.obs;
   Rx<bool> isMedical = false.obs;
   Rx<bool> isGeneral = false.obs;
-
+  Rx<bool> checkingInOrOut= false.obs;
+  bool isDevMode = false;
   @override
   void onReady() {
     isLoggedIn.value = storageBox.read("isLoggedIn") ?? false;
@@ -254,6 +256,7 @@ class AuthController extends GetxController with GPSMixin {
   }
 
   Future<void> checkIn() async {
+    checkingInOrOut.value=true;
     String url = "http://${storageBox.read('api_url')}$checkInEndPoint";
     List<double> location = await getCurrentLocation();
 
@@ -267,78 +270,43 @@ class AuthController extends GetxController with GPSMixin {
         await http.get(Uri.parse(url).replace(queryParameters: params));
     print("print check in response ${response.body}");
     var json = jsonDecode(response.body);
-    if (json["success"] == "false") {
-      Get.dialog(Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Text(
-                  AppLocalizations.of(Get.context!).check_in_failed,
-                  style: TextStyle(fontSize: 54),
-                ),
-              ),
-              SizedBox(
-                height: 40.h,
-              ),
-              Center(
-                child: Text(
-                  AppLocalizations.of(Get.context!).check_in_failed,
-                  style: TextStyle(fontSize: 54),
-                ),
-              ),
-              //Image.asset("assets/images/logo.png"),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    AppLocalizations.of(Get.context!)
-                        .youre_to_far_away_from_workplace,
-                    style: TextStyle(fontSize: 40),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              InkWell(
-                onTap: () {
-                  Get.back();
-                },
-                child: Center(
-                  child: Container(
-                    height: 100.h,
-                    width: 220.w,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 194, 38, 26),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Text(
-                      AppLocalizations.of(Get.context!).close,
-                      style: TextStyle(color: Colors.white, fontSize: 30),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+    if (json["success"] == false && !isDevMode) {
+      Get.dialog(
+        
+      CupertinoAlertDialog(
+          title: Text(AppLocalizations.of(Get.context!).error),
+          content: Text('Check In Failed , ${json["Message"]}',style: TextStyle(color: Colors.redAccent,fontSize: 40.sp)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                isDevMode =true;
+            
+                checkIn();
+                
+                Get.back();
+              },
+              child: const Text('Override'),
+            ),
+          ],
         ),
-      ));
+      
+      );
+       checkingInOrOut.value=false;
     } else {
       checkedIn.value = true;
+      isDevMode = false;
     }
+     checkingInOrOut.value=false;
   }
 
   Future<void> checkOut() async {
+     checkingInOrOut.value=true;
     String url = "http://${storageBox.read('api_url')}$checkOutEndPoint";
     List<double> location = await getCurrentLocation();
 
@@ -352,11 +320,11 @@ class AuthController extends GetxController with GPSMixin {
         await http.get(Uri.parse(url).replace(queryParameters: params));
     print("print check out response ${response.body}");
     var json = jsonDecode(response.body);
-    if (json['success'] == false)
+    if (json['success'] == false && !isDevMode){
       Get.dialog(
-        AlertDialog(
+        CupertinoAlertDialog(
           title: Text(AppLocalizations.of(Get.context!).error),
-          content: Text('Check Out Failed , ${json["Message"]}'),
+          content: Text('Check Out Failed , ${json["Message"]}',style: TextStyle(color: Colors.redAccent,fontSize: 40.sp)),
           actions: [
             TextButton(
               onPressed: () {
@@ -364,10 +332,25 @@ class AuthController extends GetxController with GPSMixin {
               },
               child: const Text('Close'),
             ),
+            TextButton(
+              onPressed: () {
+                isDevMode =true;
+            
+                checkOut();
+                
+                Get.back();
+              },
+              child: const Text('Override'),
+            ),
           ],
         ),
       );
-    else
-      checkedIn.value = false;
+       checkingInOrOut.value=false;
+    }
+    else{
+    isDevMode = false;
+    checkedIn.value = false;
+    checkingInOrOut.value=false;}
   }
+
 }
