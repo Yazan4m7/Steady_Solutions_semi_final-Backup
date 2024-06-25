@@ -27,10 +27,10 @@ void main() async {
 //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
 //   statusBarColor: Colors.transparent, 
 // ));
-// SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-//   statusBarColor: Colors.transparent, // Set the status bar color to transparent
- // statusBarIconBrightness: Brightness.light, // Set the icon color (light or dark)
-//));
+SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent, // Set the status bar color to transparent
+ statusBarIconBrightness: Brightness.light, // Set the icon color (light or dark)
+));
   MainBindings().dependencies();
   //MainBindings().overloadAPI();
   //_auth.employee.value = Employee.fromJson(storageBox.read("userAccount"));
@@ -60,11 +60,11 @@ void main() async {
   //  return false;
   //};
 
-  runApp(const SteadySolutionsApplication()); // starting point of app
+  runApp( SteadySolutionsApplication()); // starting point of app
 }
 
 class SteadySolutionsApplication extends StatefulWidget {
-  const SteadySolutionsApplication({super.key});
+   SteadySolutionsApplication({super.key});
 
   @override
   _SteadySolutionsApplicationState createState() {
@@ -134,56 +134,74 @@ class _SteadySolutionsApplicationState
 
   @override
   Widget build(BuildContext context) {
-          ScreenUtil.init(
-            context, designSize: Size(1080, 1920), 
+      //     ScreenUtil.init(
+      //       context, designSize: Size(1080, 1920), 
         
-        minTextAdapt: true,
-       );
+      //   minTextAdapt: true,
+      //  );
+   return ScreenUtilInit(
+      designSize:  Size(1080, 1920),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      // Use builder only if you need to use library outside ScreenUtilInit context
+      builder: (_ , child) {
+
 _locale = Locale("en","us");
-    return GlobalLoaderOverlay(
-      useDefaultLoading: true,
-      overlayWidgetBuilder: (_) {
-        //ignored progress for the moment
-        return Center(
-            child: SpinKitCubeGrid(
-          color: kPrimaryColor3BrightBlue,
-          size: 50.0,
-        )
-            // child: Lottie.asset(
-            //   fit: BoxFit.contain,
-            //      // frameRate: FrameRate.max,
-            //      //repeat: true,
-            //      // reverse: false,
-            //      // animate: true,
-            //       filterQuality: FilterQuality.high,
-            //      // width: 200,
-            //      // height: 200,
-            //   'assets/json_animations/gradient_loading.json',
-    
-            // ),
-            );
-      },
-      overlayColor: Color.fromARGB(255, 233, 233, 233).withOpacity(0.8),
-      child: GetMaterialApp(
-        locale: _locale,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        // ignore: prefer_const_literals_to_create_immutables,
-        supportedLocales: AppLocalizations.supportedLocales,
-        theme: defaultWhiteTheme,
-    
-        // GetX Controller Binding is in the main method
-        debugShowCheckedModeBanner: false,
-        //navigatorKey: navigatorKey,
-        home:ApiAddressScreen() ,
-        // home: Dashboard(),
+// SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+//   SystemUiOverlay.
+// ]);
+ ScreenUtil.ensureScreenSizeAndInit(context);
+    return MediaQuery(
+  //Setting font does not change with system font size
+  
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+      child: GlobalLoaderOverlay(
+        useDefaultLoading: true,
+        overlayWidgetBuilder: (_) {
+          //ignored progress for the moment
+          return Center(
+              child: SpinKitCubeGrid(
+            color: kPrimaryColor3BrightBlue,
+            size: 50.0,
+          )
+              // child: Lottie.asset(
+              //   fit: BoxFit.contain,
+              //      // frameRate: FrameRate.max,
+              //      //repeat: true,
+              //      // reverse: false,
+              //      // animate: true,
+              //       filterQuality: FilterQuality.high,
+              //      // width: 200,
+              //      // height: 200,
+              //   'assets/json_animations/gradient_loading.json',
+      
+              // ),
+              );
+        },
+        overlayColor: Color.fromARGB(255, 233, 233, 233).withOpacity(0.8),
+        child: GetMaterialApp(
+          locale: _locale,
+          localizationsDelegates:  [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // ignore: prefer_const_literals_to_create_immutables,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: defaultWhiteTheme,
+      
+          // GetX Controller Binding is in the main method
+          debugShowCheckedModeBanner: false,
+          //navigatorKey: navigatorKey,
+          home:ApiAddressScreen() ,
+          // home: Dashboard(),
+        ),
       ),
     );
   }
+  );
+    }
 
 
     }

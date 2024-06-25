@@ -10,7 +10,7 @@ import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 
 import 'package:steady_solutions/core/services/local_storage.dart';
-import 'package:steady_solutions/models/DTOs/all_rooms_response_DTO.dart';
+
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
 import 'package:steady_solutions/models/work_orders/achievement_report.dart';
 import 'package:steady_solutions/models/work_orders/room.dart';
@@ -22,6 +22,7 @@ import 'package:steady_solutions/models/work_orders/category.dart';
 import 'package:steady_solutions/models/work_orders/control_item_model.dart';
 import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/pending_work_order.dart';
+import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
 
 class WorkOrdersController extends GetxController {
   int? lastWorkOrderJobId;
@@ -63,6 +64,7 @@ class WorkOrdersController extends GetxController {
 
   onInit() {
     super.onInit();
+    if(storageBox.read("id") != null)
     if (_authController.isLoggedIn.value) {
       print("DATAAA 1");
       fetchAllData();
@@ -76,7 +78,8 @@ class WorkOrdersController extends GetxController {
             print("DATAAA 3");
           }
         }
-      });
+      }
+      );
     }
   }
 
@@ -113,7 +116,7 @@ class WorkOrdersController extends GetxController {
            room = Room.fromJson(item);
            if(room.deptId ==departmentId){
             print("adding room ${room.name} : ${room.deptId}");
-           rooms[room.id!] = room;
+           rooms[room.name!] = room;
            }
       //    print("all rooms DTO: ${room.name}");
       //    allRooms[room.deptId]![room.id!] = room;
@@ -161,6 +164,8 @@ class WorkOrdersController extends GetxController {
     if (isDataLoaded) {
       return;
     }
+
+  
     print("<<<<<<<<<< LOADING ALL DATA>>>>>>>>");
     await fetchNewWorkOrderOptions();
     await Future.delayed(Duration(seconds: 1));
@@ -269,6 +274,7 @@ class WorkOrdersController extends GetxController {
             child: Text("OK"),
             onPressed: () {
               Get.back();
+              Get.off(NotificationsScreen());
             },
           )
         ],

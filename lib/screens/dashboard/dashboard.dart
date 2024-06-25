@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:glossy/glossy.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/controllers/dashboard_controller.dart';
 import 'package:steady_solutions/core/data/app_sizes.dart';
@@ -47,6 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
   }
 
+  @override
   final Map<DashboardWidgets, Widget Function(BuildContext)> widgetBuilders = {
     DashboardWidgets.CMPerformanceChart: (context) =>
         CMPerformanceChart(context),
@@ -133,7 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     padding: const EdgeInsets.only(left:8.0),
                     child: Text(
                       "Welcome To Steady App!",
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 100.sp),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 100.sp,color: primery_dark_blue_color),
                     ),
                   ),
                 ),
@@ -142,6 +144,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
             SizedBox(height: 50.h,),
+
+
+            ////////////////////////////////////
             Container(
             
               height: MediaQuery.of(context).size.height / 3,
@@ -154,11 +159,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Row(
                         children: [
                           Text(
-                            " CM Performance",
-                            style: Theme.of(context).textTheme.titleMedium,
+                            "   CM",
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 65.sp,),
                           )
                         ],
-                      )),
+                      ),
+                      ),
                  
                    
                      Expanded(
@@ -185,6 +191,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
             ),
+
+
+               ////////////////////////////////////  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM 
             Container(
               height: MediaQuery.of(context).size.height / 3,
               width: MediaQuery.of(context).size.width,
@@ -196,8 +205,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Row(
                         children: [
                           Text(
-                            
-                            " Stock Management",
+                            //  TODO
+                            "   PM",
                             style: Theme.of(context).textTheme.titleMedium,
                           )
                         ],
@@ -207,17 +216,107 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Swiper(
                       itemBuilder: (context, index) {
                         // final image = images[index];
-                        return cmPerformanceCharts[index];
+                        return pmCharts[index];
                       },
                       indicatorLayout: PageIndicatorLayout.COLOR,
                       // itemHeight: 100,
                       // itemWidth: 400,
                       autoplay: false,
-                      itemCount: cmPerformanceCharts.length,
+                      itemCount: pmCharts.length,
                       pagination: const SwiperPagination(
                           builder: SwiperPagination.rect),
                       control: const SwiperControl(size: 0),
                       outer: true,
+                      fade: .0,
+                      loop: false,
+                      viewportFraction: 1,
+                      scale: 0.9,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+
+            ///////////////////////////////////////////////////// STOCK MANAGEMENT
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width,
+              // padding: EdgeInsets.only(bottom: 40),
+              child: Column(
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.height / 3 * 0.2,
+                      child: Row(
+                        children: [
+                          Text(
+                            //  TODO
+                            "   Stock Management",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          )
+                        ],
+                      )),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 3 * 0.7,
+                    child: Swiper(
+                      itemBuilder: (context, index) {
+                        // final image = images[index];
+                        return stockManagementCharts[index];
+                      },
+                      indicatorLayout: PageIndicatorLayout.COLOR,
+                      // itemHeight: 100,
+                      // itemWidth: 400,
+                      autoplay: false,
+                      itemCount: stockManagementCharts.length,
+                      pagination: const SwiperPagination(
+                          builder: SwiperPagination.rect),
+                      control: const SwiperControl(size: 0),
+                      outer: true,
+                      fade: 0,
+                      loop: false,
+                      viewportFraction: 1,
+                      scale: 0.9, // ignored
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+                   ////////////////////////////////////  Asset Management
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width,
+              // padding: EdgeInsets.only(bottom: 40),
+              child: Column(
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.height / 3 * 0.2,
+                      child: Row(
+                        children: [
+                          Text(
+                            //  TODO
+                            "   Asset Management",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          )
+                        ],
+                      )),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 3 * 0.7,
+                    child: Swiper(
+                      itemBuilder: (context, index) {
+                        // final image = images[index];
+                        return assetManagementCharts[index];
+                      },
+                      indicatorLayout: PageIndicatorLayout.COLOR,
+                      // itemHeight: 100,
+                      // itemWidth: 400,
+                      autoplay: false,
+                      itemCount: assetManagementCharts.length,
+                      pagination: const SwiperPagination(
+                          builder: SwiperPagination.rect),
+                      control: const SwiperControl(size: 0),
+                      outer: true,
+                      loop: false,
                       fade: .0,
                       viewportFraction: 0.7,
                       scale: 0.9,
@@ -799,6 +898,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
+
+
+   final ScreenshotController screenshotController = ScreenshotController();
 class TitledChartContainer extends StatelessWidget {
   final String title;
   final Widget child;
@@ -817,28 +919,33 @@ class TitledChartContainer extends StatelessWidget {
         // child,
     
         // Gradient Shadow Container
-        Container(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: DecoratedBox(
+        GestureDetector(
+          onDoubleTap: (){
+            _showActionSheet(context);
+          },
+          child: Container(
             decoration: BoxDecoration(
-              //   color: Colors.white,
+              color: const Color.fromARGB(255, 255, 255, 255),
               borderRadius: BorderRadius.circular(10),
-              // gradient: LinearGradient(
-              //   begin: Alignment.bottomCenter,
-              //   end: Alignment.center,
-              //   colors: [
-              //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
-              //     Colors.transparent,
-              //   ],
-              // ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
-              child: child,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                //   color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                // gradient: LinearGradient(
+                //   begin: Alignment.bottomCenter,
+                //   end: Alignment.center,
+                //   colors: [
+                //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
+                //     Colors.transparent,
+                //   ],
+                // ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
+                child: child,
+              ),
             ),
           ),
         ),
@@ -849,10 +956,51 @@ class TitledChartContainer extends StatelessWidget {
           left: 16,
           child: Text(title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: primery_blue_grey_color,
-                  )),
+              color: primery_blue_grey_color,
+         )),
         ),
       ],
     );
   }
+
+
+  // This shows a CupertinoModalPopup which hosts a CupertinoActionSheet.
+  void _showActionSheet(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Export/Share Chart'),
+        message: const Text('As an Image'),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            /// This parameter indicates the action would be a default
+            /// default behavior, turns the action's text to bold text.
+            isDefaultAction: true,
+            onPressed: () {
+           //   screenshotController.captureFromWidget(widget)
+            //  Navigator.pop(context);
+            },
+            child: const Text('Print'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Get more intels'),
+          ),
+          CupertinoActionSheetAction(
+            /// This parameter indicates the action would perform
+            /// a destructive action such as delete or exit and turns
+            /// the action's text color to red.
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Destructive Action'),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

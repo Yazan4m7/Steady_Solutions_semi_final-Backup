@@ -80,39 +80,60 @@ dependencies:
   glossy: ^0.0.4
   flutter_localizations:
     sdk: flutter
+  share_plus: ^9.0.0
+  screenshot: ^3.0.0
 
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  
+
+
+
+
+
+
+############## ICON SETTINGS 
+
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/Icon2.png"
+  image_path: "assets/icons/oms_white.png" 
+
+  adaptive_icon_background:  "#1977DD" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/icons/oms_white.png" # only available for Android 8.0 devices and above
+  #adaptive_icon_monochrome: "assets/icons/oms_white.png" # only available for Android 13 devices and above 
   min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_ios: true
+  background_color_ios: "#1977DD"
+  background_color: "#1977DD"
   web:
     generate: true
-    image_path: "assets/icons/Icon2.png"
-    background_color: "#ffffff"
-    theme_color: "#ffffff"
+    image_path: "assets/icons/oms_white.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
   windows:
     generate: true
-    image_path: "assets/icons/Icon2.png"
+    image_path: "assets/icons/oms_white.png"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
-    image_path: "assets/icons/Icon2.png"
+    image_path: "assets/icons/oms_white.png"
 
 
+
+############ LINTS
 
   # flutter_lints: ^3.0.2
   # lints: ^3.0.0
   # flutter analyze # Run Dart Analyzer
   # flutter pub run flutter_lints:main # Run Flutter Lints
   # dartfmt -w lib/ # Format all Dart files in the "lib" directory
+
+
+########################## FONTS AND IMAGES
 flutter:
   generate: true
 

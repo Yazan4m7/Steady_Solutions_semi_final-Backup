@@ -142,14 +142,13 @@ class DashboardController extends GetxController {
        'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
-
     try {
       String url = type == 1
           ? "http://${storageBox.read('api_url')}$getPMPerformanceChartEndPoint"
           : "http://${storageBox.read('api_url')}$getCMPerformanceChartEndPoint";
       print(Uri.parse(url).replace(queryParameters: params));
       final response =
-          await http.get(Uri.parse(url).replace(queryParameters: params));
+         await http.get(Uri.parse(url).replace(queryParameters: params));
 
       print(response.body);
       if (response.statusCode == 200) {
@@ -183,6 +182,7 @@ class DashboardController extends GetxController {
         Get.to(ApiAddressScreen());
       }
     }
+
     
     //storageBox.write("dashboardWidgets", dashboardWidgets);
   }

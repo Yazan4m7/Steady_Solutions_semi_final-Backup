@@ -1,5 +1,7 @@
 import 'dart:async';
 
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,101 +70,105 @@ class _HomeScreenState extends State<HomeScreen>
     // };
     super.initState();
   }
-
+    Key _key123 = Key("123");
   @override
   Widget build(BuildContext context) {
     return Background(
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: DashboardAppBar(),
-        ),
-        bottomNavigationBar: _bottomNavigationBar(context),
-        // backgroundColor: Colors.white,
-        floatingActionButton: Obx(
-          () => SpeedDial(
-            label: Text(
-              _isOpened ? "" : "Create W.O.",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: Colors.white),
-            ),
-
-            spacing: 0,
-            spaceBetweenChildren: 0,
-            backgroundColor: _authController.checkedIn.value
-                ? primery_blue_color
-                : const Color.fromARGB(255, 112, 112, 112),
-            //animatedIcon: AnimatedIcons.arrow_menu,
-            overlayColor: Color.fromARGB(255, 46, 46, 46),
-            overlayOpacity: 0.9,
-            onOpen: animate,
-            onClose: animate,
-            direction: Get.locale?.languageCode.toString() == "ar"
-                ? SpeedDialDirection.right
-                : SpeedDialDirection.left, // Change the direction to up
-
-            children: !_authController.checkedIn.value
-                ? []
-                : [
-                    SpeedDialChild(
-                      child: Icon(FontAwesomeIcons.wrench),
-                      label: AppLocalizations.of(context).equipment,
-                      labelStyle:
-                          TextStyle(color: kPrimeryBlack, fontSize: 30.sp),
-                      onTap: () {
-                        Get.to(() => NewServiceWorkOrderFrom());
-                      },
-                    ),
-                    SpeedDialChild(
-                      child: Icon(FontAwesomeIcons.microchip),
-                      label: AppLocalizations.of(context).service,
-                      labelStyle: Theme.of(context).textTheme.displayLarge,
-                      onTap: () {
-                        Get.to(() => NewEquipWorkOrderFrom());
-                      },
-                    )
-                  ],
-            child: SimpleAnimatedIcon(
-              color: Colors.white,
-              startIcon: Icons.add,
-              endIcon: Icons.close,
-              progress: _progress,
+      child: SafeArea(
+  
+        child: Scaffold(
+                   resizeToAvoidBottomInset: true,
+          appBar: PreferredSize(
+         
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: DashboardAppBar(),
+          ),
+          bottomNavigationBar: _bottomNavigationBar(context),
+          // backgroundColor: Colors.white,
+          floatingActionButton: Obx(
+            () => SpeedDial(
+              label: Text(
+                _isOpened ? "" : "Create W.O.",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(color: Colors.white),
+              ),
+              spacing: 0,
+              spaceBetweenChildren: 0,
+              backgroundColor: _authController.checkedIn.value
+                  ? primery_blue_color
+                  : const Color.fromARGB(255, 112, 112, 112),
+              //animatedIcon: AnimatedIcons.arrow_menu,
+              overlayColor: Color.fromARGB(255, 46, 46, 46),
+              overlayOpacity: 0.9,
+              onOpen: animate,
+              onClose: animate,
+              direction: Get.locale?.languageCode.toString() == "ar"
+                  ? SpeedDialDirection.right
+                  : SpeedDialDirection.left, // Change the direction to up
+              children: !_authController.checkedIn.value
+                  ? []
+                  : [
+                      SpeedDialChild(
+                        child: Icon(FontAwesomeIcons.wrench),
+                        label: AppLocalizations.of(context).equipment,
+                        labelStyle:
+                            TextStyle(color: kPrimeryBlack, fontSize: 30.sp),
+                        onTap: () {
+                          Get.to(() => NewEquipWorkOrderFrom());
+                        },
+                      ),
+                      SpeedDialChild(
+                        child: Icon(FontAwesomeIcons.microchip),
+                        label: AppLocalizations.of(context).service,
+                        labelStyle: Theme.of(context).textTheme.displayLarge,
+                        onTap: () {
+                          Get.to(() => NewServiceWorkOrderFrom());
+                        },
+                      )
+                    ],
+              child: SimpleAnimatedIcon(
+                color: Colors.white,
+                startIcon: Icons.add,
+                endIcon: Icons.close,
+                progress: _progress,
+              ),
             ),
           ),
-        ),
-        key: scaffoldKey,
-        drawer: SideBar(),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width,
-                  // height: MediaQuery.of(context).size.height * 0.8,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (page) {
-                      setState(() {
-                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _pageController.keepPage;
-
-                        _currentIndex = page;
-                      });
-                       });
-                    },
-                    children: [
-                      DashboardScreen(),
-                      QRScannerView(),
-                      SizedBox(
-                        child: Text(AppLocalizations.of(context).approvals),
-                      ),
-                    ],
+          key: scaffoldKey,
+          drawer: SideBar(),
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    // width: MediaQuery.of(context).size.width,
+                    // height: MediaQuery.of(context).size.height * 0.8,
+                    child: PageView(
+                      key : _key123,
+                      controller: _pageController,
+                      onPageChanged: (page) {
+                        setState(() {
+                         WidgetsBinding.instance.addPostFrameCallback((_) {
+                         // _pageController.keepPage;
+        
+                          _currentIndex = page;
+                        });
+                        });
+                      },
+                      children: [
+                        DashboardScreen(),
+                        QRScannerView(),
+                        // SizedBox(
+                        //   child: Text(AppLocalizations.of(context).approvals),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -182,67 +188,50 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _bottomNavigationBar(context) {
-    return GlossyContainer(
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.only(
-      //        topLeft: Radius.circular(25.0),
-      //  topRight: Radius.circular(25.0),
-      //  bottomLeft: Radius.circular(0.0),
-      //  bottomRight: Radius.circular(0.0),
-      //   )
-      // ) ,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(25.0),
-        topRight: Radius.circular(25.0),
-        bottomLeft: Radius.circular(0.0),
-        bottomRight: Radius.circular(0.0),
-      ),
-      height: 65,
-      width: double.infinity,
-      child: BottomNavigationBar(
-        elevation: 0,
-
-        backgroundColor: bottom_sheet_bg_color,
-
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        items: [
-          BottomNavigationBarItem(
-            backgroundColor: Colors.red,
-            icon: Icon(FontAwesomeIcons.house),
-            label: AppLocalizations.of(context).home,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.qrcode),
-            label: AppLocalizations.of(context).qr_scanner,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.circleCheck),
-            label: AppLocalizations.of(context).approval,
-          )
-        ],
-
-        onTap: (index) {
-          _currentIndex = index;
-          _pageController.jumpToPage(index);
-          setState(() {
-            print(index);
-          });
-        },
-        //type: BottomNavigationBarType.fixed,
-      ),
+    return BottomNavigationBar(
+      elevation: 0,
+    
+      backgroundColor: bottom_sheet_bg_color,
+    
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _currentIndex,
+      items: [
+        BottomNavigationBarItem(
+          backgroundColor: Colors.red,
+          icon: Icon(FontAwesomeIcons.house),
+          label: AppLocalizations.of(context).home,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.qrcode),
+          label: AppLocalizations.of(context).qr_scanner,
+        ),
+        // BottomNavigationBarItem(
+        //   icon: Icon(FontAwesomeIcons.circleCheck),
+        //   label: AppLocalizations.of(context).approval,
+        // )
+      ],
+    
+      onTap: (index) {
+        _currentIndex = index;
+        _pageController.jumpToPage(index);
+        setState(() {
+          print(index);
+        });
+      },
+      //type: BottomNavigationBarType.fixed,
     );
   }
 
   Widget DashboardAppBar() {
     return Container(
+     // color:Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             icon: Icon(
               Icons.menu,
-              color: icon_wo_bg_color,
+              color: primery_blue_color,
             ),
             onPressed: () {
               scaffoldKey.currentState!.openDrawer();
@@ -255,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen>
                 width: MediaQuery.of(context).size.width * 0.15,
                 child: Center(
                   child: IconButton(
-                    color: Color(0xFF4e7ca2),
+                    color: Color.fromARGB(255, 128, 193, 255),
                     icon: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(

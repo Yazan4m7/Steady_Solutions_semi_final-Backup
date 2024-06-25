@@ -24,10 +24,13 @@ import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ViewReport extends StatefulWidget {
+
+  int forId1;
   int reportId;
   int notificationedTypeId;
-  ViewReport(
-      {Key? key, required this.reportId, required this.notificationedTypeId})
+
+
+  ViewReport(      {Key? key, required this.reportId, required this.notificationedTypeId,required this.forId1})
       : super(key: key);
 
   @override
@@ -239,7 +242,7 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
               );
             } else
               reponseMsg=  await _notificationController.sendApproveOrEval(
-                  reportId: widget.reportId,
+                  reportId: widget.forId1,
                   repairDate: report.value.repairDate ?? "",
                   NotificationTypeId: widget.notificationedTypeId);
 
@@ -274,9 +277,10 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
                 ),
               );
             } else
+            print (report.value.repairDate);print (report.value.repairDate?.toString());
              reponseMsg=  await _notificationController.sendApproveOrEval(
                   reportId: widget.reportId,
-                  repairDate: report.value.repairDate ?? "",
+                  repairDate:  report.value.repairDate?.toString() ??" XX" ,
                   NotificationTypeId: widget.notificationedTypeId);
                    _handleRespnse(reponseMsg);
           },
@@ -322,7 +326,12 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
                                 iconColor: Colors.white,
                               ),
                             ]);
-    }
+      // _notificationController.markNotificationAsSeen(
+      //         widget.forId1.toString(),
+      //         widget.reportId.toString(),
+      //         widget.notificationedTypeId.toString());
+                  }
+     
     else
  {
       Dialogs.materialDialog(

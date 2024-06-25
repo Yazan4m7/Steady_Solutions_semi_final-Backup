@@ -87,10 +87,11 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 class NotificationTile extends StatelessWidget {
   final NotificationItem notification;
 
-  const NotificationTile({
+   NotificationTile({
     required this.notification,
   });
-
+  final NotificationsController _notificationsController =
+      NotificationsController();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -99,16 +100,16 @@ class NotificationTile extends StatelessWidget {
       },
       child: Container(
          
-        margin: EdgeInsets.symmetric(horizontal: 23.w, vertical: 14.h),
+        margin: EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
         decoration: BoxDecoration(
            color: Colors.white,
           boxShadow: [
-            // BoxShadow(
-            //   color: Color.fromARGB(255, 222, 222, 222).withOpacity(0.5),
-            //   spreadRadius: 2,
-            //   blurRadius: 10,
-            //   offset: Offset(0, 8), // changes position of shadow
-            // ),
+            BoxShadow(
+              color: Color.fromARGB(255, 222, 222, 222).withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: Offset(0, 8), // changes position of shadow
+            ),
           ],
           shape: BoxShape.rectangle,
           // borderRadius: BorderRadius.circular(10),
@@ -175,14 +176,16 @@ class NotificationTile extends StatelessWidget {
                                         ],
                                       ),
       );}
-      else
+      else{
+                    
                       notification.isSeen = true;
                       Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewReport(reportId: notification.passedPar1,notificationedTypeId: notification.notificationTypeID!),
+                              builder: (context) => ViewReport( forId1: notification.forID1!,   reportId: notification.passedPar1,notificationedTypeId: notification.notificationTypeID!),
                             ),
                           );
+                  }
                   },
                   iconSize: 30,
                   splashRadius: 24,

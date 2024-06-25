@@ -49,7 +49,8 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
     return Background(
         child: SingleChildScrollView(
             child: Column(
-      children: <Widget>[
+              children: <Widget>[
+        SizedBox(height: MediaQuery.of(context).size.height / 4.5,),
         _logo(context),
         SizedBox(
           height: 100.h,
@@ -118,8 +119,8 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
             const Spacer(),
           ],
         ),
-      ],
-    )));
+              ],
+            )));
   }
 }
 

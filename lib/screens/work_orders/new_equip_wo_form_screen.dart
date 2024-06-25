@@ -144,15 +144,26 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
 
     return Background(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
            backgroundColor: Colors.transparent,
           centerTitle: true,
           iconTheme:  IconThemeData(color: Color(0xFF4e7ca2)),
-          title:  Text("${AppLocalizations.of(context).create_work_order}",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
+          title:  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // TODO remove /s on production
+              Text( AppLocalizations.of(context).create_work_order ,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
+                     Text( "/E" ,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize:35.sp,color: Color.fromARGB(255, 116, 35, 35),fontWeight: FontWeight.w400)),
+            ],
+          ),
         ),
         body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+      
           child: Form(
             key: _formKey,
               child: Container(
@@ -330,7 +341,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 _textFormField(
                     labelText: AppLocalizations.of(context).fault_status,
                     prefixIcon: Icons.error_outline,
-                    
+                    controller: faultStatusTEController,
                     keyboardType: TextInputType.name),
 
                 SizedBox(height: 50.h),

@@ -61,66 +61,66 @@ ThemeData defaultWhiteTheme = ThemeData(
   //brightness: Brightness.light,
   primaryColor: kPrimaryColor3BrightBlue,
   textTheme: TextTheme(
-    displayLarge: GoogleFonts.merriweather(
+    displayLarge: GoogleFonts.jost(
       color: Colors.black,
       fontSize: displayLTextSize,
       fontWeight: FontWeight.w400,
     ),
-    displayMedium: GoogleFonts.merriweather(
+    displayMedium: GoogleFonts.jost(
      
       color: Colors.black,
       fontSize: displayMTextSize,
       fontWeight: FontWeight.w600,
     ),
-    displaySmall: GoogleFonts.merriweather(
+    displaySmall: GoogleFonts.jost(
       color: Colors.black,
       fontSize: displaySTextSize,
       fontWeight: FontWeight.w600,
     ),
-    headlineLarge: GoogleFonts.roboto(
+    headlineLarge: GoogleFonts.jost(
       color: kPrimeryColor2NavyDark,
       fontSize: headlineLTextSize,
       fontWeight: FontWeight.w600,
     ),
-    headlineMedium: GoogleFonts.roboto(
+    headlineMedium: GoogleFonts.jost(
       color: kPrimeryColor2NavyDark,
       fontSize: headlineMTextSize,
       fontWeight: FontWeight.w400,
     ),
-    headlineSmall: GoogleFonts.roboto(
+    headlineSmall: GoogleFonts.jost(
       color: kPrimeryColor2NavyDark,
       fontSize: headlineSTextSize,
       fontWeight: FontWeight.w400,
     ),
    
    
-    titleLarge: GoogleFonts.lora(
+    titleLarge: GoogleFonts.jost(
       color: titles_color,
       fontSize: titleLTextSize,
       fontWeight: FontWeight.w600,
     ),
-    titleMedium: GoogleFonts.lora(
+    titleMedium: GoogleFonts.jost(
       color: titles_color,
       fontSize: titleMTextSize,
       fontWeight: FontWeight.w600,
     ),
-    titleSmall: GoogleFonts.lora(
+    titleSmall: GoogleFonts.jost(
       color: titles_color,
       fontSize: titleSTextSize,
       fontWeight: FontWeight.w600,
     ),
-    bodyLarge: GoogleFonts.ptSans(
+    bodyLarge: GoogleFonts.jost(
       fontStyle: FontStyle.normal,
       color: body_color,
       fontSize: bodyLTextSize,
       fontWeight: FontWeight.w600,
     ),
-    bodyMedium: GoogleFonts.ptSans(
+    bodyMedium: GoogleFonts.jost(
       color: body_color,
       fontSize: bodyMTextSize,
       fontWeight: FontWeight.w600,
     ),
-    bodySmall: GoogleFonts.ptSans(
+    bodySmall: GoogleFonts.jost(
       color: body_color,
       fontSize: bodySTextSize,
       fontWeight: FontWeight.w600,

@@ -207,7 +207,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
 // 'All'
             ListTile(
               
-              tileColor: primery_dark_blue_color,
+              tileColor:  Colors.blueGrey,
               textColor: Colors.white,
               title: Text("Department"),
               onTap: () {
@@ -536,24 +536,15 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
        
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-           
-            Colors.white,
-             primery_blue_color.withOpacity(0.2),
-          ],
-          stops: [0.7,1]
-        ),),
+        color: Color.fromARGB(255, 7, 36, 77),
+        ),
     //color: Colors.white,
     child: Row(
       children: [
         Expanded(
           flex: 1,
           child: IconButton(
-            icon: Icon(Icons.home_outlined, color: Colors.black87),
+            icon: Icon(Icons.home_outlined, color: const Color.fromARGB(221, 255, 255, 255)),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -573,7 +564,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
                           .titleMedium!
                           .copyWith(
                             letterSpacing: 0.2,
-                              color: primery_dark_blue_color,
+                              color: Colors.white,
                               fontSize: 55.sp,
                               fontWeight: FontWeight.normal))),
               // Container(
@@ -595,7 +586,7 @@ class _InstalledBaseListState extends State<InstalledBaseList> {
         Expanded(
           flex: 1,
           child: IconButton(
-            icon: Icon(Icons.filter_alt, color: Colors.black87),
+            icon: Icon(Icons.filter_alt, color: const Color.fromARGB(221, 255, 255, 255)),
             onPressed: () {
               _showFilterSelectionDropDown();
             },

@@ -39,7 +39,6 @@ class NotificationsController extends GetxController {
       // Convert data to Notification model and add to the map
 
       data.forEach((item) {
-       
         notificationsList[item["ID"].toString()] =
             NotificationItem.fromJson(item);
       });
@@ -99,9 +98,45 @@ class NotificationsController extends GetxController {
     print(" unseen count : current ${unSeenNotificationsCount.value} previous ${previousCount}");
   }
 
+  void markNotificationAsSeen(String ForID1 ,String PassedPar1 ,String NotificationTypeID) async {
+       final response = await http.post(
+        Uri.parse(
+          "http://${storageBox.read('api_url')}/OMS/WOSeen?",
+        ),
+        body: {
+          'ForID1': ForID1,
+          'PassedPar1': PassedPar1,
+          'NotificationTypeID':NotificationTypeID,
+          'UserID': storageBox.read("id").toString(), 
+          'EquipmentTypeID': storageBox.read("role").toString(), 
+          
+      },
+    );
+    print("Notification seen respoinse : ${response.body}");
+   
+  }
+
+//void getWorkOr
+
+
+
+
+
 
   Future<String> sendApproveOrEval ({required int reportId, required String repairDate,required int NotificationTypeId}) async{
  String responseMsg = "No connection made";
+ print("repaired: "+ reportId.toString());
+  print("repaired: "+ repairDate.toString());
+   print("repaired: "+ NotificationTypeId.toString());
+
+
+
+  List<String> parts = repairDate.split(' ');
+
+  String newRepaireDate = parts[0].replaceAll("/", "-");
+
+  print("Formatted sctring $newRepaireDate");
+//  prin(reportId, required String repairDate,required int NotificationTypeId)
       final response = await http.post(
         Uri.parse(
           "http://${storageBox.read('api_url')}$sendApprovOrEvalEndPoint",

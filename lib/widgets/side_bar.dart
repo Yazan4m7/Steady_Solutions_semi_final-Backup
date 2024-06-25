@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/dashboard_controller.dart';
@@ -39,7 +40,7 @@ class SideBar extends StatelessWidget {
     }
     double level1IconSize = 60.w, level2IconSize = 40.w, level3IconSize = 30.w;
     return Drawer(
-      backgroundColor: drawerBgColor,
+      backgroundColor: primery_blue_color,
       child: Stack(
         children: [
           Container(
@@ -147,7 +148,7 @@ class SideBar extends StatelessWidget {
                                         ),
                                   ),
                                   children: [
-                                    //=======================================
+                        //====================================================================================================================================
                                     DrawerListInnerTile(
                                       context: context,
                                       title: AppLocalizations.of(context)
@@ -301,6 +302,7 @@ class SideBar extends StatelessWidget {
                       /////////////////////       DASHBOARD      ///////////////////////////////
 
                       ExpansionTile(
+                        enabled: false,
                         childrenPadding: EdgeInsets.only(left: 10),
                         leading: Icon(
                           Icons.dashboard_customize_outlined,
@@ -313,439 +315,444 @@ class SideBar extends StatelessWidget {
                           AppLocalizations.of(context).dashboard,
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.white,
+                                    color: Colors.grey,
                                   ),
                         ),
-                        children: [
-                          /////////////////////       work_orders      ///////////////////////////////
-                          /////////////////////       work_orders      ///////////////////////////////
-                          /////////////////////       Work_orders      ///////////////////////////////
-                          /////////////////////       work_orders      ///////////////////////////////
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.only(left: 10),
-                            leading: Icon(
-                              Icons.tire_repair_rounded,
-                              color: Colors.white,
-                              size: level1IconSize,
-                            ),
-                            iconColor: Colors.white,
-                            collapsedIconColor: Colors.white,
-                            title: Text(
-                              AppLocalizations.of(context).work_orders,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                            ),
-                            children: [
-                              /////////////////////       cm_performance      ///////////////////////////////
-                              /////////////////////       cm_performance      ///////////////////////////////
-                              /////////////////////       cm_performance      ///////////////////////////////
-                              /////////////////////       cm_performance      ///////////////////////////////
-                              Obx(
-                                () => DrawerListTile(
-                                  context: context,
-                                  trailingWidget:
-                                      // _chartsController.loading["CM"] == true
-                                      //      ? CircularProgressIndicator(color: Colors.white)
-                                      //      :
-                                      _chartsController.selectedWidgets
-                                              .contains(DashboardWidgets
-                                                  .CMPerformanceChart)
-                                          ? Icon(Icons.check,
-                                              color: Colors.white)
-                                          : null,
-                                  title: AppLocalizations.of(context)
-                                      .cm_performance,
-                                  icon: Icon(
-                                    Icons.logout,
-                                    color: Colors.white,
-                                  ),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(DashboardWidgets
-                                            .CMPerformanceChart))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets.CMPerformanceChart);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.CMPerformanceChart);
-                                    }
-                                  },
-                                ),
-                              ),
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget:
-                                      // _chartsController.selectedWidgets.contains(DashboardWidgets.MTBFIndicator)
-                                      //    ? CircularProgressIndicator(color: Colors.white)
-                                      //    :
-                                      _chartsController.selectedWidgets
-                                              .contains(DashboardWidgets
-                                                  .MTBFIndicator)
-                                          ? Icon(Icons.check,
-                                              color: Colors.white)
-                                          : null,
-                                  title: AppLocalizations.of(context).mtbf,
-                                  icon: Icon(Icons.monitor_heart_outlined,
-                                      size: level2IconSize),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(
-                                            DashboardWidgets.MTBFIndicator))
-                                      _chartsController.selectedWidgets
-                                          .add(DashboardWidgets.MTBFIndicator);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.MTBFIndicator);
-                                    }
-                                  },
-                                ),
-                              ),
+                      
+                      
+                        // children: [
+                        //   /////////////////////       work_orders      ///////////////////////////////
+                        //   /////////////////////       work_orders      ///////////////////////////////
+                        //   /////////////////////       Work_orders      ///////////////////////////////
+                        //   /////////////////////       work_orders      ///////////////////////////////
+                        //   ExpansionTile(
+                        //     childrenPadding: EdgeInsets.only(left: 10),
+                        //     leading: Icon(
+                        //       Icons.tire_repair_rounded,
+                        //       color: Colors.white,
+                        //       size: level1IconSize,
+                        //     ),
+                        //     iconColor: Colors.white,
+                        //     collapsedIconColor: Colors.white,
+                        //     title: Text(
+                        //       AppLocalizations.of(context).work_orders,
+                        //       style: Theme.of(context)
+                        //           .textTheme
+                        //           .bodyLarge
+                        //           ?.copyWith(
+                        //             color: Colors.white,
+                        //           ),
+                        //     ),
+                        //     children: [
+                        //       /////////////////////       cm_performance      ///////////////////////////////
+                        //       /////////////////////       cm_performance      ///////////////////////////////
+                        //       /////////////////////       cm_performance      ///////////////////////////////
+                        //       /////////////////////       cm_performance      ///////////////////////////////
+                        //       Obx(
+                        //         () => DrawerListTile(
+                        //           context: context,
+                        //           trailingWidget:
+                        //               // _chartsController.loading["CM"] == true
+                        //               //      ? CircularProgressIndicator(color: Colors.white)
+                        //               //      :
+                        //               _chartsController.selectedWidgets
+                        //                       .contains(DashboardWidgets
+                        //                           .CMPerformanceChart)
+                        //                   ? Icon(Icons.check,
+                        //                       color: Colors.white)
+                        //                   : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .cm_performance,
+                        //           icon: Icon(
+                        //             Icons.logout,
+                        //             color: Colors.white,
+                        //           ),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(DashboardWidgets
+                        //                     .CMPerformanceChart))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets.CMPerformanceChart);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.CMPerformanceChart);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget:
+                        //               // _chartsController.selectedWidgets.contains(DashboardWidgets.MTBFIndicator)
+                        //               //    ? CircularProgressIndicator(color: Colors.white)
+                        //               //    :
+                        //               _chartsController.selectedWidgets
+                        //                       .contains(DashboardWidgets
+                        //                           .MTBFIndicator)
+                        //                   ? Icon(Icons.check,
+                        //                       color: Colors.white)
+                        //                   : null,
+                        //           title: AppLocalizations.of(context).mtbf,
+                        //           icon: Icon(Icons.monitor_heart_outlined,
+                        //               size: level2IconSize),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(
+                        //                     DashboardWidgets.MTBFIndicator))
+                        //               _chartsController.selectedWidgets
+                        //                   .add(DashboardWidgets.MTBFIndicator);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.MTBFIndicator);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
 
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget:
-                                      //  _chartsController.loading["MTTR"] == true
-                                      //    ? CircularProgressIndicator(color: Colors.white)
-                                      //    :
-                                      _chartsController.selectedWidgets
-                                              .contains(DashboardWidgets
-                                                  .MTTRIndicator)
-                                          ? Icon(Icons.check,
-                                              color: Colors.white)
-                                          : null,
-                                  title: AppLocalizations.of(context).mttr,
-                                  icon: Icon(Icons.monitor_heart_outlined,
-                                      size: level2IconSize),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(
-                                            DashboardWidgets.MTTRIndicator))
-                                      _chartsController.selectedWidgets
-                                          .add(DashboardWidgets.MTTRIndicator);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.MTTRIndicator);
-                                    }
-                                  },
-                                ),
-                              ),
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget:
+                        //               //  _chartsController.loading["MTTR"] == true
+                        //               //    ? CircularProgressIndicator(color: Colors.white)
+                        //               //    :
+                        //               _chartsController.selectedWidgets
+                        //                       .contains(DashboardWidgets
+                        //                           .MTTRIndicator)
+                        //                   ? Icon(Icons.check,
+                        //                       color: Colors.white)
+                        //                   : null,
+                        //           title: AppLocalizations.of(context).mttr,
+                        //           icon: Icon(Icons.monitor_heart_outlined,
+                        //               size: level2IconSize),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(
+                        //                     DashboardWidgets.MTTRIndicator))
+                        //               _chartsController.selectedWidgets
+                        //                   .add(DashboardWidgets.MTTRIndicator);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.MTTRIndicator);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
 
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget:
-                                      //_chartsController.loading["AvgDownTime"] == true
-                                      //  ? CircularProgressIndicator(color: Colors.white)
-                                      //  :
-                                      _chartsController.selectedWidgets
-                                              .contains(DashboardWidgets
-                                                  .AvgDownTimeIndicator)
-                                          ? Icon(Icons.check,
-                                              color: Colors.white)
-                                          : null,
-                                  title: AppLocalizations.of(context)
-                                      .avg_down_time,
-                                  icon: Icon(FontAwesomeIcons.calendar,
-                                      size: level2IconSize),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(DashboardWidgets
-                                            .AvgDownTimeIndicator))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets
-                                              .AvgDownTimeIndicator);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets
-                                              .AvgDownTimeIndicator);
-                                    }
-                                  },
-                                ),
-                              ),
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget:
+                        //               //_chartsController.loading["AvgDownTime"] == true
+                        //               //  ? CircularProgressIndicator(color: Colors.white)
+                        //               //  :
+                        //               _chartsController.selectedWidgets
+                        //                       .contains(DashboardWidgets
+                        //                           .AvgDownTimeIndicator)
+                        //                   ? Icon(Icons.check,
+                        //                       color: Colors.white)
+                        //                   : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .avg_down_time,
+                        //           icon: Icon(FontAwesomeIcons.calendar,
+                        //               size: level2IconSize),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(DashboardWidgets
+                        //                     .AvgDownTimeIndicator))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets
+                        //                       .AvgDownTimeIndicator);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets
+                        //                       .AvgDownTimeIndicator);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
 
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget: (_chartsController
-                                          .selectedWidgets
-                                          .contains(DashboardWidgets
-                                              .WOByCategoryChart))
-                                      ? Icon(Icons.check, color: Colors.white)
-                                      : null,
-                                  title: AppLocalizations.of(context)
-                                      .wo_by_category,
-                                  icon: Icon(FontAwesomeIcons.calendar,
-                                      size: level2IconSize),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(
-                                            DashboardWidgets.WOByCategoryChart))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets.WOByCategoryChart);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.WOByCategoryChart);
-                                    }
-                                  },
-                                ),
-                              ),
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget: (_chartsController
-                                          .selectedWidgets
-                                          .contains(
-                                              DashboardWidgets.WOByYearTable))
-                                      ? Icon(Icons.check, color: Colors.white)
-                                      : null,
-                                  title: AppLocalizations.of(context)
-                                      .wo_by_current_year,
-                                  icon: Icon(FontAwesomeIcons.timeline,
-                                      size: level2IconSize),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(
-                                            DashboardWidgets.WOByYearTable))
-                                      _chartsController.selectedWidgets
-                                          .add(DashboardWidgets.WOByYearTable);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.WOByYearTable);
-                                    }
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget: (_chartsController
+                        //                   .selectedWidgets
+                        //                   .contains(DashboardWidgets
+                        //                       .WOByCategoryChart))
+                        //               ? Icon(Icons.check, color: Colors.white)
+                        //               : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .wo_by_category,
+                        //           icon: Icon(FontAwesomeIcons.calendar,
+                        //               size: level2IconSize),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(
+                        //                     DashboardWidgets.WOByCategoryChart))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets.WOByCategoryChart);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.WOByCategoryChart);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget: (_chartsController
+                        //                   .selectedWidgets
+                        //                   .contains(
+                        //                       DashboardWidgets.WOByYearTable))
+                        //               ? Icon(Icons.check, color: Colors.white)
+                        //               : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .wo_by_current_year,
+                        //           icon: Icon(FontAwesomeIcons.timeline,
+                        //               size: level2IconSize),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(
+                        //                     DashboardWidgets.WOByYearTable))
+                        //               _chartsController.selectedWidgets
+                        //                   .add(DashboardWidgets.WOByYearTable);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.WOByYearTable);
+                        //             }
+                        //           },
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
 
-                          ExpansionTile(
-                            enabled: true,
-                            childrenPadding: EdgeInsets.only(left: 10),
-                            leading: Icon(
-                              Icons.tire_repair_rounded,
-                              color: Colors.white,
-                              size: level1IconSize,
-                            ),
-                            iconColor: Colors.white,
-                            collapsedIconColor: Colors.white,
-                            title: Text(
-                              AppLocalizations.of(context).pm,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                            ),
-                            children: [
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget:
-                                      //  _chartsController.loading["PM"] == true
-                                      //    ? CircularProgressIndicator(color: Colors.white)
-                                      //    :
-                                      _chartsController.selectedWidgets
-                                              .contains(DashboardWidgets
-                                                  .PMPerformanceChart)
-                                          ? Icon(Icons.check,
-                                              color: Colors.white)
-                                          : null,
-                                  title: AppLocalizations.of(context)
-                                      .pm_performance,
-                                  icon: Icon(FontAwesomeIcons.calendar,
-                                      size: level2IconSize),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(DashboardWidgets
-                                            .PMPerformanceChart))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets.PMPerformanceChart);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.PMPerformanceChart);
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                        //   ExpansionTile(
+                        //     enabled: true,
+                        //     childrenPadding: EdgeInsets.only(left: 10),
+                        //     leading: Icon(
+                        //       Icons.tire_repair_rounded,
+                        //       color: Colors.white,
+                        //       size: level1IconSize,
+                        //     ),
+                        //     iconColor: Colors.white,
+                        //     collapsedIconColor: Colors.white,
+                        //     title: Text(
+                        //       AppLocalizations.of(context).pm,
+                        //       style: Theme.of(context)
+                        //           .textTheme
+                        //           .bodyLarge
+                        //           ?.copyWith(
+                        //             color: Colors.white,
+                        //           ),
+                        //     ),
+                        //     children: [
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget:
+                        //               //  _chartsController.loading["PM"] == true
+                        //               //    ? CircularProgressIndicator(color: Colors.white)
+                        //               //    :
+                        //               _chartsController.selectedWidgets
+                        //                       .contains(DashboardWidgets
+                        //                           .PMPerformanceChart)
+                        //                   ? Icon(Icons.check,
+                        //                       color: Colors.white)
+                        //                   : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .pm_performance,
+                        //           icon: Icon(FontAwesomeIcons.calendar,
+                        //               size: level2IconSize),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(DashboardWidgets
+                        //                     .PMPerformanceChart))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets.PMPerformanceChart);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.PMPerformanceChart);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
 
-                          //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
-                          //   ExpansionTile(
-                          //     enabled: true,
-                          //     childrenPadding: EdgeInsets.only(left: 10),
-                          //     leading: Icon(
-                          //       Icons.tire_repair_rounded,
-                          //       color: Colors.white,
-                          //       size: level1IconSize,
-                          //     ),
-                          //       iconColor: Colors.white,
-                          // collapsedIconColor: Colors.white,
-                          //     title: Text(
-                          //       AppLocalizations.of(context).work_orders,
-                          //       style: Theme.of(context).textTheme.displayLarge?.copyWith(),
-                          //     ),
-                          //     children: [
+                        //   //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+                        //   //   ExpansionTile(
+                        //   //     enabled: true,
+                        //   //     childrenPadding: EdgeInsets.only(left: 10),
+                        //   //     leading: Icon(
+                        //   //       Icons.tire_repair_rounded,
+                        //   //       color: Colors.white,
+                        //   //       size: level1IconSize,
+                        //   //     ),
+                        //   //       iconColor: Colors.white,
+                        //   // collapsedIconColor: Colors.white,
+                        //   //     title: Text(
+                        //   //       AppLocalizations.of(context).work_orders,
+                        //   //       style: Theme.of(context).textTheme.displayLarge?.copyWith(),
+                        //   //     ),
+                        //   //     children: [
 
-                          //     ],
-                          //                   ),
-                          ExpansionTile(
-                            enabled: true,
-                            childrenPadding: EdgeInsets.only(left: 10),
-                            leading: Icon(
-                              Icons.tire_repair_rounded,
-                              color: Colors.white,
-                              size: level1IconSize,
-                            ),
-                            iconColor: Colors.white,
-                            collapsedIconColor: Colors.white,
-                            title: Text(
-                              AppLocalizations.of(context).asset_management,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                            ),
-                            children: [
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget: (_chartsController
-                                          .selectedWidgets
-                                          .contains(DashboardWidgets
-                                              .workingEquipmentIndicator))
-                                      ? Icon(Icons.check, color: Colors.white)
-                                      : null,
-                                  title: AppLocalizations.of(context)
-                                      .working_equipment,
-                                  icon: Icon(
-                                    FontAwesomeIcons.calendar,
-                                    size: level2IconSize,
-                                    color: Colors.white,
-                                  ),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(DashboardWidgets
-                                            .workingEquipmentIndicator))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets
-                                              .workingEquipmentIndicator);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets
-                                              .workingEquipmentIndicator);
-                                    }
-                                  },
-                                ),
-                              ),
+                        //   //     ],
+                        //   //                   ),
+                        //   ExpansionTile(
+                        //     enabled: true,
+                        //     childrenPadding: EdgeInsets.only(left: 10),
+                        //     leading: Icon(
+                        //       Icons.tire_repair_rounded,
+                        //       color: Colors.white,
+                        //       size: level1IconSize,
+                        //     ),
+                        //     iconColor: Colors.white,
+                        //     collapsedIconColor: Colors.white,
+                        //     title: Text(
+                        //       AppLocalizations.of(context).asset_management,
+                        //       style: Theme.of(context)
+                        //           .textTheme
+                        //           .bodyLarge
+                        //           ?.copyWith(
+                        //             color: Colors.white,
+                        //           ),
+                        //     ),
+                        //     children: [
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget: (_chartsController
+                        //                   .selectedWidgets
+                        //                   .contains(DashboardWidgets
+                        //                       .workingEquipmentIndicator))
+                        //               ? Icon(Icons.check, color: Colors.white)
+                        //               : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .working_equipment,
+                        //           icon: Icon(
+                        //             FontAwesomeIcons.calendar,
+                        //             size: level2IconSize,
+                        //             color: Colors.white,
+                        //           ),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(DashboardWidgets
+                        //                     .workingEquipmentIndicator))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets
+                        //                       .workingEquipmentIndicator);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets
+                        //                       .workingEquipmentIndicator);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
 
-                              //=======================================
-                              Obx(
-                                () => DrawerListInnerTile(
-                                  context: context,
-                                  trailingWidget: (_chartsController
-                                          .selectedWidgets
-                                          .contains(DashboardWidgets
-                                              .equipByClassChart))
-                                      ? Icon(Icons.check, color: Colors.white)
-                                      : null,
-                                  title: AppLocalizations.of(context)
-                                      .equip_by_class,
-                                  icon: Icon(
-                                    FontAwesomeIcons.calendar,
-                                    size: level2IconSize,
-                                    color: Colors.white,
-                                  ),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(
-                                            DashboardWidgets.equipByClassChart))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets.equipByClassChart);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets.equipByClassChart);
-                                    }
-                                  },
-                                ),
-                              ),
-                              //=======================================
-                            ],
-                          ),
-                          // Parts Consum. By Curent year
-                          // PM Performance
-                          //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
-                          ExpansionTile(
-                            enabled: true,
-                            childrenPadding: EdgeInsets.only(left: 10),
-                            leading: Icon(
-                              Icons.tire_repair_rounded,
-                              color: Colors.white,
-                              size: level1IconSize,
-                            ),
-                            iconColor: Colors.white,
-                            collapsedIconColor: Colors.white,
-                            title: Text(
-                              AppLocalizations.of(context).stock_management,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                            ),
-                            children: [
-                              Obx(
-                                () => DrawerListTile(
-                                  context: context,
-                                  trailingWidget: (_chartsController
-                                          .selectedWidgets
-                                          .contains(DashboardWidgets
-                                              .PartsConsumptionChart))
-                                      ? Icon(Icons.check, color: Colors.white)
-                                      : null,
-                                  title: AppLocalizations.of(context)
-                                      .parts_consumption_by_current_year,
-                                  titleTextStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                      ),
-                                  icon: Icon(
-                                    Icons.pie_chart_outline,
-                                    color: Colors.white,
-                                  ),
-                                  onTap: () {
-                                    if (!_chartsController.selectedWidgets
-                                        .contains(DashboardWidgets
-                                            .PartsConsumptionChart))
-                                      _chartsController.selectedWidgets.add(
-                                          DashboardWidgets
-                                              .PartsConsumptionChart);
-                                    else {
-                                      _chartsController.selectedWidgets.remove(
-                                          DashboardWidgets
-                                              .PartsConsumptionChart);
-                                    }
-                                  },
-                                ),
-                              ),
-                              //=======================================
-                            ],
-                          ),
-                          // Parts Consum. By Curent year
-                          // PM Performance
-                        ],
+                        //       //=======================================
+                        //       Obx(
+                        //         () => DrawerListInnerTile(
+                        //           context: context,
+                        //           trailingWidget: (_chartsController
+                        //                   .selectedWidgets
+                        //                   .contains(DashboardWidgets
+                        //                       .equipByClassChart))
+                        //               ? Icon(Icons.check, color: Colors.white)
+                        //               : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .equip_by_class,
+                        //           icon: Icon(
+                        //             FontAwesomeIcons.calendar,
+                        //             size: level2IconSize,
+                        //             color: Colors.white,
+                        //           ),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(
+                        //                     DashboardWidgets.equipByClassChart))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets.equipByClassChart);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets.equipByClassChart);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
+                        //       //=======================================
+                        //     ],
+                        //   ),
+                        //   // Parts Consum. By Curent year
+                        //   // PM Performance
+                        //   //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+                        //   ExpansionTile(
+                        //     enabled: true,
+                        //     childrenPadding: EdgeInsets.only(left: 10),
+                        //     leading: Icon(
+                        //       Icons.tire_repair_rounded,
+                        //       color: Colors.white,
+                        //       size: level1IconSize,
+                        //     ),
+                        //     iconColor: Colors.white,
+                        //     collapsedIconColor: Colors.white,
+                        //     title: Text(
+                        //       AppLocalizations.of(context).stock_management,
+                        //       style: Theme.of(context)
+                        //           .textTheme
+                        //           .bodyLarge
+                        //           ?.copyWith(
+                        //             color: Colors.white,
+                        //           ),
+                        //     ),
+                        //     children: [
+                        //       Obx(
+                        //         () => DrawerListTile(
+                        //           context: context,
+                        //           trailingWidget: (_chartsController
+                        //                   .selectedWidgets
+                        //                   .contains(DashboardWidgets
+                        //                       .PartsConsumptionChart))
+                        //               ? Icon(Icons.check, color: Colors.white)
+                        //               : null,
+                        //           title: AppLocalizations.of(context)
+                        //               .parts_consumption_by_current_year,
+                        //           titleTextStyle: Theme.of(context)
+                        //               .textTheme
+                        //               .bodyLarge
+                        //               ?.copyWith(
+                        //                 color: Colors.white,
+                        //               ),
+                        //           icon: Icon(
+                        //             Icons.pie_chart_outline,
+                        //             color: Colors.white,
+                        //           ),
+                        //           onTap: () {
+                        //             if (!_chartsController.selectedWidgets
+                        //                 .contains(DashboardWidgets
+                        //                     .PartsConsumptionChart))
+                        //               _chartsController.selectedWidgets.add(
+                        //                   DashboardWidgets
+                        //                       .PartsConsumptionChart);
+                        //             else {
+                        //               _chartsController.selectedWidgets.remove(
+                        //                   DashboardWidgets
+                        //                       .PartsConsumptionChart);
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
+                        //       //=======================================
+                        //     ],
+                        //   ),
+                        //   // Parts Consum. By Curent year
+                        //   // PM Performance
+                        // ],
+                     
+                     
+                     
                       ),
                       //=======================================
 
@@ -787,7 +794,7 @@ class SideBar extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    color: drawerBgColor,
+                   // color: drawerBgColor,
                     margin: EdgeInsets.only(top: 10),
                     child: Padding(
                       padding: EdgeInsets.all(5.0),
