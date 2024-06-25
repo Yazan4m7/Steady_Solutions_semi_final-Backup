@@ -60,11 +60,11 @@ SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
   //  return false;
   //};
 
-  runApp( SteadySolutionsApplication()); // starting point of app
+  runApp(const SteadySolutionsApplication()); // starting point of app
 }
 
 class SteadySolutionsApplication extends StatefulWidget {
-   SteadySolutionsApplication({super.key});
+  const SteadySolutionsApplication({super.key});
 
   @override
   _SteadySolutionsApplicationState createState() {
@@ -139,18 +139,22 @@ class _SteadySolutionsApplicationState
         
       //   minTextAdapt: true,
       //  );
-   return ScreenUtilInit(
-      designSize:  Size(1080, 1920),
-      minTextAdapt: true,
-      splitScreenMode: true,
+  //  return ScreenUtilInit(
+  //     designSize: const Size(1080, 1920),
+  //     minTextAdapt: true,
+  //     splitScreenMode: true,
       // Use builder only if you need to use library outside ScreenUtilInit context
-      builder: (_ , child) {
+    //  builder: (_ , child) {
 
 _locale = Locale("en","us");
 // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
 //   SystemUiOverlay.
 // ]);
- ScreenUtil.ensureScreenSizeAndInit(context);
+  ScreenUtil.ensureScreenSizeAndInit(
+  designSize: const Size(1080, 1920),
+   minTextAdapt: true,
+  splitScreenMode: true,
+  context);
     return MediaQuery(
   //Setting font does not change with system font size
   
@@ -181,7 +185,7 @@ _locale = Locale("en","us");
         overlayColor: Color.fromARGB(255, 233, 233, 233).withOpacity(0.8),
         child: GetMaterialApp(
           locale: _locale,
-          localizationsDelegates:  [
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
@@ -199,8 +203,8 @@ _locale = Locale("en","us");
         ),
       ),
     );
-  }
-  );
+ // }
+ // );
     }
 
 

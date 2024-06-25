@@ -62,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen>
         }
       });
     }
+    print("font scaling : 1 is ${1.sp} and 10 is ${10.sp}");
+
+
+
     // FlutterError.onError = (FlutterErrorDetails details) {
     //   print("=================== CAUGHT FLUTTER ERROR");
     //   print("=================== =====================================");
