@@ -75,14 +75,14 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
   @override
   void initState() {
     _workOrderController.fetchNewWorkOrderOptions();
-    _workOrderController.controlItem.value = ControlItem();
+  
     if(widget.controlNumber != null){
    _workOrderController.getControlItem(
                                   controlNum: widget.controlNumber!);
       controlNumberTEController.text = widget.controlNumber!;              
                     }
      WidgetsBinding.instance.addPostFrameCallback((_) {
-
+  _workOrderController.controlItem.value = ControlItem();
       if(lisenter == null )
       lisenter = _workOrderController.controlItem.listen((value) {
         print("LISENING TO CONTROL ITEM");
@@ -239,7 +239,12 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                         icon:
                              Icon(Icons.qr_code, color: widget.controlNumber != null ? Color.fromARGB(255, 42, 42, 42): Color(0xFF4e7ca2)),
                         onPressed: widget.controlNumber != null ?  null: () async {
-                          Get.to(() =>  QRScannerView());
+                          Navigator.push( context, MaterialPageRoute(builder :(context) => QRScannerView()));
+                       
+                         
+                        
+                        
+                        
                         }),
                   ],
                 ),
@@ -408,7 +413,22 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                            AppLocalizations.of(context).upload_picture,
                           
                         ),
-                      ) : Image.file(_image!),
+                      ) : GestureDetector(
+                          onTap: ()async{
+                             await _getImageFromCamera();
+                          setState(() {
+                           
+                            print("Image is ${_image?.path}");
+                          });
+                          },
+                           child: Container(
+                            height: 100,
+                            width: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(_image!)),
+                                               ),
+                         ),
                     ],
                   ),
                 ),

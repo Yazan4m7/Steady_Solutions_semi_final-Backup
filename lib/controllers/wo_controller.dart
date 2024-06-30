@@ -243,7 +243,9 @@ class WorkOrdersController extends GetxController {
   // }
 
   Future<AchievementReport> getAchievementReport(int reportId) async {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
     isLoading.value = true;
+      });
     AchievementReport report = AchievementReport();
     print("sending report id : $reportId");
     final Map<String, String> params = {
@@ -281,7 +283,9 @@ class WorkOrdersController extends GetxController {
       ));
     }
     debugPrint("Aciev report :${report.equipName} ${report.failureDateTime} ${report.remedy}");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
     isLoading.value = false;
+      });
     return report;
   }
 

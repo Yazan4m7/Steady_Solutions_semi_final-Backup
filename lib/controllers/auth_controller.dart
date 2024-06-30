@@ -254,7 +254,11 @@ class AuthController extends GetxController with GPSMixin {
     employee = Employee().obs;
     Get.offAll(() => LoginScreen());
   }
+ void clearPortalAddress() {
+  storageBox.remove("isLoggedIn");
+  storageBox.remove("apiAddress");
 
+}
   Future<void> checkIn() async {
     checkingInOrOut.value=true;
     String url = "http://${storageBox.read('api_url')}$checkInEndPoint";

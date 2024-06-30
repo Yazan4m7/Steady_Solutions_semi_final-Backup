@@ -1,28 +1,17 @@
-import 'dart:ui';
-
+import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:glossy/glossy.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:steady_solutions/app_config/app_theme.dart';
 import 'package:steady_solutions/controllers/dashboard_controller.dart';
-import 'package:steady_solutions/core/data/app_sizes.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:steady_solutions/core/data/constants.dart';
-import 'package:steady_solutions/core/gps_mixin.dart';
-import 'package:steady_solutions/core/services/local_storage.dart';
+import 'package:steady_solutions/controllers/notifications_controller.dart';
 import 'package:steady_solutions/models/charts_models.dart';
 import 'package:steady_solutions/models/dashboard/chart_data.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:steady_solutions/controllers/notifications_controller.dart';
-import 'package:card_swiper/card_swiper.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({
@@ -42,30 +31,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   initState() {
     _notificationsController.fetchNotifications();
-    _dashboardsController.loadSelectedWidgets();
+    // _dashboardsController.loadSelectedWidgets();
     if (DashboardController.isDataLoaded.value)
       _dashboardsController.fetchChartsData();
     super.initState();
   }
 
-  @override
-  final Map<DashboardWidgets, Widget Function(BuildContext)> widgetBuilders = {
-    DashboardWidgets.CMPerformanceChart: (context) =>
-        CMPerformanceChart(context),
-    DashboardWidgets.PMPerformanceChart: (context) =>
-        PMPerformanceChart(context),
-    DashboardWidgets.MTTRIndicator: (context) => MTTRContainer(context),
-    DashboardWidgets.MTBFIndicator: (context) => MTBFContainer(context),
-    DashboardWidgets.AvgDownTimeIndicator: (context) =>
-        AvgDownTimeContainer(context),
-    DashboardWidgets.WOByCategoryChart: (context) => WOByCategory(context),
-    DashboardWidgets.WOByYearTable: (context) => WOByYearChart(context),
-    DashboardWidgets.PartsConsumptionChart: (context) =>
-        fetchPartsConsumption(context),
-    DashboardWidgets.workingEquipmentIndicator: (context) =>
-        workingEquipmentIndicator(context),
-    DashboardWidgets.equipByClassChart: (context) => fetchEquipByClass(context),
-  };
   List pmPerformanceCharts = [
     Container(
       color: Colors.red,
@@ -121,269 +92,288 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // if (DashboardController.isDataLoaded.value)
     //   _dashboardsController.fetchChartsData();
     return SingleChildScrollView(
-      //padding: sizes.defaultPadding,
-      child: Obx(
-        () {
-          // selectedWidgetsCopy = _dashboardsController.selectedWidgets.toList();
-          _dashboardsController.saveSelectedWidgets();
-          return Column(children: [
-            Row(
-              mainAxisAlignment:  MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: Text(
-                      "Welcome To Steady App!",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 100.sp,color: primery_dark_blue_color),
-                    ),
-                  ),
-                ),
-                // IconButton(
-                //     onPressed: () {}, icon: Icon(Icons.access_alarms_rounded,color: Colors.white,))
-              ],
-            ),
-            SizedBox(height: 50.h,),
-
-
-            ////////////////////////////////////
-            Container(
-            
-              height: MediaQuery.of(context).size.height / 3,
-              width: MediaQuery.of(context).size.width,
-              // padding: EdgeInsets.only(bottom: 40),
-              child: Column(
-                children: [
-                  Container(
-                      height: MediaQuery.of(context).size.height / 3 * 0.2,
-                      child: Row(
-                        children: [
-                          Text(
-                            "   CM",
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 65.sp,),
-                          )
-                        ],
-                      ),
-                      ),
-                 
-                   
-                     Expanded(
-                       child: Swiper(
-                        itemBuilder: (context, index) {
-                          // final image = images[index];
-                          return cmPerformanceCharts[index];
-                        },
-                        indicatorLayout: PageIndicatorLayout.COLOR,
-                        // itemHeight: 100,
-                        // itemWidth: 400,
-                        autoplay: false,
-                        itemCount: cmPerformanceCharts.length,
-                        pagination: const SwiperPagination(
-                            builder: SwiperPagination.rect),
-                        control: const SwiperControl(size: 0),
-                        outer: true,
-                        fade: .0,
-                        viewportFraction: 0.7,
-                        scale: 0.9,
-                                           ),
-                     ),
-                  
-                ],
+        //padding: sizes.defaultPadding,
+        child:
+            // selectedWidgetsCopy = _dashboardsController.selectedWidgets.toList();
+            //  _dashboardsController.saveSelectedWidgets();
+            Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                AppLocalizations.of(context).welcome_to_steady,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 100.sp, color: primery_dark_blue_color),
               ),
             ),
+          ),
 
-
-               ////////////////////////////////////  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM 
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              width: MediaQuery.of(context).size.width,
-              // padding: EdgeInsets.only(bottom: 40),
-              child: Column(
-                children: [
-                  Container(
-                      height: MediaQuery.of(context).size.height / 3 * 0.2,
-                      child: Row(
-                        children: [
-                          Text(
-                            //  TODO
-                            "   PM",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          )
-                        ],
-                      )),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 3 * 0.7,
-                    child: Swiper(
-                      itemBuilder: (context, index) {
-                        // final image = images[index];
-                        return pmCharts[index];
-                      },
-                      indicatorLayout: PageIndicatorLayout.COLOR,
-                      // itemHeight: 100,
-                      // itemWidth: 400,
-                      autoplay: false,
-                      itemCount: pmCharts.length,
-                      pagination: const SwiperPagination(
-                          builder: SwiperPagination.rect),
-                      control: const SwiperControl(size: 0),
-                      outer: true,
-                      fade: .0,
-                      loop: false,
-                      viewportFraction: 1,
-                      scale: 0.9,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-
-            ///////////////////////////////////////////////////// STOCK MANAGEMENT
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              width: MediaQuery.of(context).size.width,
-              // padding: EdgeInsets.only(bottom: 40),
-              child: Column(
-                children: [
-                  Container(
-                      height: MediaQuery.of(context).size.height / 3 * 0.2,
-                      child: Row(
-                        children: [
-                          Text(
-                            //  TODO
-                            "   Stock Management",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          )
-                        ],
-                      )),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 3 * 0.7,
-                    child: Swiper(
-                      itemBuilder: (context, index) {
-                        // final image = images[index];
-                        return stockManagementCharts[index];
-                      },
-                      indicatorLayout: PageIndicatorLayout.COLOR,
-                      // itemHeight: 100,
-                      // itemWidth: 400,
-                      autoplay: false,
-                      itemCount: stockManagementCharts.length,
-                      pagination: const SwiperPagination(
-                          builder: SwiperPagination.rect),
-                      control: const SwiperControl(size: 0),
-                      outer: true,
-                      fade: 0,
-                      loop: false,
-                      viewportFraction: 1,
-                      scale: 0.9, // ignored
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-                   ////////////////////////////////////  Asset Management
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              width: MediaQuery.of(context).size.width,
-              // padding: EdgeInsets.only(bottom: 40),
-              child: Column(
-                children: [
-                  Container(
-                      height: MediaQuery.of(context).size.height / 3 * 0.2,
-                      child: Row(
-                        children: [
-                          Text(
-                            //  TODO
-                            "   Asset Management",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          )
-                        ],
-                      )),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 3 * 0.7,
-                    child: Swiper(
-                      itemBuilder: (context, index) {
-                        // final image = images[index];
-                        return assetManagementCharts[index];
-                      },
-                      indicatorLayout: PageIndicatorLayout.COLOR,
-                      // itemHeight: 100,
-                      // itemWidth: 400,
-                      autoplay: false,
-                      itemCount: assetManagementCharts.length,
-                      pagination: const SwiperPagination(
-                          builder: SwiperPagination.rect),
-                      control: const SwiperControl(size: 0),
-                      outer: true,
-                      loop: false,
-                      fade: .0,
-                      viewportFraction: 0.7,
-                      scale: 0.9,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ]);
-        },
+          // IconButton(
+          //     onPressed: () {}, icon: Icon(Icons.access_alarms_rounded,color: Colors.white,))
+        ],
       ),
-    );
+      Divider(
+        height: 35.h,
+        thickness: 0,
+        color: Colors.black,
+        indent: 10,
+        endIndent: 10,
+      ),
+      SizedBox(
+        height: 30.h,
+      ),
+      ////////////////////////////////////  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM
+      Container(
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width,
+        // padding: EdgeInsets.only(bottom: 40),
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height / 3 * 0.2,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text(
+                      AppLocalizations.of(context).cm,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: 65.sp,
+                          ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  // final image = images[index];
+                  return cmPerformanceCharts[index];
+                },
+                indicatorLayout: PageIndicatorLayout.COLOR,
+                // itemHeight: 100,
+                // itemWidth: 400,
+                autoplay: false,
+                itemCount: cmPerformanceCharts.length,
+                pagination:
+                    const SwiperPagination(builder: SwiperPagination.rect),
+                control: const SwiperControl(size: 0),
+                outer: true,
+                fade: .8,
+                viewportFraction: 0.8,
+                scale: 0.9,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      ////////////////////////////////////  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM
+      Container(
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width,
+        // padding: EdgeInsets.only(bottom: 40),
+        child: Column(
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height / 3 * 0.2,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        //  TODO
+                        AppLocalizations.of(context).pm_only,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    )
+                  ],
+                )),
+            Expanded(
+              // height: MediaQuery.of(context).size.height / 3 * 0.7,
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  // final image = images[index];
+                  return pmCharts[index];
+                },
+                indicatorLayout: PageIndicatorLayout.COLOR,
+                // itemHeight: 100,
+                // itemWidth: 400,
+                autoplay: false,
+                itemCount: pmCharts.length,
+                pagination:
+                    const SwiperPagination(builder: SwiperPagination.rect),
+                control: const SwiperControl(size: 0),
+                outer: true,
+
+                loop: false,
+
+                fade: .8,
+                viewportFraction: 0.8,
+                scale: 0.9,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      ///////////////////////////////////////////////////// STOCK MANAGEMENT
+      Container(
+        height: MediaQuery.of(context).size.height / 2.7,
+        width: MediaQuery.of(context).size.width,
+        // padding: EdgeInsets.only(bottom: 40),
+        child: Column(
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height / 2.7 * 0.15,
+                child: Row(
+                  children: [
+                    Text(
+                      //  TODO
+                      "   Stock Management",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    )
+                  ],
+                )),
+            Expanded(
+              //height: MediaQuery.of(context).size.height / 2.7 * 0.7,
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  // final image = images[index];
+                  return stockManagementCharts[index];
+                },
+                indicatorLayout: PageIndicatorLayout.COLOR,
+                // itemHeight: 100,
+                // itemWidth: 400,
+                autoplay: false,
+                itemCount: stockManagementCharts.length,
+                pagination:
+                    const SwiperPagination(builder: SwiperPagination.rect),
+                control: const SwiperControl(size: 0),
+                outer: true,
+
+                loop: false,
+                fade: .8,
+                viewportFraction: 0.8,
+                scale: 0.6, // ignored
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      ////////////////////////////////////  Asset Management
+      Container(
+        height: MediaQuery.of(context).size.height / 2.6,
+        width: MediaQuery.of(context).size.width,
+        // padding: EdgeInsets.only(bottom: 40),
+        child: Column(
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height / 3 * 0.2,
+                child: Row(
+                  children: [
+                    Text(
+                      //  TODO
+                      "   Asset Management",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    )
+                  ],
+                )),
+            Expanded(
+              // height: MediaQuery.of(context).size.height / 3 * 0.7,
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  // final image = images[index];
+                  return assetManagementCharts[index];
+                },
+                indicatorLayout: PageIndicatorLayout.COLOR,
+                // itemHeight: 100,
+                // itemWidth: 400,
+                autoplay: false,
+                itemCount: assetManagementCharts.length,
+                pagination:
+                    const SwiperPagination(builder: SwiperPagination.rect),
+                control: const SwiperControl(size: 0),
+                outer: true,
+                loop: false,
+                fade: .8,
+                viewportFraction: 0.8,
+                scale: 0.9,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ]));
   }
 
   static CMPerformanceChart(BuildContext context) {
     print("cm container");
-    return Obx( ()=> _dashboardsController.dashboardWidgets["CM"] ==null ? SpinKitThreeBounce( color: Colors.blue, size: 50.w, ) : SfCircularChart(
-          // title: ChartTitle(
-          //     text: 'CM Performance',
-          //     textStyle: Theme.of(context).textTheme.bodySmall,
-          //     alignment: ChartAlignment.near),
-          legend: const Legend(
-            isVisible: false,
-            position: LegendPosition.bottom,
-            // ...
-          ),
-          annotations: <CircularChartAnnotation>[
-            CircularChartAnnotation(
-              widget: Container(
-                // Your custom center widget
-                child: Text(
-                  "${_dashboardsController.dashboardWidgets["CM"]?.text ?? "0"}%",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-          tooltipBehavior: TooltipBehavior(
-            color: Colors.blueAccent,
-            enable: true,
-            duration: 500,
-            // ...
-          ),
-          series: <CircularSeries>[
-            DoughnutSeries<ChartData, String>(
-              dataSource: [
-                ChartData(
-                    //text: "hi",
-                    x: "Pending",
-                    y: _dashboardsController.dashboardWidgets["CM"]?.x ?? 0.00,
-                    color: Color.fromARGB(255, 11, 115, 149)),
-                ChartData(
-                    x: "Done",
-                    y: _dashboardsController.dashboardWidgets["CM"]?.y ?? 0.00,
-                    color: Color.fromARGB(255, 128, 184, 204))
-              ],
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              pointColorMapper: (datum, index) => datum.color,
-              dataLabelSettings: DataLabelSettings(
-                isVisible: true, // Show data labels
-                labelPosition: ChartDataLabelPosition.inside,
-                textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(),
-              ),
+    return Obx(
+      () => _dashboardsController.dashboardWidgets["CM"] == null
+          ? SpinKitThreeBounce(
+              color: Colors.blue,
+              size: 50.w,
             )
-          ]),
+          : SfCircularChart(
+              // title: ChartTitle(
+              //     text: 'CM Performance',
+              //     textStyle: Theme.of(context).textTheme.bodySmall,
+              //     alignment: ChartAlignment.near),
+              legend: const Legend(
+                isVisible: false,
+                position: LegendPosition.bottom,
+                // ...
+              ),
+              annotations: <CircularChartAnnotation>[
+                CircularChartAnnotation(
+                  widget: Container(
+                    // Your custom center widget
+                    child: Text(
+                      "${_dashboardsController.dashboardWidgets["CM"]?.text ?? "0"}%",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+              tooltipBehavior: TooltipBehavior(
+                color: Colors.blueAccent,
+                enable: true,
+                duration: 500,
+                // ...
+              ),
+              series: <CircularSeries>[
+                DoughnutSeries<ChartData, String>(
+                  dataSource: [
+                    ChartData(
+                        //text: "hi",
+                        x: "Pending",
+                        y: _dashboardsController.dashboardWidgets["CM"]?.x ??
+                            0.00,
+                        color: Color.fromARGB(255, 11, 115, 149)),
+                    ChartData(
+                        x: "Done",
+                        y: _dashboardsController.dashboardWidgets["CM"]?.y ??
+                            0.00,
+                        color: Color.fromARGB(255, 128, 184, 204))
+                  ],
+                  xValueMapper: (ChartData data, _) => data.x,
+                  yValueMapper: (ChartData data, _) => data.y,
+                  pointColorMapper: (datum, index) => datum.color,
+                  dataLabelSettings: DataLabelSettings(
+                    isVisible: true, // Show data labels
+                    labelPosition: ChartDataLabelPosition.inside,
+                    textStyle:
+                        Theme.of(context).textTheme.bodyMedium?.copyWith(),
+                  ),
+                )
+              ]),
     );
   }
 
@@ -456,39 +446,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         child: Obx(
-          ()=> _dashboardsController.MTTR.value.isEmpty ?  SpinKitThreeBounce( color: Colors.blue, size: 50.w, )  : Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "MTTR [H]",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue,
+          () => _dashboardsController.MTTR.value.isEmpty
+              ? SpinKitThreeBounce(
+                  color: Colors.blue,
+                  size: 50.w,
+                )
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Text(
+                        //   "MTTR [H]",
+                        //   style: Theme.of(context).textTheme.headlineMedium,
+                        // ),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue,
+                          ),
+                          child: Icon(
+                            Icons.monitor_heart_outlined,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Icon(
-                      Icons.monitor_heart_outlined,
-                      color: Colors.white,
+                    Row(
+                      children: [
+                        Obx(() => Text(
+                              _dashboardsController.MTTR.value,
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ))
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Obx(() => Text(
-                        _dashboardsController.MTTR.value,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ))
-                ],
-              ),
-            ],
-          ),
-        ) ,
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -502,10 +497,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "MTBF [D]",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              // Text(
+              //   "MTBF [D]",
+              //   style: Theme.of(context).textTheme.headlineMedium,
+              // ),
               Container(
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
@@ -552,70 +547,80 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Expanded(
                 child: Container(
-                  child: Obx(()=>
-                    _dashboardsController.avgDownTime["avg"]!.isEmpty ?  SpinKitThreeBounce( color: Colors.blue, size: 50.w, )  : Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              _dashboardsController.avgDownTime["avg"]!,
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
+                  child: Obx(
+                    () => _dashboardsController.avgDownTime["avg"]!.isEmpty
+                        ? SpinKitThreeBounce(
+                            color: Colors.blue,
+                            size: 50.w,
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _dashboardsController.avgDownTime["avg"]!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineLarge,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10),
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue,
+                                    ),
+                                    child: Icon(
+                                      Icons.timer_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              child: Icon(
-                                Icons.timer_outlined,
-                                color: Colors.white,
+                              Row(
+                                children: [
+                                  Text(
+                                    "Min",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(color: Colors.green[700]),
+                                  ),
+                                  SizedBox(
+                                    width: 30.w,
+                                  ),
+                                  Text(
+                                    _dashboardsController.avgDownTime["min"]!,
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Min",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .copyWith(color: Colors.green[700]),
-                            ),
-                            SizedBox(
-                              width: 30.w,
-                            ),
-                            Text(
-                              _dashboardsController.avgDownTime["min"]!,
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Max",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .copyWith(color: Colors.red),
-                            ),
-                            SizedBox(
-                              width: 30.w,
-                            ),
-                            Text(
-                              _dashboardsController.avgDownTime["max"]!,
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Max",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(color: Colors.red),
+                                  ),
+                                  SizedBox(
+                                    width: 30.w,
+                                  ),
+                                  Text(
+                                    _dashboardsController.avgDownTime["max"]!,
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                   ),
                 ),
               )
@@ -627,38 +632,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   static WOByCategory(BuildContext context) {
-    return SingleChildScrollView(
-      child: SfCartesianChart(
-        // title: ChartTitle(
-        //     text: 'WO/Category',
-        //     textStyle: Theme.of(context).textTheme.labelLarge,
-        //     alignment: ChartAlignment.center),
-        primaryXAxis: CategoryAxis(
-          labelPosition: ChartDataLabelPosition.outside,
-          labelIntersectAction: AxisLabelIntersectAction.rotate45,
-          labelStyle: Theme.of(context).textTheme.labelSmall,
-        ),
-        primaryYAxis: NumericAxis(
-          minimum: 0,
-          maximum: 100,
-          interval: 25,
-          majorGridLines: MajorGridLines(width: 1), // Hide major grid lines
-        ),
-        // isTransposed: true,
-        series: <ColumnSeries<ChartData, String>>[
-          ColumnSeries<ChartData, String>(
-            dataSource: _dashboardsController.byCategoryChartData != null
-                ? _dashboardsController.byCategoryChartData!
-                : [],
-            xValueMapper: (ChartData data, _) => data.category, // Use category
-            yValueMapper: (ChartData data, _) => data.jobCount, // Use job count
-            dataLabelSettings: DataLabelSettings(isVisible: true),
-            color: const Color.fromARGB(255, 38, 166, 79),
-            borderRadius: BorderRadius.circular(0),
-            width: 0.5,
-          )
-        ],
+    return SfCartesianChart(
+      // title: ChartTitle(
+      //     text: 'WO/Category',
+      //     textStyle: Theme.of(context).textTheme.labelLarge,
+      //     alignment: ChartAlignment.center),
+      primaryXAxis: CategoryAxis(
+        /*labelsExtent: 8,*/
+        labelPosition: ChartDataLabelPosition.outside,
+        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+        labelStyle: Theme.of(context).textTheme.labelSmall,
       ),
+      primaryYAxis: NumericAxis(
+        minimum: 0,
+        maximum: 100,
+        interval: 25,
+        majorGridLines: MajorGridLines(width: 1), // Hide major grid lines
+      ),
+      isTransposed: true,
+      series: <ColumnSeries<ChartData, String>>[
+        ColumnSeries<ChartData, String>(
+          dataSource: _dashboardsController.byCategoryChartData != null
+              ? _dashboardsController.byCategoryChartData!
+              : [],
+          xValueMapper: (ChartData data, _) => data.category, // Use category
+          yValueMapper: (ChartData data, _) => data.jobCount, // Use job count
+          dataLabelSettings: DataLabelSettings(isVisible: true),
+          color: const Color.fromARGB(255, 38, 166, 79),
+          borderRadius: BorderRadius.circular(0),
+          width: 0.5,
+        )
+      ],
     );
   }
 
@@ -841,9 +845,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     SfCartesianChart chart = SfCartesianChart(
       plotAreaBorderWidth: 0,
-      title: ChartTitle(
+      /*   title: ChartTitle(
           text: 'Inventory Part Consumbtion',
-          textStyle: Theme.of(context).textTheme.labelMedium),
+          textStyle: Theme.of(context).textTheme.labelMedium),*/
       legend:
           Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
       primaryXAxis: const NumericAxis(
@@ -882,14 +886,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ))
     ];
     return SfCircularChart(
-      title: ChartTitle(
+      /* title: ChartTitle(
           text: 'Equipment By Class',
           textStyle: Theme.of(context).textTheme.labelLarge,
-          alignment: ChartAlignment.center),
+          alignment: ChartAlignment.center),*/
       series: series1,
       legend: Legend(
-        padding: 10,
-        isVisible: true,
+        padding: 1,
+        isVisible: false,
         position: LegendPosition.auto,
         alignment: ChartAlignment.near,
         overflowMode: LegendItemOverflowMode.wrap,
@@ -898,9 +902,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
+final ScreenshotController screenshotController = ScreenshotController();
 
-
-   final ScreenshotController screenshotController = ScreenshotController();
 class TitledChartContainer extends StatelessWidget {
   final String title;
   final Widget child;
@@ -913,56 +916,59 @@ class TitledChartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Child Widget
-        // child,
-    
-        // Gradient Shadow Container
-        GestureDetector(
-          onDoubleTap: (){
-            _showActionSheet(context);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: DecoratedBox(
+    return Container(
+      height: 700.h,
+      child: Stack(
+        children: [
+          // Child Widget
+          // child,
+
+          // Gradient Shadow Container
+          GestureDetector(
+            onDoubleTap: () {
+              _showActionSheet(context);
+            },
+            child: Container(
+              height: 700,
               decoration: BoxDecoration(
-                //   color: Colors.white,
+                color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10),
-                // gradient: LinearGradient(
-                //   begin: Alignment.bottomCenter,
-                //   end: Alignment.center,
-                //   colors: [
-                //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
-                //     Colors.transparent,
-                //   ],
-                // ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
-                child: child,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  //   color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.bottomCenter,
+                  //   end: Alignment.center,
+                  //   colors: [
+                  //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
+                  //     Colors.transparent,
+                  //   ],
+                  // ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
+                  child: child,
+                ),
               ),
             ),
           ),
-        ),
-    
-        // Title Text
-        Positioned(
-          bottom: 10,
-          left: 16,
-          child: Text(title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: primery_blue_grey_color,
-         )),
-        ),
-      ],
+
+          // Title Text
+          Positioned(
+            bottom: 10,
+            left: 16,
+            child: Text(title,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: primery_blue_grey_color,
+                    )),
+          ),
+        ],
+      ),
     );
   }
-
 
   // This shows a CupertinoModalPopup which hosts a CupertinoActionSheet.
   void _showActionSheet(BuildContext context) {
@@ -977,8 +983,8 @@ class TitledChartContainer extends StatelessWidget {
             /// default behavior, turns the action's text to bold text.
             isDefaultAction: true,
             onPressed: () {
-           //   screenshotController.captureFromWidget(widget)
-            //  Navigator.pop(context);
+              //   screenshotController.captureFromWidget(widget)
+              //  Navigator.pop(context);
             },
             child: const Text('Print'),
           ),
@@ -1002,5 +1008,4 @@ class TitledChartContainer extends StatelessWidget {
       ),
     );
   }
-
 }

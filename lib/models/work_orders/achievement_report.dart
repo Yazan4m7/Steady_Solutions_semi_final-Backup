@@ -1,7 +1,7 @@
 class AchievementReport {
-  int? cMReportID;
-  int? jobNO;
-  int? equipID;
+  String? cMReportID;
+  String? jobNO;
+  String? equipID;
   String? equipName;
   String? failureDateTime;
   String? callerName;
@@ -13,7 +13,7 @@ class AchievementReport {
   String? repairDate;
   String? startDate;
   String? endDate;
-
+  String? comments;
   AchievementReport(
       {this.cMReportID,
       this.jobNO,
@@ -28,23 +28,26 @@ class AchievementReport {
       this.travelTime,
       this.repairDate,
       this.startDate,
-      this.endDate});
+      this.endDate,
+      this.comments});
 
   AchievementReport.fromJson(Map<String, dynamic> json) {
-    cMReportID = json['CMReportID'] ?? "N/A";
-    jobNO = json['JobNO']?? "N/A";
-    equipID = json['EquipID']?? "N/A";
-    equipName = json['EquipName']?? "N/A";
-    failureDateTime = json['FailureDateTime']?? "N/A";
-    callerName = json['CallerName']?? "N/A";
-    faultStatus = json['FaultStatus']?? "N/A";
-    remedy = json['Remedy']?? "N/A";
-    reasonForNotClosingJob = json['ReasonForNotClosingJob']?? "N/A";
-    actionTakenToClosePendingJob = json['ActionTakenToClosePendingJob']?? "N/A";
-    travelTime = json['TravelTime']?? "N/A";
-    repairDate = json['RepairDate']?? "N/A";
-    startDate = json['StartDate']?? "N/A";
-    endDate = json['EndDate']?? "N/A";
+    cMReportID = json['CMReportID'].toString();
+    jobNO = json['JobNO'].toString();
+    equipID = json['EquipID'].toString();
+    equipName = json['EquipName'].toString();
+    failureDateTime = json['FailureDateTime'].toString();
+    callerName = json['CallerName'].toString();
+    faultStatus = json['FaultStatus'].toString();
+    remedy = json['Remedy'].toString();
+    reasonForNotClosingJob = json['ReasonForNotClosingJob'].toString();
+    actionTakenToClosePendingJob =
+        json['ActionTakenToClosePendingJob'].toString();
+    travelTime = json['TravelTime'].toString();
+    repairDate = json['RepairDate'].toString();
+    startDate = json['StartDate'].toString();
+    endDate = json['EndDate'].toString();
+    comments = json['Comments'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +66,7 @@ class AchievementReport {
     data['RepairDate'] = this.repairDate;
     data['StartDate'] = this.startDate;
     data['EndDate'] = this.endDate;
+    data['Comments'] = this.comments;
     return data;
   }
 }

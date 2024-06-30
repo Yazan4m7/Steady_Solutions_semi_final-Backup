@@ -9,7 +9,11 @@ import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/dashboard_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
+import 'package:steady_solutions/models/assets_management/installed_base.dart';
 import 'package:steady_solutions/screens/asset_management/installed_base_table.dart';
+import 'package:steady_solutions/screens/asset_management/installed_base_table_v2.dart';
+import 'package:steady_solutions/screens/asset_management/installed_base_table_v3.dart';
+import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
 import 'package:steady_solutions/screens/pending_list/pending_work_orders.dart';
 import 'package:steady_solutions/screens/pm/calendar.dart';
@@ -40,7 +44,7 @@ class SideBar extends StatelessWidget {
     }
     double level1IconSize = 60.w, level2IconSize = 40.w, level3IconSize = 30.w;
     return Drawer(
-      backgroundColor: primery_blue_color,
+      backgroundColor: secondary_dark_blue,
       child: Stack(
         children: [
           Container(
@@ -91,6 +95,8 @@ class SideBar extends StatelessWidget {
                                   builder: (context) => InstalledBaseList(),
                                 ),
                               );
+                              //MyHomePage()
+                              // BigDataTable
                             },
                           ),
                           //=======================================
@@ -773,7 +779,24 @@ class SideBar extends StatelessWidget {
                           );
                         },
                       ),
-
+                        DrawerListTile(
+                        context: context,
+                        title: AppLocalizations.of(context).change_portal_address,
+                        icon: Icon(
+                          Icons.change_circle_outlined,
+                          color: Colors.white,
+                        ),
+                        onTap: () {
+                          _authController.clearPortalAddress();
+                          
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ApiAddressScreen(),
+                            ),
+                          );
+                        },
+                      ),
                       DrawerListTile(
                         context: context,
                         title: AppLocalizations.of(context).logout,

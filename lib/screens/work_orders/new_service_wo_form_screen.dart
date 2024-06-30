@@ -13,6 +13,7 @@ import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
+import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
 import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/work_orders/room.dart';
@@ -77,6 +78,7 @@ Future<void> _getImageFromCamera() async {
       // You can use the '_image' File object here to do something with the captured photo
     }
 }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -290,8 +292,24 @@ Future<void> _getImageFromCamera() async {
                              AppLocalizations.of(context).upload_picture,
                             
                           ),
-                        ) : Image.file(_image!),
-                      ],
+                        ) :
+                        
+                         GestureDetector(
+                          onTap: ()async{
+                             await _getImageFromCamera();
+                          setState(() {
+                           
+                            print("Image is ${_image?.path}");
+                          });
+                          },
+                           child: Container(
+                            height: 100,
+                            width: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(_image!)),
+                                               ),
+                         )],
                     ),
                     SizedBox(height: 50.h),
                 

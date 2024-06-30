@@ -23,6 +23,9 @@
     "service_desc",
     "back_to_form",
     "create_work_order",
+    "wo_analysis_by_category",
+    "inventory_part_consumbtion_by_current_year",
+    "work_wrders_by_current_year",
     "check_in_failed",
     "youre_to_far_away_from_workplace",
     "error",
@@ -48,6 +51,8 @@
     "failure_status",
     "approved_successfully",
     "select_an_option_from_the_drawer",
-    "service"
+    "service",
+    "welcome_to_steady",
+    "pm_only"
   ]
 }

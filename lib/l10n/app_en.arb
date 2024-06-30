@@ -161,7 +161,11 @@
 "failure_status" : "Failure Status",
 "approved_successfully" : "Approved Successfully",
 "select_an_option_from_the_drawer" : "Select an option from the drawer",
-            "service" : "Service"
+            "service" : "Service",
+            "welcome_to_steady": "Welcome To Steady App!",
+            "pm_only" : "PM",
+            "work_order" : "Work Order"
+          
  }
 
 

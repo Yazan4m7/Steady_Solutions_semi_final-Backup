@@ -38,7 +38,7 @@ class InstalledBaseDataSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => dataGridRows;
-
+ 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     TextStyle rowsTextStyle=TextStyle(

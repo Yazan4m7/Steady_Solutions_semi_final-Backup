@@ -9,7 +9,6 @@ import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 class NotificationsController extends GetxController {
   RxMap<String, NotificationItem> notificationsList =
       <String, NotificationItem>{}.obs;
-  final ApiAddressController _apiController = Get.find<ApiAddressController>();
   final seenNotifications = <String>[].obs;
   RxBool isLoading = false.obs;
    RxInt unSeenNotificationsCount = 0.obs;
@@ -98,7 +97,7 @@ class NotificationsController extends GetxController {
     print(" unseen count : current ${unSeenNotificationsCount.value} previous ${previousCount}");
   }
 
-  void markNotificationAsSeen(String ForID1 ,String PassedPar1 ,String NotificationTypeID) async {
+  void markNotificationAsSeen({required String ForID1 , required String PassedPar1 ,required String NotificationTypeID}) async {
        final response = await http.post(
         Uri.parse(
           "http://${storageBox.read('api_url')}/OMS/WOSeen?",
@@ -116,18 +115,12 @@ class NotificationsController extends GetxController {
    
   }
 
-//void getWorkOr
-
-
-
-
-
 
   Future<String> sendApproveOrEval ({required int reportId, required String repairDate,required int NotificationTypeId}) async{
  String responseMsg = "No connection made";
  print("repaired: "+ reportId.toString());
-  print("repaired: "+ repairDate.toString());
-   print("repaired: "+ NotificationTypeId.toString());
+  print("repair date: "+ repairDate.toString());
+   print(" ntype id: "+ NotificationTypeId.toString());
 
 
 

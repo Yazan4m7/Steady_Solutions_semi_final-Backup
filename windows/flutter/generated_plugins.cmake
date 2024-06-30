@@ -4,12 +4,14 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
+  file_saver
   file_selector_windows
   firebase_auth
   firebase_core
   flutter_localization
   geolocator_windows
   local_auth_windows
+  printing
   rive_common
   share_plus
   url_launcher_windows

@@ -5,10 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
-import 'package:steady_solutions/controllers/auth_controller.dart';
-import 'package:steady_solutions/core/services/local_storage.dart';
-import 'package:steady_solutions/screens/auth/login_screen.dart';
-import 'package:steady_solutions/widgets/misc/custom_dialog.dart';
+
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loader_overlay/loader_overlay.dart';

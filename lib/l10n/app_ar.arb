@@ -99,14 +99,12 @@
       "loading" : "يتم التحميل",
       "please_wait" : "يرجى الانتظار",
       "select_manufacturer" : "اختر المصنع",
-      "select_manufacturer" : "Select Manafacturer",
-      "wo_analysis_by_category" :"WO Analysis By Category",
-      "inventory_part_consumbtion_by_current_year": "Inventory Part Consumbtion By Current Year",
-      "work_wrders_by_current_year" :"Work Orders By Current Year",
+
       "site_name" : "الموقع",
       "category": "الصنف",
       "departments" : "الفسم",
-      "rooms" : "الغرف"
+      "rooms" : "الغرف",
+      "work_order" : "عمل أصلاح",
 
-
+      "change_portal_address" : "Change Portal Address"
     }

@@ -1,37 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
-import 'package:steady_solutions/core/data/constants.dart';
-
 import 'package:steady_solutions/core/services/local_storage.dart';
-import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:steady_solutions/widgets/misc/show_up_widget.dart';
+import 'package:steady_solutions/widgets/utils/background.dart';
 
-class LoginScreen extends StatelessWidget  {
+class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   //static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthController _authController = Get.find<AuthController>();
- final ApiAddressController _apiController = Get.find<ApiAddressController>();
+  final ApiAddressController _apiController = Get.find<ApiAddressController>();
   static TextEditingController _emailTFController = TextEditingController();
   static TextEditingController _passwordTFController = TextEditingController();
-  static String? role;
-  String?  _selectedRole;
+  static String? role = "2";
+  String? _selectedRole;
   final TextEditingController _dropdownController = TextEditingController();
-   static final GlobalKey<State> _dropDownKey = GlobalKey();
+  static final GlobalKey<State> _dropDownKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-   _selectedRole = (_authController.isGeneral.value &&
-                            !_authController.isMedical.value)
-                        ? AppLocalizations.of(context).general
-                        : (!_authController.isMedical.value &&
-                                _authController.isMedical.value)
-                            ? AppLocalizations.of(context).medical
-                            : AppLocalizations.of(context).medical;
-                               _dropdownController.text = _selectedRole!;
+    _selectedRole = (_authController.isGeneral.value &&
+            !_authController.isMedical.value)
+        ? AppLocalizations.of(context).general
+        : (!_authController.isMedical.value && _authController.isMedical.value)
+            ? AppLocalizations.of(context).medical
+            : AppLocalizations.of(context).medical;
+    _dropdownController.text = _selectedRole!;
     return Background(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -41,7 +38,7 @@ class LoginScreen extends StatelessWidget  {
             leading: PopupMenuButton<String>(
               icon: const Icon(Icons.language),
               onSelected: (String result) {
-               storageBox.write('languageCode',result) ;
+                storageBox.write('languageCode', result);
                 Get.updateLocale(Locale(result));
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -108,7 +105,8 @@ class LoginScreen extends StatelessWidget  {
             const Spacer(),
             Expanded(
               flex: 6,
-              child: Image.asset("assets/images/logos/new_blue_logo_transparent_bg-09.png"),
+              child: Image.asset(
+                  "assets/images/logos/new_blue_logo_transparent_bg-09.png"),
             ),
             const Spacer(),
           ],
@@ -117,7 +115,7 @@ class LoginScreen extends StatelessWidget  {
     );
   }
 
-   Widget _loginForm(BuildContext context) {
+  Widget _loginForm(BuildContext context) {
     print("returning form");
     return Container(
       decoration: BoxDecoration(
@@ -165,63 +163,72 @@ class LoginScreen extends StatelessWidget  {
                     )),
               ),
             ),
-             Obx(
-                ()=> Padding(
-                  padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-                  child: DropdownButtonFormField<String>(
-                      key: LoginScreen._dropDownKey,
-                      dropdownColor: Colors.white,
-                      style: inputTextStyle,
-                      decoration: kTextFieldDecoration.copyWith(
-                          labelText: AppLocalizations.of(context).select_om_type,
-                          prefixIcon: const Icon(Icons.arrow_drop_down,
-                              color: Colors.white)),
-                      items: [
-                        DropdownMenuItem<String>(
-                          value: AppLocalizations.of(context).medical,
-                          child:Obx(()=>
-                             Text(AppLocalizations.of(context).medical,
-                                style: _authController.isMedical.value == true
-                                    ? dropDownTextStyle
-                                    :dropDownTextStyle.copyWith(color: const Color.fromARGB(255, 16, 16, 16)) ),
-                          ),
-                        
-                        enabled: true,
-                        //  enabled: _authController.isMedical.value,
+            Obx(
+              () => Padding(
+                padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+                child: DropdownButtonFormField<String>(
+                    key: LoginScreen._dropDownKey,
+                    dropdownColor: Colors.white,
+                    style: inputTextStyle,
+                    decoration: kTextFieldDecoration.copyWith(
+                        labelText: AppLocalizations.of(context).select_om_type,
+                        prefixIcon: const Icon(Icons.arrow_drop_down,
+                            color: Colors.black)),
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: AppLocalizations.of(context).medical,
+                        child: Obx(
+                          () => Text(AppLocalizations.of(context).medical,
+                              style: _authController.isMedical.value == true
+                                  ? dropDownTextStyle
+                                  : dropDownTextStyle.copyWith(
+                                      color: const Color.fromARGB(
+                                          255, 16, 16, 16))),
                         ),
-                        DropdownMenuItem<String>(
-                          value: AppLocalizations.of(context).general,
-                          child: Obx(()=> Text(AppLocalizations.of(context).general,
-                                style:  _authController.isGeneral.value == true
-                                    ? dropDownTextStyle
-                                    :dropDownTextStyle.copyWith(color: Colors.grey) ),
-                          ),
-                          enabled: _authController.isGeneral.value,
-                        )
-                      ],
-                      onChanged: (String? newValue) {
-                        print("onChanged");
-                        _selectedRole = newValue;
-                      },
-                      onSaved: (String? newValue) {
-                        print("onSaved");
-                        _selectedRole = newValue;
-                      },
-                      value: _selectedRole),
-                ),
-              ),const SizedBox(height: defaultPadding),
+
+                        enabled: true,
+                        onTap: () {
+                            print("onTap 2");
+                          role = '2';
+                        }
+                        //  enabled: _authController.isMedical.value,
+                      ),
+                      DropdownMenuItem<String>(
+                        value: AppLocalizations.of(context).general,
+                        child: Obx(
+                          () => Text(AppLocalizations.of(context).general,
+                              style: _authController.isGeneral.value == true
+                                  ? dropDownTextStyle
+                                  : dropDownTextStyle.copyWith(
+                                      color: Colors.grey)),
+                        ),
+                        enabled: _authController.isGeneral.value,
+                        onTap: () {
+                          print("onTap 1");
+                          role = '1';
+                        },
+                      )
+                    ],
+                    onChanged: (String? newValue) {
+                      print("onChanged");
+                    
+                    },
+                    onSaved: (String? newValue) {
+                      print("onSaved");
+                      
+                    },
+                    value: _selectedRole),
+              ),
+            ),
+            const SizedBox(height: defaultPadding),
             ElevatedButton(
               style: kPrimeryBtnStyle(context),
               onPressed: () async {
-                if (role == AppLocalizations.of(context).medical) {
-                  role = '1';//TODO SWAP
-                } else {
-                  role = '2';
-                }
+              
                 print("sending role to controller: $role");
                 // Error dialog box shows up by auth controller
-                await _authController.login(
-                    _emailTFController.text, _passwordTFController.text, role!,context);
+                await _authController.login(_emailTFController.text,
+                    _passwordTFController.text, role!, context);
                 //    }
               },
               child: Text(

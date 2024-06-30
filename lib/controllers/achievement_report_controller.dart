@@ -9,6 +9,7 @@ import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/models/job_for_achievement.dart';
+import 'package:steady_solutions/models/work_orders/WorkOrderDetails.dart';
 
 class AchievementReportsController extends GetxController {
   static AchievementReportsController get instance => Get.find();
@@ -20,8 +21,42 @@ class AchievementReportsController extends GetxController {
       ControlItemFromAchievement().obs;
   Rx<bool> isLoading = false.obs;
 
+  Future<WorkOrderDetails> getWODetailsForNotification(String jobNumber) async {
+    print("wo number : $jobNumber");
+    WorkOrderDetails woDetails;
+    final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+      'JobNo': jobNumber,
+    };
+
+    try {
+      final response = await http.get(
+          Uri.parse("http://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
+              .replace(queryParameters: params));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("wo response: $data");
+        woDetails = WorkOrderDetails.fromJson(data);
+      } else {
+        woDetails = WorkOrderDetails(
+          equipName: "N/A",
+          faultStatus:"N/A",
+        );
+      }
+      return woDetails;
+    } catch (e) {
+      woDetails = WorkOrderDetails(
+        equipName: "N/A",
+        faultStatus: "N/A",
+
+      );
+      return woDetails;
+    }
+  }
+
   Future<void> getWOJobINfo(String jobNumber) async {
-    print("wo number");
+    print("wo number : $jobNumber");
     final Map<String, String> params = {
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),

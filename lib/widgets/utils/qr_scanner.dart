@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/screens/work_orders/KPI.dart';
+import 'package:steady_solutions/screens/work_orders/new_equip_wo_form_screen.dart';
+import 'package:steady_solutions/screens/work_orders/new_service_wo_form_screen.dart';
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:url_launcher/url_launcher.dart';
 class QRScannerView extends StatefulWidget {
@@ -56,16 +58,28 @@ class _QRScannerViewState extends State<QRScannerView> {
     controller.scannedDataStream.listen((scanData) {
       print("Scan data: $scanData");
       if(scanData.code != null)
+      {
+        if(scanData.code!.contains("http://") || scanData.code!.contains("https://")){
       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => KPIWebsite(url: scanData.code!),
                           ),
                         );
-                        return;
+                        return;}
+                       
+          else {
+            print(scanData.code! );
+            _workOrdersController.getControlItem(controlNum: scanData.code!);
+            if(_workOrdersController.controlItem.value.id != null)   
+             WidgetsBinding.instance.addPostFrameCallback((_) { 
+            Get.to(()=>NewEquipWorkOrderFrom());
+             });
+    }   
+
      // launchUrl(Uri.parse(scanData.code!));
-    
-      _workOrdersController.getControlItem(controlNum: "scanData");
+      }
+   
     });
   }
 

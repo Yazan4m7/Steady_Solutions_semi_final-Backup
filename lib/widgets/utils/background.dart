@@ -40,8 +40,9 @@ class Background extends StatelessWidget {
                             0.9,
                           ],
                           colors: [
-                            grey_bg_color,
-                            grey_bg_color.withOpacity(0.9),
+                            grey_bg_color.withOpacity(0.8),
+                            grey_bg_color
+                            ,
                             // Adjust opacity as needed
                           ],
                         ),

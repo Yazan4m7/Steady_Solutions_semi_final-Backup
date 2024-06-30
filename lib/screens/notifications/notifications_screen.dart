@@ -5,7 +5,9 @@ import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/notifications_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:steady_solutions/models/notification_item.dart';
+import 'package:steady_solutions/models/work_orders/WorkOrderDetails.dart';
 import 'package:steady_solutions/screens/notifications/approve_report.dart';
+import 'package:steady_solutions/screens/notifications/work_oreder_details.dart';
 
 class NotificationsScreen extends StatefulWidget {
   @override
@@ -13,8 +15,7 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen>
-    with TickerProviderStateMixin
-     {
+    with TickerProviderStateMixin {
   final NotificationsController _notificationsController =
       NotificationsController();
   late AnimationController controller;
@@ -35,8 +36,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   Widget build(BuildContext context) {
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200));
-    final spinkit = SpinKitDoubleBounce(
-        color: kPrimaryColor1Green, size: 50.0);
+    final spinkit = SpinKitDoubleBounce(color: kPrimaryColor1Green, size: 50.0);
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 245, 245, 245),
@@ -48,11 +48,11 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           },
         ),
         centerTitle: true,
-          iconTheme: IconThemeData(color: Color(0xFF4e7ca2)),
+        iconTheme: IconThemeData(color: Color(0xFF4e7ca2)),
         title: Text("Notifications"),
         backgroundColor: Colors.white,
       ),
-     // extendBodyBehindAppBar: true,
+      // extendBodyBehindAppBar: true,
       body: Obx(
         () => _notificationsController.isLoading.value == true
             ? Center(
@@ -69,17 +69,17 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               ))
             : Container(
                 //color: Colors.white,
-                child:ListView.builder(
-                itemCount: _notificationsController.notificationsList.length,
-                itemBuilder: (context, index) {
-                  final entry = _notificationsController.notificationsList.entries.elementAt(index);
-                  return NotificationTile(notification: entry.value);
-                },
-              ),
+                child: ListView.builder(
+                  itemCount: _notificationsController.notificationsList.length,
+                  itemBuilder: (context, index) {
+                    final entry = _notificationsController
+                        .notificationsList.entries
+                        .elementAt(index);
+                    return NotificationTile(notification: entry.value);
+                  },
+                ),
               ),
       ),
-
-
     );
   }
 }
@@ -87,7 +87,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 class NotificationTile extends StatelessWidget {
   final NotificationItem notification;
 
-   NotificationTile({
+  NotificationTile({
     required this.notification,
   });
   final NotificationsController _notificationsController =
@@ -95,14 +95,11 @@ class NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        
-      },
+      onTap: () {},
       child: Container(
-         
         margin: EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
         decoration: BoxDecoration(
-           color: Colors.white,
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: Color.fromARGB(255, 222, 222, 222).withOpacity(0.5),
@@ -123,122 +120,166 @@ class NotificationTile extends StatelessWidget {
           // ),
         ),
         child: ListTile(
-          
-          leading: Container(
-           
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: getIconColor(notification.notificationTypeID)
-                  .withOpacity(0.2), // Softer background for icon
-            //  borderRadius: BorderRadius.circular(20),
+            leading: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: getIconColor(notification.notificationTypeID)
+                    .withOpacity(0.2), // Softer background for icon
+                //  borderRadius: BorderRadius.circular(20),
+              ),
+              child: Icon(
+                getIcon(notification.notificationTypeID),
+                color: getIconColor(notification.notificationTypeID),
+                size: 28,
+              ),
             ),
-            child: Icon(
-              getIcon(notification.notificationTypeID),
-              color: getIconColor(notification.notificationTypeID),
-              size: 28,
-            ),
-          ),
-          title: Text(
-            notification.notificationTypeDesc ?? "N/A",
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800,),
-          ),
-          subtitle: Column(
-           
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(notification.msgNotes ?? "-"),
-              Text(
-                  "${convertToHoursAgo(notification.notificationDate!)} h ago"),
-            ],
-          ),
-
-          trailing: 
-               IconButton(
-                  icon: Icon(
-                    Icons.remove_red_eye,
-                    color: notification.isSeen ? Colors.black : Colors.grey,
+            title: Text(
+              notification.notificationTypeDesc ?? "N/A",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
                   ),
-                  onPressed: () {
-                   if(notification.notificationTypeID == null){
-                     
-                   
-                     Get.dialog(
-                                      AlertDialog(
-                                        title: const Text('Error'),
-                                        content: const Text( "Notification ID is missing"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Get.back();
-                                            },
-                                            child: const Text('Close'),
-                                          ),
-                                        ],
-                                      ),
-      );}
-      else{
-                    
-                      notification.isSeen = true;
-                      Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewReport( forId1: notification.forID1!,   reportId: notification.passedPar1,notificationedTypeId: notification.notificationTypeID!),
-                            ),
-                          );
-                  }
-                  },
-                  iconSize: 30,
-                  splashRadius: 24,
-                  tooltip:
-                      notification.isSeen ? 'Mark as unread' : 'Mark as read',
-                  padding: EdgeInsets.zero,
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  constraints: BoxConstraints(),
-                  enableFeedback: true,
-                  focusColor: Colors.transparent,
-                  autofocus: false,
-                  focusNode: FocusNode(),
-                  style: ButtonStyle(
-                    // shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    //   RoundedRectangleBorder(
-                    //     side: BorderSide(
-                    //       color:
-                    //           notification.isSeen ? Colors.black : Colors.grey,
-                    //       width: 2,
-                    //     ),
-                    //     //borderRadius: BorderRadius.circular(10),
-                    //   ),
-                    // ),
-                    backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                      (Set<WidgetState> states) {
-                        if (states.contains(WidgetState.hovered)) {
-                          return Colors.blue;
-                        }
-                        if (states.contains(WidgetState.pressed)) {
-                          return Colors.blue.withOpacity(0.8);
-                        }
-                        return notification.isSeen
-                            ? Colors.transparent
-                            : Colors.white;
-                      },
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(notification.msgNotes ?? "-"),
+                Text(
+                    "${convertToHoursAgo(notification.notificationDate!)} h ago"),
+              ],
+            ),
+            trailing: IconButton(
+              icon: Icon(
+                Icons.remove_red_eye,
+                color: notification.isSeen ? Colors.black : Colors.grey,
+              ),
+              onPressed: () {
+                if (notification.notificationTypeID == null) {
+                  Get.dialog(
+                    AlertDialog(
+                      title: const Text('Error'),
+                      content: const Text("Notification ID is missing"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text('Close'),
+                        ),
+                      ],
                     ),
-                  ),
-                )
-             
-          // Display count if available
-        ),
+                  );
+                } else
+
+                //////////// CLOSE CM JOB
+                if (notification.notificationTypeID == 1) {
+                  notification.isSeen = true;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewReport(
+                          forId1: notification.forID1!,
+                          passedParDate: notification.passedParDate!,
+                          reportId: notification.forID1!,
+                          notificationedTypeId:
+                              notification.notificationTypeID!),
+                    ),
+                  );
+                }
+                ///////////// CREATE WORK ORDER
+                else if (notification.notificationTypeID == 22) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WorkOrderDetailsScreen(
+                          workOrderId: notification.forID1!,
+                          passedPar1: notification.passedPar1.toString(),),
+                    ),
+                  );
+                }
+                /////// APPROVE EVALUATTION
+                else if (notification.notificationTypeID == 5) {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewReport(
+                          forId1: notification.forID1!,
+                          passedParDate: notification.passedParDate!,
+                          reportId: notification.forID1!,
+                          notificationedTypeId:
+                              notification.notificationTypeID!),
+                    ),
+                  );
+                  
+                } else {
+                  Get.dialog(
+                    AlertDialog(
+                      title: const Text('Error'),
+                      content: Text(
+                          "Notification ID  ${notification.notificationTypeID} is not recognized"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text('Close'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                ;
+              },
+              iconSize: 30,
+              splashRadius: 24,
+              tooltip: notification.isSeen ? 'Mark as unread' : 'Mark as read',
+              padding: EdgeInsets.zero,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              constraints: BoxConstraints(),
+              enableFeedback: true,
+              focusColor: Colors.transparent,
+              autofocus: false,
+              focusNode: FocusNode(),
+              style: ButtonStyle(
+                // shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                //   RoundedRectangleBorder(
+                //     side: BorderSide(
+                //       color:
+                //           notification.isSeen ? Colors.black : Colors.grey,
+                //       width: 2,
+                //     ),
+                //     //borderRadius: BorderRadius.circular(10),
+                //   ),
+                // ),
+                backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.hovered)) {
+                      return Colors.blue;
+                    }
+                    if (states.contains(WidgetState.pressed)) {
+                      return Colors.blue.withOpacity(0.8);
+                    }
+                    return notification.isSeen
+                        ? Colors.transparent
+                        : Colors.white;
+                  },
+                ),
+              ),
+            )
+
+            // Display count if available
+            ),
       ),
     );
   }
 
   convertToHoursAgo(String date) {
     try {
-    // Reverse the format of date in string "15-05-2024 22:23:01" to "2024-05-15 22:23:01"
-    List<String> parts = date.split(' ');
-    List<String> dateParts = parts[0].split('/');
-    date= '${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${parts[1]}';
+      // Reverse the format of date in string "15-05-2024 22:23:01" to "2024-05-15 22:23:01"
+      List<String> parts = date.split(' ');
+      List<String> dateParts = parts[0].split('/');
+      date = '${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${parts[1]}';
       return DateTime.now().difference(DateTime.parse(date)).inHours.toString();
     } catch (e) {
       print(e);

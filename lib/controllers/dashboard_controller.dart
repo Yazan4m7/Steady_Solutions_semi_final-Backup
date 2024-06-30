@@ -98,40 +98,23 @@ class DashboardController extends GetxController {
   //  await equipByClass();
   }
 
-  void toggleWidgetSelection(DashboardWidgets type) {
-    if (selectedWidgets.contains(type)) {
-      selectedWidgets.remove(type);
-    } else {
-      selectedWidgets.add(type);
-    }
-    saveSelectedWidgets();
-  }
-  void addSelectedWidget(DashboardWidgets type) {
+  // void toggleWidgetSelection(DashboardWidgets type) {
+  //   if (selectedWidgets.contains(type)) {
+  //     selectedWidgets.remove(type);
+  //   } else {
+  //     selectedWidgets.add(type);
+  //   }
+  //   saveSelectedWidgets();
+  // }
+  // void addSelectedWidget(DashboardWidgets type) {
 
-      selectedWidgets.add(type);
+  //     selectedWidgets.add(type);
     
-    saveSelectedWidgets();
-  }
+  //   saveSelectedWidgets();
+  // }
 
-  void saveSelectedWidgets() {
-    List<String> widgetNames =
-        selectedWidgets.map((widget) => widget.name).toList();
-        print("saved $widgetNames");
-    storageBox.write('selectedWidgets', widgetNames);
-  }
 
-  void loadSelectedWidgets() {
-    List<dynamic>? widgetNames = storageBox.read('selectedWidgets');
-    print("widgetNames: $widgetNames");
-    if (widgetNames != null) {
-      selectedWidgets.value = widgetNames
-          .map((name) =>
-              DashboardWidgets.values.firstWhere((e) => e.name == name))
-          .toList();
-    }
-    print(selectedWidgets);
-  }
-
+ 
   // Function to fetch data for a specific ID
   Future<void> fetchCMPerformance(int type) async {
   
