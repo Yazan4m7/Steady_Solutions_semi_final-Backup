@@ -1,5 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
-
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
 import 'package:steady_solutions/models/department.dart';
+import 'package:steady_solutions/models/work_orders/call_type.dart';
 import 'package:steady_solutions/models/work_orders/room.dart';
 import 'package:steady_solutions/models/work_orders/service_info.dart';
 import 'package:steady_solutions/models/work_orders/site.dart';
@@ -24,6 +26,7 @@ import 'package:steady_solutions/models/work_orders/category.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class NewServiceWorkOrderFrom extends StatefulWidget {
   const NewServiceWorkOrderFrom({Key? key}) : super(key: key);
 
@@ -47,8 +50,14 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
   Rx<Category> category = Category().obs;
   Rx<Room> room = Room().obs;
   String? faultStatus;
-File? _image; 
+  File? _image;
   final ImagePicker _picker = ImagePicker();
+
+  /// Text editing controllers for drop downs
+  final TextEditingController siteTEController = TextEditingController();
+  final TextEditingController categoriesTEController = TextEditingController();
+  final TextEditingController departmentsTEController = TextEditingController();
+  final TextEditingController roomsTEController = TextEditingController();
 
   /// Text editing controllers
   final TextEditingController controlNumberTEController =
@@ -57,19 +66,23 @@ File? _image;
   final TextEditingController serialNumberTEController =
       TextEditingController();
   final TextEditingController faultStatusTEController = TextEditingController();
+ SuggestionsController<Room>  roomsSuggestionsController= SuggestionsController();
+  SuggestionsController<Department>  departmentsSuggestionsController= SuggestionsController();
   Rx roomId = "".obs;
+  Rx<bool> isRoomsLoading = false.obs;
   @override
   void initState() {
-   // _workOrderController.clearData();
+    // _workOrderController.clearData();
     _workOrderController.fetchNewWorkOrderOptions();
-  
+
     //_workOrderController.controlItem.value = ControlItem();
     super.initState();
   }
 
   var QRResult = "";
-Future<void> _getImageFromCamera() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+  Future<void> _getImageFromCamera() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       setState(() {
@@ -77,7 +90,7 @@ Future<void> _getImageFromCamera() async {
       });
       // You can use the '_image' File object here to do something with the captured photo
     }
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,31 +98,37 @@ Future<void> _getImageFromCamera() async {
 
     return Background(
       child: Scaffold(
-                 resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: true,
+        extendBody: false,
         backgroundColor: const Color.fromARGB(0, 255, 255, 255),
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(0, 255, 255, 255),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF4e7ca2)),
-          title:  Row(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // TODO remove /s on production
-              Text( AppLocalizations.of(context).create_work_order ,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
+            
+              Text(AppLocalizations.of(context).create_work_order,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Color(
+                        0xFF4e7ca2,
+                      ),
+                      fontWeight: FontWeight.w600)),
             ],
           ),
         ),
         body: SafeArea(
-          child: SingleChildScrollView (
-            child: Form (
-                child: Container (
+          child: SingleChildScrollView(
+            child: Form(
+                child: Container(
               width: double.infinity,
               height: screenSize.height * .81,
               padding: EdgeInsets.symmetric(horizontal: screenSize.width * .05),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0), // Add rounded corners
+                borderRadius:
+                    BorderRadius.circular(10.0), // Add rounded corners
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.2), // Add subtle shadow
@@ -124,51 +143,261 @@ Future<void> _getImageFromCamera() async {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: 50.h),
-                    _autoCompleteTextField(
-                      labelText:  AppLocalizations.of(context).site_name,
-                      prefixIcon: Icons.home,
-                      options: _workOrderController.siteNames,
-                      onChanged: (value) {
-                        
-                        _workOrderController.getDepartments(
-                            siteId: site.value.value!);
+                    ///////////////////////////
+                    /// START OF NEW SCREEN
+
+                    ///   SITES
+                    /// //////////////////
+                    TypeAheadField<Site>(
+                        decorationBuilder: (context, child) => DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 2,color: Colors.grey),
+                          color: Colors.white,
+                        ),
+                        child: child,
+                      ),
+                      
+                      suggestionsCallback: (search) => _workOrderController
+                          .siteNames.values
+                          .toList()
+                          .where((site) => site.text!
+                              .toLowerCase()
+                              .contains(search.toLowerCase()))
+                          .toList(),
+                          
+                 
+                      controller: siteTEController,
+                      builder: (context, siteTEController, focusNode) {
+                        return TextField(
+                          
+                          
+                            controller: siteTEController,
+                            focusNode: focusNode,
+                            autofocus: true,
+                            decoration: kTextFieldDecoration.copyWith(label: Text("Site"),prefixIcon: Icon(Icons.location_on)));
+                      },
+                      itemBuilder: (context, site) {
+                        return ListTile(
+                          title: Text(site.text ?? "x"),
+                       
+                        );
+                      },
+                      
+                      onSelected: (siteI) {
+                        setState(() {
+                          siteTEController.value =
+                              TextEditingValue(text: siteI.value!);
+                          siteTEController.text = siteI.text!;
+                              WidgetsBinding.instance.addPostFrameCallback((_) async{
+                            site.value =siteI;
+                            await _workOrderController.getDepartments(siteId: site.value.value!);
+                            departmentsSuggestionsController.refresh();
+                          });
+                        });
                       },
                     ),
-                    SizedBox(height: 30.h),
-                    _autoCompleteTextField(
-                        labelText:  AppLocalizations.of(context).category,
-                        prefixIcon: Icons.category,
-                        options: _workOrderController.categories,
-                        onChanged: (value) {}),
-                    SizedBox(height: 30.h),
-                    Obx(
-                      () => _autoCompleteTextField(
-                        labelText:  AppLocalizations.of(context).departments,
-                        prefixIcon: Icons.corporate_fare,
-                        options: _workOrderController.departments.value, // Value is needed to prevent getx error
-                        onChanged: (value) {
-                         // _workOrderController.getRoomsList(departmentId:value.toString() );
+  SizedBox(height: 30.h),
+                    ///// CATEGORIES
+                    ///////////////////////////
+                    TypeAheadField<Category>(
+                         decorationBuilder: (context, child) => DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 2,color: Colors.grey),
+                          color: Colors.white,
+                        ),
+                        child: child,
+                      ),
+                      suggestionsCallback: (search) => _workOrderController
+                          .categories.values
+                          .toList()
+                          .where((cat) => cat.text!
+                              .toLowerCase()
+                              .contains(search.toLowerCase()))
+                          .toList(),
+                      loadingBuilder: (context) => const Text('Loading...'),
+                      errorBuilder: (context, error) => const Text('Error!'),
+                      emptyBuilder: (context) => const Text('No items found!'),
+                      controller: categoriesTEController,
+                      transitionBuilder: (context, animation, child) {
+                        return FadeTransition(
+                          opacity: CurvedAnimation(
+                              parent: animation, curve: Curves.fastOutSlowIn),
+                          child: child,
+                        );
+                      },
+                      builder: (context, categoriesTEController, focusNode) {
+                        return TextField(
+                            controller: categoriesTEController,
+                            focusNode: focusNode,
+                            autofocus: false,
+                             decoration: kTextFieldDecoration.copyWith(label: Text("Category"),prefixIcon: Icon(Icons.category)));
+                      },
+                      itemBuilder: (context, category) {
+                        return ListTile(
+                          title: Text(category.text ?? "x"),
+                        
+                        );
+                      },
+                      onSelected: (categoryI) {
+                        setState(() {
+                          categoriesTEController.value =
+                              TextEditingValue(text: categoryI.text!);
+                        });
+                           category.value = categoryI;
+                        print(categoryI.text);
+                      },
+                    ),
+  SizedBox(height: 30.h),
+                    ///   DEPARTMENT
+                    /// //////////////////
+                    TypeAheadField<Department>(
+                      suggestionsController: departmentsSuggestionsController,
+                      suggestionsCallback: (search) =>
+                          _workOrderController.departments.values.toList(),
+                      controller: departmentsTEController,
+                      decorationBuilder: (context, child) => DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 2,color: Colors.grey),
+                          color: Colors.white,
+                        ),
+                        child: child,
+                      ),
+                      builder: (context, departmentsTEController, focusNode) {
+                        return TextField(
+                            controller: departmentsTEController,
+                            focusNode: focusNode,
+                            autofocus: false,
+                            decoration:  kTextFieldDecoration.copyWith(label: Text("Department"),prefixIcon: Icon(Icons.screen_lock_portrait_rounded)));
+                      },
+                      itemBuilder: (context, department) {
+                        return ListTile(
+                          title: Text(department.text ?? "x"),
+                          
+                        );
+                      },
+                      onSelected: (departmentI) async {
+                        setState(() {
+                          departmentsTEController.value =
+                              TextEditingValue(text: departmentI.value!);
+                          departmentsTEController.text = departmentI.text!;
+
+                           WidgetsBinding.instance.addPostFrameCallback((_)async {
+                           // get first element of type "Department" from the map "options"
+
+                              department.value = departmentI;
+                                roomsTEController.value =
+                                TextEditingValue(text: '');
+                                isRoomsLoading.value = true;
+                                   roomsSuggestionsController.refresh();
+                                roomsSuggestionsController.isLoading=true;
+                                _workOrderController.rooms =   RxMap<String, Room>();
+                                 roomsSuggestionsController.refresh();
+                              await _workOrderController.getRoomsList(
+                                  departmentId: department.value.value!);
+                                 isRoomsLoading.value = false;
+                                  roomsSuggestionsController.isLoading=false;
+                            roomsSuggestionsController.refresh();
+                            print("selected department: ${department.value.value}");
+                            print ("selected categoryId: ${category.value.value}");
+                             _workOrderController.getServiceInfo(
+                              categoryId: category.value.value!,
+                              departmentId: department.value.value!);
+                           
+                            });
+                        });
+                      },
+                    ),
+  SizedBox(height: 30.h),
+                    /// ROOMS
+                    /// ////////////////
+                   TypeAheadField<Room>(
+                    retainOnLoading : false,
+                        suggestionsCallback: (search) => isRoomsLoading.value ? [] : _workOrderController.rooms.values.toList().where((roomI) => roomI.text!.toLowerCase().contains(search.toLowerCase())).toList(),
+  decorationBuilder: (context, child) => DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 2,color: Colors.grey),
+                          color: Colors.white,
+                        ),
+                        child: child,
+                      ),
+                       suggestionsController: roomsSuggestionsController,
+                        controller: roomsTEController,
+                        loadingBuilder: (context) => const Text('Loading...'),
+                      errorBuilder: (context, error) => const Text('Error!'),
+                      emptyBuilder: (context) => const Text('No items found!'),
+                        builder: (context, roomsTEController, focusNode) {
+                          return TextField(
+                              controller: roomsTEController,
+                              focusNode: focusNode,
+                              autofocus: false,
+                               decoration: kTextFieldDecoration.copyWith(label: Text("Room"),prefixIcon: Icon(Icons.meeting_room_outlined)));
+                        },
+                        itemBuilder: (context, room) {
+                          return ListTile(
+                            title: Text(room.text ?? "x"),
+                            
+                          );
+                        },
+                        onSelected: (roomI) {
+                          setState(() {
+                            roomsTEController.value =
+                                TextEditingValue(text: roomI.text!);
+                            room.value = roomI;
+                        
+                          });
                         },
                       ),
-                    ),
-                     SizedBox(height: 30.h),
-                    Obx(
-                      () => site.value.value == null ?
-                      SizedBox(child:Text("Select Site"))
-                      :_autoCompleteTextField(
-                        labelText:  AppLocalizations.of(context).rooms,
-                        prefixIcon: Icons.meeting_room,
-                        options: _workOrderController.rooms,
-                        onChanged: (value ) {
-                          // siteName.value = value!;
-                        },
-                      ),
-                    ),
-                   
+                    SizedBox(height: 30.h),
+
+                    /////// END OF NEW SCREEN
+                    ////////////////////////
+
+                    // SizedBox(height: 50.h),
+                    // _autoCompleteTextField(
+                    //   labelText: AppLocalizations.of(context).site_name,
+                    //   prefixIcon: Icons.home,
+                    //   options: _workOrderController.siteNames,
+                    //   onChanged: (value) {},
+                    // ),
+                    // SizedBox(height: 30.h),
+                    // _autoCompleteTextField(
+                    //     labelText: AppLocalizations.of(context).category,
+                    //     prefixIcon: Icons.category,
+                    //     options: _workOrderController.categories,
+                    //     onChanged: (value) {}),
+                    // SizedBox(height: 30.h),
+                    // Obx(
+                    //   () => _autoCompleteTextField(
+                    //     labelText: AppLocalizations.of(context).departments,
+                    //     prefixIcon: Icons.corporate_fare,
+                    //     options: _workOrderController.departments
+                    //         .value, // Value is needed to prevent getx error
+                    //     onChanged: (value) {
+                    //       // _workOrderController.getRoomsList(departmentId:value.toString() );
+                    //     },
+                    //   ),
+                    // ),
+                    // SizedBox(height: 30.h),
+                    // Obx(
+                    //   () => _autoCompleteTextField(
+                    //     labelText: AppLocalizations.of(context).rooms,
+                    //     prefixIcon: Icons.meeting_room,
+                    //     options: _workOrderController.rooms,
+                    //     onChanged: (value) {
+                    //       debugPrint(
+                    //           _workOrderController.rooms.length.toString());
+                    //     },
+                    //   ),
+                    // ),
+
                     SizedBox(height: 20.h),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 15.h),
                       //height: 50.h,
                       child: Row(
                         children: [
@@ -183,8 +412,9 @@ Future<void> _getImageFromCamera() async {
                           Expanded(
                             child: Obx(
                               () => Text(
-                                _workOrderController.serviceInfo.value.controlNo ??
-                                     AppLocalizations.of(context).control_number,
+                                _workOrderController
+                                        .serviceInfo.value.controlNo ??
+                                    AppLocalizations.of(context).control_number,
                                 style: GoogleFonts.nunitoSans(
                                     color: Colors.grey[500],
                                     fontSize: 45.sp,
@@ -195,11 +425,10 @@ Future<void> _getImageFromCamera() async {
                         ],
                       ),
                     ),
-                
-                
+
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.w, vertical: 15.h),
                       //height: 50.h,
                       child: Row(
                         children: [
@@ -216,7 +445,7 @@ Future<void> _getImageFromCamera() async {
                               () => Text(
                                 _workOrderController
                                         .serviceInfo.value.serviceDesc ??
-                                     AppLocalizations.of(context).service_desc,
+                                    AppLocalizations.of(context).service_desc,
                                 style: GoogleFonts.nunitoSans(
                                     color: Colors.grey[500],
                                     fontSize: 50.sp,
@@ -227,12 +456,12 @@ Future<void> _getImageFromCamera() async {
                         ],
                       ),
                     ),
-                
+
                     SizedBox(height: 50.h),
                     _textFormField(
-                        labelText:  AppLocalizations.of(context).fault_status,
+                        labelText: AppLocalizations.of(context).fault_status,
                         prefixIcon: Icons.error_outline,
-                        
+                        controller: faultStatusTEController,
                         keyboardType: TextInputType.name),
                     SizedBox(height: 30.h),
                     Row(
@@ -247,7 +476,9 @@ Future<void> _getImageFromCamera() async {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(2),
                                     side: const BorderSide(
-                                        width: 9, color: Color.fromARGB(255, 178, 178, 178)),
+                                        width: 9,
+                                        color:
+                                            Color.fromARGB(255, 178, 178, 178)),
                                   ),
                                   fillColor:
                                       MaterialStateProperty.resolveWith<Color>(
@@ -269,7 +500,8 @@ Future<void> _getImageFromCamera() async {
                             ),
                             Container(
                               padding: const EdgeInsets.only(left: 8.0),
-                              child: Text( AppLocalizations.of(context).is_urgent,
+                              child: Text(
+                                  AppLocalizations.of(context).is_urgent,
                                   style: GoogleFonts.nunitoSans(
                                       color: const Color(0xFF4e7ca2),
                                       fontWeight: FontWeight.w800,
@@ -277,140 +509,181 @@ Future<void> _getImageFromCamera() async {
                             ),
                           ],
                         ),
-                       SizedBox(height: 10),
-                        _image == null ?   ElevatedButton(
-                          style: kSmallSecondaryBtnStyle(context),
-                          onPressed: () async {
-                           await _getImageFromCamera();
-                          setState(() {
-                           
-                            print("Image is ${_image?.path}");
-                          });
-                          },
-                          //style: kSmallBtnStyle(context),
-                          child:  Text(
-                             AppLocalizations.of(context).upload_picture,
-                            
-                          ),
-                        ) :
-                        
-                         GestureDetector(
-                          onTap: ()async{
-                             await _getImageFromCamera();
-                          setState(() {
-                           
-                            print("Image is ${_image?.path}");
-                          });
-                          },
-                           child: Container(
-                            height: 100,
-                            width: 100,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.file(_image!)),
-                                               ),
-                         )],
+                        SizedBox(height: 10),
+                        _image == null
+                            ? ElevatedButton(
+                                style: kSmallSecondaryBtnStyle(context),
+                                onPressed: () async {
+                                  await _getImageFromCamera();
+                                  setState(() {
+                                    // print("Image is ${_image?.path}");
+                                  });
+                                },
+                                //style: kSmallBtnStyle(context),
+                                child: Text(
+                                  AppLocalizations.of(context).upload_picture,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () async {
+                                  await _getImageFromCamera();
+                                  setState(() {
+                                    // print("Image is ${_image?.path}");
+                                  });
+                                },
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.file(_image!)),
+                                ),
+                              )
+                      ],
                     ),
                     SizedBox(height: 50.h),
-                
+
                     //Save Btn
                     ElevatedButton(
-                        onPressed: () async {
-                          WorkOrder WO = WorkOrder()
-                              .setEquipmentID(
-                                  _workOrderController.serviceInfo.value.Id)
-                              .setCallTypeID("0")
-                              .setIsUrgent(isUrgent.value.toString())
-                              .setFaultStatues(faultStatusTEController.text)
-                              .setImageFile(_image)
-                              .setRoomId(room.value.id)
-                              .setEquipTypeId(_authOrderController
-                                  .employee.value.role
-                                  .toString())
-                              .setType('2')
-                              .build();
-                          CreateWorkOrderDTO response =
-                              await _workOrderController.createWorkOrder(WO);
-                          if (response.success == 1) {
-                            Dialogs.materialDialog(
-                                color: Colors.white,
-                                msg:  AppLocalizations.of(context).work_order_created_successfully,
-                                title:  AppLocalizations.of(context).success,
-                                lottieBuilder: Lottie.asset(
-                                  'assets/json_animations/success_blue.json',
-                                  fit: BoxFit.contain,
-                                ),
-                                customView: Container(
-                                    child: Text(
-                                        "${ AppLocalizations.of(context).job_no}:  ${response.jobNum ?? "N/A"}",style:
-                                        Theme.of(context).textTheme.displayLarge,
-                                        )),
-                                customViewPosition:
-                                    CustomViewPosition.BEFORE_ACTION,
-                                context: context,
-                                actions: [
-                                  IconsButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    text: AppLocalizations.of(context).back_to_form,
-                                    iconData: Icons.arrow_back_rounded,
-                                    color: Colors.blue,
-                                    textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
-                                    iconColor: Colors.white,
-                                  ),
-                                  IconsButton(
-                                    onPressed: () {
-                                      Get.offAll(HomeScreen());
-                                    },
-                                    text:  AppLocalizations.of(context).close,
-                                    iconData: Icons.done,
-                                    color: Colors.blue,
-                                    textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
-                                    iconColor: Colors.white,
-                                  ),
-                                ]);
-                          } else {
-                            Dialogs.materialDialog(
-                                color: Colors.white,
-                                msg:  AppLocalizations.of(context).failed_to_create_work_order,
-                                title: 'Failed',
-                                lottieBuilder: Lottie.asset(
-                                  'assets/json_animations/fail_grey.json',
-                                  fit: BoxFit.contain,
-                                ),
-                                customView: Text(response.message),
-                                customViewPosition:
-                                    CustomViewPosition.BEFORE_ACTION,
-                                context: context,
-                                actions: [
-                                  IconsButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    text:AppLocalizations.of(context).back_to_form,
-                                    iconData: Icons.arrow_back_rounded,
-                                    color: const Color.fromARGB(255, 75, 75, 75),
-                                    textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
-                                    iconColor: Colors.white,
-                                  ),
-                                  IconsButton(
-                                    onPressed: () {
-                                      Get.to(() => HomeScreen());
-                                    },
-                                    text: AppLocalizations.of(context).go_to_dashboard,
-                                    iconData: Icons.dashboard,
-                                    color: Colors.blue,
-                                    textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
-                                    iconColor: Colors.white,
-                                  ),
-                                ]);
-                          }
-                        },
+                        onPressed: _workOrderController.isCreating.value
+                            ? () {}
+                            : () async {
+                                WorkOrder WO = WorkOrder()
+                                    .setEquipmentID( _workOrderController
+                                        .serviceInfo.value.Id)
+                                    .setCallTypeID("0")
+                                    .setControlNumber( _workOrderController
+                                        .serviceInfo.value.controlNo)
+                                    .setIsUrgent(isUrgent.value.toString())
+                                    .setFaultStatues(
+                                        faultStatusTEController.text)
+                                    .setImageFile(_image)
+                                    .setRoomId(room.value.value)
+                                    .setEquipName(
+                                        controlNumberTEController.text)
+                                    .setEquipTypeId(_authOrderController
+                                        .employee.value.role
+                                        .toString())
+                                    .setType('2')
+                                    .build();
+                                print(WO.toJson());
+                                CreateWorkOrderDTO response =
+                                    await _workOrderController
+                                        .createWorkOrder(WO);
+                                if (response.success == 1) {
+                                  Dialogs.materialDialog(
+                                      color: Colors.white,
+                                      msg: AppLocalizations.of(context)
+                                          .work_order_created_successfully,
+                                      title:
+                                          AppLocalizations.of(context).success,
+                                      lottieBuilder: Lottie.asset(
+                                        'assets/json_animations/success_blue.json',
+                                        fit: BoxFit.contain,
+                                      ),
+                                      customView: Container(
+                                          child: Text(
+                                        "${AppLocalizations.of(context).job_no}:  ${response.jobNum ?? "N/A"}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge,
+                                      )),
+                                      customViewPosition:
+                                          CustomViewPosition.BEFORE_ACTION,
+                                      context: context,
+                                      actions: [
+                                        IconsButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          text: AppLocalizations.of(context)
+                                              .back_to_form,
+                                          iconData: Icons.arrow_back_rounded,
+                                          color: Colors.blue,
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                              ),
+                                          iconColor: Colors.white,
+                                        ),
+                                        IconsButton(
+                                          onPressed: () {
+                                            Get.offAll(HomeScreen());
+                                          },
+                                          text: AppLocalizations.of(context)
+                                              .close,
+                                          iconData: Icons.done,
+                                          color: Colors.blue,
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                              ),
+                                          iconColor: Colors.white,
+                                        ),
+                                      ]);
+                                } else {
+                                  Dialogs.materialDialog(
+                                      color: Colors.white,
+                                      msg: AppLocalizations.of(context)
+                                          .failed_to_create_work_order,
+                                      title: 'Failed',
+                                      lottieBuilder: Lottie.asset(
+                                        'assets/json_animations/fail_grey.json',
+                                        fit: BoxFit.contain,
+                                      ),
+                                      customView: Text(response.message),
+                                      customViewPosition:
+                                          CustomViewPosition.BEFORE_ACTION,
+                                      context: context,
+                                      actions: [
+                                        IconsButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          text: AppLocalizations.of(context)
+                                              .back_to_form,
+                                          iconData: Icons.arrow_back_rounded,
+                                          color: const Color.fromARGB(
+                                              255, 75, 75, 75),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                              ),
+                                          iconColor: Colors.white,
+                                        ),
+                                        IconsButton(
+                                          onPressed: () {
+                                            Get.to(() => HomeScreen());
+                                          },
+                                          text: AppLocalizations.of(context)
+                                              .go_to_dashboard,
+                                          iconData: Icons.dashboard,
+                                          color: Colors.blue,
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                              ),
+                                          iconColor: Colors.white,
+                                        ),
+                                      ]);
+                                }
+                              },
                         // },
-                        style: kPrimeryBtnStyle(context),
+                        style: _workOrderController.isCreating.value
+                            ? kPrimeryBtnStyle(context).copyWith(
+                                backgroundColor:
+                                    WidgetStateProperty.all<Color>(Colors.grey))
+                            : kPrimeryBtnStyle(context),
                         child: Text(
-                           AppLocalizations.of(context).save,
+                          AppLocalizations.of(context).save,
                           style: GoogleFonts.nunitoSans(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               fontWeight: FontWeight.w600,
@@ -456,34 +729,33 @@ Future<void> _getImageFromCamera() async {
                 color: const Color(0xFF104065),
               ),
       ),
-           validator:required ?  (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a value';
-                      }
-                      return null;
-                    }
-                   : null,
+      validator: required
+          ? (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please select a value';
+              }
+              return null;
+            }
+          : null,
     );
   }
 
   Widget _autoCompleteTextField({
     required String labelText,
     IconData? prefixIcon,
-      bool? enabled = true,
+    bool? enabled = true,
     required Map<String, dynamic> options,
     void Function(int?)? onChanged,
-        bool required = false,
+    bool required = false,
   }) {
     return Autocomplete<String>(
-      
       // ID needed to post : "Value"
       // Displayed to user : "Text"
       // Key of the map    : "Text"
       optionsBuilder: (TextEditingValue textEditingValue) {
-      
-        if (textEditingValue.text == '') {
-          return options.keys;
-        }
+        // if (textEditingValue.text == '') {
+        //   return options.keys;
+        // }
         return options.keys.where((String option) {
           return option
               .toLowerCase()
@@ -493,30 +765,33 @@ Future<void> _getImageFromCamera() async {
       onSelected: (String selection) {
         {
           dynamic object = options[selection];
+          log("object : $object");
           if (object is Site) {
             site.value = object;
             _workOrderController.getDepartments(siteId: site.value.value!);
 
-            //debugPrintnt("Site Selected");
+            debugPrint("Site Selected for dep");
           } else if (object is Category) {
             category.value = object;
 
-            //debugPrintnt("category Selected");
+            debugPrint("category Selected");
           } else if (object is Department) {
+            debugPrint("Department Selected");
             department.value = object;
+            debugPrint("$department Selected : ${department.value.value}");
             _workOrderController.getRoomsList(
-                 departmentId: department.value.value!);
+                departmentId: department.value.value!);
             _workOrderController.getServiceInfo(
                 categoryId: category.value.value!,
                 departmentId: department.value.value!);
-            //debugPrintnt("department Selected");
+            //debug// printnt("department Selected");
           } else if (object is Room) {
             room.value = object;
-            //debugPrintnt("room Selected");
+            debugPrint("room Selected");
           }
-          // if (object is CallType) {
-          //   callType.value = object;
-          // }
+          if (object is CallType) {
+            //  callType.value = object;
+          }
         }
       },
       optionsViewBuilder: (context, onSelected, options) => Align(
@@ -544,7 +819,7 @@ Future<void> _getImageFromCamera() async {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(option,style:dropDownTextStyle),
+                      child: Text(option, style: dropDownTextStyle),
                     ),
                   );
                 },
@@ -557,78 +832,82 @@ Future<void> _getImageFromCamera() async {
           TextEditingController textEditingController,
           FocusNode focusNode,
           VoidCallback onFieldSubmitted) {
-         if(options.length == 1 && options.keys.first != ''){
-          if( options.entries.first.value is Site)
+        if (options.length == 1 &&
+            options.keys.first != '' &&
+            options.entries.first.value is Site) {
+          if (options.entries.first.value is Site)
           // get first element of type "Site" from the map "options"
           {
-             WidgetsBinding.instance.addPostFrameCallback((_) {
-            site.value = options.entries.first.value;
-             });
-          }
-          if( options.entries.first.value is Category) {
-             WidgetsBinding.instance.addPostFrameCallback((_) {
-          // get first element of type "Category" from the map "options"
-         
-            category.value = options.entries.first.value;
-              });
-          }
-          if( options.entries.first.value is Department) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-          // get first element of type "Department" from the map "options"
-          
-          
-            department.value = options.entries.first.value;
-              });
+              site.value = options.entries.first.value;
+              _workOrderController.getDepartments(siteId: site.value.value!);
+            });
           }
-          if( options.entries.first.value is Room) 
+          if (options.entries.first.value is Category) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              // get first element of type "Category" from the map "options"
+
+              category.value = options.entries.first.value;
+            });
+          }
+          if (options.entries.first.value is Department) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              // get first element of type "Department" from the map "options"
+
+              department.value = options.entries.first.value;
+              _workOrderController.getRoomsList(
+                  departmentId: department.value.value!);
+            });
+          }
+          if (options.entries.first.value is Room)
           // get first element of type "Room" from the map "options"
-          { WidgetsBinding.instance.addPostFrameCallback((_) {
-            room.value = options.entries.first.value;
-             });
+          {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              room.value = options.entries.first.value;
+            });
           }
-       
-            return TextFormField(
-          controller: textEditingController,
-          //initialValue: options.keys.first,
-          focusNode: focusNode,
-          style: inputTextStyle,
-           enabled: false,
-         
-          onFieldSubmitted: (String value) {
-            onFieldSubmitted();
-          },
-          decoration: kTextFieldDecoration.copyWith(
-            labelText: options.keys.first,
-            prefixIcon: prefixIcon == null
-                ? null
-                : Icon(prefixIcon, color:  Color(0xFF104065)),
-          ),
-        );
-            }
-     else{
-        return TextFormField(
-          controller: textEditingController,
-       
-          focusNode: focusNode,
-          style: inputTextStyle,
-          validator:required ?  (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a value';
-                      }
-                      return null;
+
+          return TextFormField(
+            controller: textEditingController,
+            //initialValue: options.keys.first,
+            focusNode: focusNode,
+            style: inputTextStyle,
+            enabled: false,
+
+            onFieldSubmitted: (String value) {
+              onFieldSubmitted();
+            },
+            decoration: kTextFieldDecoration.copyWith(
+              labelText: options.keys.first,
+              prefixIcon: prefixIcon == null
+                  ? null
+                  : Icon(prefixIcon, color: Color(0xFF104065)),
+            ),
+          );
+        } else {
+          return TextFormField(
+            controller: textEditingController,
+            focusNode: focusNode,
+            style: inputTextStyle,
+            validator: required
+                ? (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a value';
                     }
-                   : null,
-          onFieldSubmitted: (String value) {
-            onFieldSubmitted();
-          },
-          decoration: kTextFieldDecoration.copyWith(
-            labelText: labelText,
-            prefixIcon: prefixIcon == null
-                ? null
-                : Icon(prefixIcon, color:  Color(0xFF104065)),
-          ),
-        );
-     }
+                    return null;
+                  }
+                : null,
+            onFieldSubmitted: (String value) {
+              onFieldSubmitted();
+            },
+            decoration: kTextFieldDecoration.copyWith(
+              labelText: labelText,
+              prefixIcon: prefixIcon == null
+                  ? null
+                  : Icon(prefixIcon, color: Color(0xFF104065)),
+            ),
+          );
+        }
       },
     );
   }

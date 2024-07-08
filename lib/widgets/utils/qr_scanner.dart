@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,7 @@ class _QRScannerViewState extends State<QRScannerView> {
   // is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
+    log("reassemble");
     super.reassemble();
     if (Platform.isAndroid) {
       controller!.pauseCamera();
@@ -34,6 +36,7 @@ class _QRScannerViewState extends State<QRScannerView> {
 
   @override
   Widget build(BuildContext context) {
+    print("building");
     return Background(
       child: Scaffold(
         body: QRView(
@@ -54,12 +57,13 @@ class _QRScannerViewState extends State<QRScannerView> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+     log("_onQRViewCreated");
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      print("Scan data: $scanData");
+      
       if(scanData.code != null)
       {
-        if(scanData.code!.contains("http://") || scanData.code!.contains("https://")){
+        if(scanData.code!.contains("https://") || scanData.code!.contains("httpss://")){
       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -69,7 +73,7 @@ class _QRScannerViewState extends State<QRScannerView> {
                         return;}
                        
           else {
-            print(scanData.code! );
+             log(scanData.code! );
             _workOrdersController.getControlItem(controlNum: scanData.code!);
             if(_workOrdersController.controlItem.value.id != null)   
              WidgetsBinding.instance.addPostFrameCallback((_) { 

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 
 import 'package:steady_solutions/core/services/local_storage.dart';
@@ -17,7 +18,7 @@ class ApiAddressController extends GetxController {
   // Path: lib/application/0.api_address/api_adderss_controller.dart
 
   RxString apiAddress = "".obs;
-  Rx<bool> isApiRunning = storageBox.read("api_url") != null ? true.obs : false.obs;
+
   //StreamSubscription<String>? lisenter;
   Rx<bool> isLoading = false.obs;
 
@@ -54,58 +55,56 @@ class ApiAddressController extends GetxController {
 
   testAndSaveAPI(String url, BuildContext context) async {
     isLoading.value = true;
-    if ( url.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        print("url is empty");
-        storageBox.remove("api_url");
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ApiAddressScreen()));
-      });
-      showWrongPortalAddressDialog(context);
-    } else {
+  //  context.loaderOverlay.show();
+      url = url.trim();
       print("url not empty ===> testing url : $url");
       apiAddress.value = url;
+      storageBox.write("api_url",url);
       if (await testApiAddress(context)) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           print("Portal passed the test, navigating to login screen");
           storageBox.write("api_url",url);
+
+          apiAddress.value = url;
+  
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => LoginScreen()));
         });
+      } else {
+        showWrongPortalAddressDialog(context);
       }
-    }
-    storageBox.write("api_url", url);
-    print("Saved on device");
-    apiAddress.value = url;
-    print("after saving on memory storage : $apiAddress");
+    
+ 
+  
 
     isLoading.value = false;
   }
 
   Future<bool> testApiAddress(context) async {
-    bool isApiRunning = false;
+ 
 
+      bool isApiRunning = false;
+           String url = storageBox.read("api_url") ;
+
+              apiAddress.value= url;
     try {
-      var response = await http
-          .post(Uri.parse("http://${apiAddress.value}$loginEndpoint"), body: {
-        "Email": "Test@gmail.com",
-        "Password": "DummyPassword",
-        "EquipmentType": "1"
-      });
-      print("response body : ${response.body}");
+      print("URL : ${storageBox.read('api_url')}");
+     final response = await http.get(
+          Uri.parse("https://${storageBox.read('api_url')}$getEquipTypeIdsEndPoint"));
+      print("test api response body : ${response.body}");
 
       if (response.statusCode == 200) {
         print("API response CODE : ${response.statusCode}");
         isApiRunning = true;
       } else {
-        isApiRunning = false;
+        isApiRunning= false;
       }
     } catch ( e) {
       //if(kDebugMode)
       //rethrow;
-      showWrongPortalAddressDialog(context);
+      //showWrongPortalAddressDialog(context);
       storageBox.write("isLoggedIn", false);
-     
+     isApiRunning = false;
     }
      apiAddress.value = storageBox.read("api_url").toString();
     return isApiRunning;

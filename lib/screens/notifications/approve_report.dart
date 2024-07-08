@@ -49,7 +49,7 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
   }
 
   void getReport() async {
-    print("report id is ${widget.reportId}");
+    // print("report id is ${widget.reportId}");
     report.value =
         await _workOrderController.getAchievementReport(widget.reportId);
   }
@@ -295,8 +295,8 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
                       ),
                     );
                   } else
-                    print(report.value.repairDate);
-                  print(report.value.repairDate?.toString());
+                    // print(report.value.repairDate);
+                  // print(report.value.repairDate?.toString());
                   reponseMsg = await _notificationController.sendApproveOrEval(
                       reportId: widget.reportId,
                       repairDate: widget.passedParDate,

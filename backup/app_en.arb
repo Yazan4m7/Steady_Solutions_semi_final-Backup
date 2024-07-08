@@ -366,5 +366,6 @@
 "pm_performance" : " ",
 "portalAddress" : " ",
 "close" : " ",
-"checkUrlMsg" : " "
+"checkUrlMsg" : " ",
+"asset_number" : "Asset Number"
       }

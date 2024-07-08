@@ -11,8 +11,7 @@ import 'package:steady_solutions/controllers/dashboard_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/models/assets_management/installed_base.dart';
 import 'package:steady_solutions/screens/asset_management/installed_base_table.dart';
-import 'package:steady_solutions/screens/asset_management/installed_base_table_v2.dart';
-import 'package:steady_solutions/screens/asset_management/installed_base_table_v3.dart';
+
 import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
 import 'package:steady_solutions/screens/pending_list/pending_work_orders.dart';
@@ -34,7 +33,7 @@ class SideBar extends StatelessWidget {
   Widget build(BuildContext context) {
     double? leftPadding;
     double? rightPadding;
-    print(Get.locale.toString());
+    // print(Get.locale.toString());
     if (Get.locale.toString() == "en") {
       leftPadding = 25.w;
       rightPadding = null;
@@ -779,24 +778,24 @@ class SideBar extends StatelessWidget {
                           );
                         },
                       ),
-                        DrawerListTile(
-                        context: context,
-                        title: AppLocalizations.of(context).change_portal_address,
-                        icon: Icon(
-                          Icons.change_circle_outlined,
-                          color: Colors.white,
-                        ),
-                        onTap: () {
-                          _authController.clearPortalAddress();
+                      //   DrawerListTile(
+                      //   context: context,
+                      //   title: AppLocalizations.of(context).change_portal_address,
+                      //   icon: Icon(
+                      //     Icons.change_circle_outlined,
+                      //     color: Colors.white,
+                      //   ),
+                      //   onTap: () {
+                      //     _authController.clearPortalAddress();
                           
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ApiAddressScreen(),
-                            ),
-                          );
-                        },
-                      ),
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => ApiAddressScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                       DrawerListTile(
                         context: context,
                         title: AppLocalizations.of(context).logout,
@@ -831,7 +830,7 @@ class SideBar extends StatelessWidget {
                                 color: Colors.white,
                               ),
                         ),
-                        onTap: () => launch('https://steadysolutions-jo.com'),
+                        onTap: () => launch('httpss://steadysolutions-jo.com'),
                       ),
                     ),
                   )

@@ -1,5 +1,6 @@
 
- import 'dart:math' as math;
+ import 'dart:developer';
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,7 +61,7 @@ class DashboardController extends GetxController {
   onInit() {
  
     super.onInit();
-    fetchChartsData();
+   
       
 
     
@@ -68,26 +69,38 @@ class DashboardController extends GetxController {
    static RxBool isDataLoaded = false.obs;
 
   void fetchChartsData() async{
-    if (storageBox.read('api_url') != null && !isDataLoaded.value && storageBox.read("id") != null) {
-    await fetchCMPerformance(1);
+    if (storageBox.read('api_url') != null ) {
+    
+     fetchCMPerformance(1);
     // await Future.delayed(Duration(seconds: 1));
-    await fetchCMPerformance(2);
+    
+     fetchCMPerformance(2);
    //  await Future.delayed(Duration(seconds: 1));
-    await fetchMTTR();
+      //    Future.delayed(Duration(milliseconds: 500));   
+     fetchPartsConsumption();
+     workingEquipment();
+
+    // Future.delayed(Duration(seconds: 1));
+     fetchMTTR();
    //  await Future.delayed(Duration(seconds: 1));
-    await fetchMTBF();
+    
+     fetchMTBF();
    //  await Future.delayed(Duration(seconds: 1));
-    await fetchAvgDownTime();
+    
+     fetchAvgDownTime();
    //  await Future.delayed(Duration(seconds: 1));
-    await fetchWObyYear();
+    
+     fetchWObyYear();
    //  await Future.delayed(Duration(seconds: 1));
-    await fetchWObyCategory();
+  // Future.delayed(Duration(seconds: 1));  
+     fetchWObyCategory();
    //  await Future.delayed(Duration(seconds: 1));
-    await fetchPartsConsumption();
-   //  await Future.delayed(Duration(seconds: 1));
-    await workingEquipment();
+    
+
+  
     // await Future.delayed(Duration(seconds: 1));
-    await equipByClass();
+    
+     equipByClass();
   
     isDataLoaded = true.obs;
     }
@@ -98,20 +111,7 @@ class DashboardController extends GetxController {
   //  await equipByClass();
   }
 
-  // void toggleWidgetSelection(DashboardWidgets type) {
-  //   if (selectedWidgets.contains(type)) {
-  //     selectedWidgets.remove(type);
-  //   } else {
-  //     selectedWidgets.add(type);
-  //   }
-  //   saveSelectedWidgets();
-  // }
-  // void addSelectedWidget(DashboardWidgets type) {
 
-  //     selectedWidgets.add(type);
-    
-  //   saveSelectedWidgets();
-  // }
 
 
  
@@ -125,15 +125,16 @@ class DashboardController extends GetxController {
        'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
+    log("User id : ${ storageBox.read("id").toString()}");
     try {
       String url = type == 1
-          ? "http://${storageBox.read('api_url')}$getPMPerformanceChartEndPoint"
-          : "http://${storageBox.read('api_url')}$getCMPerformanceChartEndPoint";
-      print(Uri.parse(url).replace(queryParameters: params));
+          ? "https://${storageBox.read('api_url')}$getPMPerformanceChartEndPoint"
+          : "https://${storageBox.read('api_url')}$getCMPerformanceChartEndPoint";
+      // printUri.parse(url).replace(queryParameters: params));
       final response =
          await http.get(Uri.parse(url).replace(queryParameters: params));
 
-      print(response.body);
+      // printresponse.body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (type == 1) {
@@ -144,22 +145,22 @@ class DashboardController extends GetxController {
           dashboardWidgets["CM"] = cmPerformance.value;
         }
         DashboardWidgetModel value = DashboardWidgetModel.fromJson(data);
-        print("FALSE");
+        // print"FALSE");
         loading['PM'] = false;
         loading['CM'] = false;
       } else {
-        print("FALSE2");
+        // print"FALSE2");
         loading['PM'] = false;
         loading['CM'] = false;
         Get.snackbar("Error 010",
             "Server resposned with status code ${response.statusCode}");
       }
-      print("FALSE3");
+      // print"FALSE3");
       loading['PM'] = false;
       loading['CM'] = false;
     } catch (e) {
       if (kDebugMode) {
-        print("Cannot connect to API-----------------------");
+        // print"Cannot connect to API-----------------------");
         //rethrow;
       } else {
         Get.to(ApiAddressScreen());
@@ -181,10 +182,10 @@ class DashboardController extends GetxController {
 
     try {
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getMTTREndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getMTTREndPoint")
               .replace(queryParameters: params));
 
-      print(" MTTR Response : " + response.body);
+      // print" MTTR Response : " + response.body);
       if (response.statusCode == 200) {
         final String time = jsonDecode(response.body)["MTTRVal"];
         MTTR.value = time;
@@ -225,13 +226,13 @@ class DashboardController extends GetxController {
     };
 
     try {
-      print(Uri.parse("http://${storageBox.read('api_url')}$getMTBFEndPoint")
-          .replace(queryParameters: params));
+      // printUri.parse("https://${storageBox.read('api_url')}$getMTBFEndPoint")
+      //    .replace(queryParameters: params));
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getMTBFEndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getMTBFEndPoint")
               .replace(queryParameters: params));
 
-      print(" MTBF Response : " + response.body);
+      // print" MTBF Response : " + response.body);
       if (response.statusCode == 200) {
         final String time = jsonDecode(response.body)["MTBFVal"];
         MTBF.value = time;
@@ -262,7 +263,7 @@ class DashboardController extends GetxController {
   }
 
   Future<void> fetchAvgDownTime() async {
-    print("fetching AvgDownTime");
+    // print"fetching AvgDownTime");
          WidgetsBinding.instance.addPostFrameCallback((_) {
     loading['AvgDownTime'] = true;
  });
@@ -272,24 +273,24 @@ class DashboardController extends GetxController {
     };
 
     try {
-      print(Uri.parse(
-              "http://${storageBox.read('api_url')}$getAvgDownTimeEndPoint")
-          .replace(queryParameters: params));
+      // printUri.parse(
+      //        "https://${storageBox.read('api_url')}$getAvgDownTimeEndPoint")
+      //    .replace(queryParameters: params));
       final response = await http.get(Uri.parse(
-              "http://${storageBox.read('api_url')}$getAvgDownTimeEndPoint")
+              "https://${storageBox.read('api_url')}$getAvgDownTimeEndPoint")
           .replace(queryParameters: params));
 
-      print(" getAvgDownTime Response : " + response.body);
+      // print" getAvgDownTime Response : " + response.body);
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         avgDownTime["avg"] = json["DownTimeVal"];
         avgDownTime["min"] = json["MinDownTimeVal"];
         avgDownTime["max"] = json["MaxDownTimeVal"];
-        print(avgDownTime["avg"].toString() +
+        // printavgDownTime["avg"].toString() +
             " " +
             avgDownTime["min"].toString() +
             " " +
-            avgDownTime["max"].toString());
+            avgDownTime["max"].toString();
         dashboardWidgets["AvgDownTime"] = true;
       } else {
         loading['AvgDownTime'] = false;
@@ -317,12 +318,12 @@ class DashboardController extends GetxController {
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
-      String url = "http://${storageBox.read('api_url')}$getWOByCategoryEndPoint";
-      print(Uri.parse(url).replace(queryParameters: params));
+      String url = "https://${storageBox.read('api_url')}$getWOByCategoryEndPoint";
+      // printUri.parse(url).replace(queryParameters: params));
       final response =
           await http.get(Uri.parse(url).replace(queryParameters: params));
 
-      print("WO BY Category Response : " + response.body);
+      // print"WO BY Category Response : " + response.body);
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
        
@@ -336,14 +337,14 @@ class DashboardController extends GetxController {
 
         
         for (int i = 0; i < categories.length; i++) {
-          print("add");
+          // print"add");
           byCategoryChartData!.add(ChartData(category: categories[i], jobCount:jobCounts[i],performance: performances[i]));
           }
 
 
         dashboardWidgets["wo_by_category"] = byCategoryChartData;
       } else {
-      //  print("FALSE2");R
+      //  // print"FALSE2");R
 
       }
      
@@ -363,12 +364,12 @@ class DashboardController extends GetxController {
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
-      String url = "http://${storageBox.read('api_url')}$getWOByYearEndPoint";
-      print(Uri.parse(url).replace(queryParameters: params));
+      String url = "https://${storageBox.read('api_url')}$getWOByYearEndPoint";
+      // printUri.parse(url).replace(queryParameters: params));
       final response =
           await http.get(Uri.parse(url).replace(queryParameters: params));
 
-      print("WO BY YEAR Response : " + response.body);
+      // print"WO BY YEAR Response : " + response.body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
          
@@ -379,14 +380,14 @@ class DashboardController extends GetxController {
 
 
            
-          print("add");
+          // print"add");
           for (int i = 0; i < monthNames.length; i++) {
             woByYearChartData.add(WOByYearChartData(monthNumber: i, WOCount: monthdata[i],monthName: monthNames[i]));
           }
           
     
       } else {
-      //  print("FALSE2");
+      //  // print"FALSE2");
 
       }
      
@@ -410,10 +411,10 @@ class DashboardController extends GetxController {
     try {
     
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getPartsConsumptionEndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getPartsConsumptionEndPoint")
               .replace(queryParameters: params));
 
-      print("fetchPartsConsumption Response : " + response.body);
+      // print"fetchPartsConsumption Response : " + response.body);
      
    
       if (response.statusCode == 200) {
@@ -464,13 +465,13 @@ class DashboardController extends GetxController {
     };
 
     try {
-      print(Uri.parse("http://${storageBox.read('api_url')}$getWorkingEquipmentEndPoint")
-          .replace(queryParameters: params));
+      // printUri.parse("https://${storageBox.read('api_url')}$getWorkingEquipmentEndPoint")
+      //    .replace(queryParameters: params));
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getWorkingEquipmentEndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getWorkingEquipmentEndPoint")
               .replace(queryParameters: params));
 
-      print(" Working equip Response : " + response.body);
+      // print" Working equip Response : " + response.body);
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         workingEquipmentData["Working"]=data["Working"];
@@ -499,13 +500,13 @@ class DashboardController extends GetxController {
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
        try {
-      print(Uri.parse("http://${storageBox.read('api_url')}$getEquipmentByClassEndPoint")
-          .replace(queryParameters: params));
+      // printUri.parse("https://${storageBox.read('api_url')}$getEquipmentByClassEndPoint")
+    //      .replace(queryParameters: params));
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getEquipmentByClassEndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getEquipmentByClassEndPoint")
               .replace(queryParameters: params));
 
-      print(" equipByClass Response : " + response.body);
+      // print" equipByClass Response : " + response.body);
       if (response.statusCode == 200) {
          final Map<String, dynamic> jsonData = jsonDecode(response.body);
           final List<dynamic> pieDataList = jsonData['success'];

@@ -51,7 +51,7 @@ class _WorkOrderDetailsScreenState extends State<WorkOrderDetailsScreen>
   }
 
   void getWorkOrderDetails() async {
-    print("wo id is ${widget.workOrderId}");
+    // print("wo id is ${widget.workOrderId}");
     woDetails.value =
         await _reportsController.getWODetailsForNotification(widget.workOrderId.toString());
   }

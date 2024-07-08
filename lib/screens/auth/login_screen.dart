@@ -6,6 +6,7 @@ import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
+import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/widgets/misc/show_up_widget.dart';
 import 'package:steady_solutions/widgets/utils/background.dart';
 
@@ -16,43 +17,62 @@ class LoginScreen extends StatelessWidget {
   final ApiAddressController _apiController = Get.find<ApiAddressController>();
   static TextEditingController _emailTFController = TextEditingController();
   static TextEditingController _passwordTFController = TextEditingController();
-  static String? role = "2";
-  String? _selectedRole;
+  static String? role = "0";
+
   final TextEditingController _dropdownController = TextEditingController();
-  static final GlobalKey<State> _dropDownKey = GlobalKey();
+  static final GlobalKey<State> _dropDownKey = GlobalKey<State>();
   @override
   Widget build(BuildContext context) {
-    _selectedRole = (_authController.isGeneral.value &&
-            !_authController.isMedical.value)
-        ? AppLocalizations.of(context).general
-        : (!_authController.isMedical.value && _authController.isMedical.value)
-            ? AppLocalizations.of(context).medical
-            : AppLocalizations.of(context).medical;
-    _dropdownController.text = _selectedRole!;
+
+     Future.delayed(Duration.zero, () async {
+     await   _authController.getEquipIds();
+     if (_authController.isGeneral.value &&   !_authController.isMedical.value)
+       role= "1";
+    else if (!_authController.isGeneral.value &&   _authController.isMedical.value)
+     role=="2";
+     });
+    
+   
+    
+    
+   
     return Background(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          leadingWidth: double.infinity,
             iconTheme:
                 const IconThemeData(color: Color.fromARGB(255, 38, 49, 57)),
-            leading: PopupMenuButton<String>(
-              icon: const Icon(Icons.language),
-              onSelected: (String result) {
-                storageBox.write('languageCode', result);
-                Get.updateLocale(Locale(result));
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: 'en',
-                  child: Text(AppLocalizations.of(context).english),
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.language),
+                  onSelected: (String result) {
+                    storageBox.write('languageCode', result);
+                    Get.updateLocale(Locale(result));
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'en',
+                      child: Text(AppLocalizations.of(context).english),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'ar',
+                      child: Text(AppLocalizations.of(context).arabic),
+                    ),
+                  ],
                 ),
-                PopupMenuItem<String>(
-                  value: 'ar',
-                  child: Text(AppLocalizations.of(context).arabic),
-                ),
+                IconButton(
+                    onPressed: () {
+                      storageBox.erase();
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ApiAddressScreen()), (route) => false);
+                    },
+                    icon: const Icon(Icons.link_off))
               ],
             ),
             //  title: const Text("LOGIN"),
+            
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             centerTitle: true),
@@ -116,7 +136,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _loginForm(BuildContext context) {
-    print("returning form");
+    // print("returning form");
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -167,6 +187,8 @@ class LoginScreen extends StatelessWidget {
               () => Padding(
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: DropdownButtonFormField<String>(
+                //  hint: Text("Select Type"),
+                    value: _authController.isGeneral.value ? "General" : "Medical",
                     key: LoginScreen._dropDownKey,
                     dropdownColor: Colors.white,
                     style: inputTextStyle,
@@ -175,6 +197,7 @@ class LoginScreen extends StatelessWidget {
                         prefixIcon: const Icon(Icons.arrow_drop_down,
                             color: Colors.black)),
                     items: [
+                      
                       DropdownMenuItem<String>(
                         value: AppLocalizations.of(context).medical,
                         child: Obx(
@@ -182,16 +205,14 @@ class LoginScreen extends StatelessWidget {
                               style: _authController.isMedical.value == true
                                   ? dropDownTextStyle
                                   : dropDownTextStyle.copyWith(
-                                      color: const Color.fromARGB(
-                                          255, 16, 16, 16))),
+                                      color:
+                                          Color.fromARGB(255, 151, 151, 151))),
                         ),
-
-                        enabled: true,
                         onTap: () {
-                            print("onTap 2");
+                           // print("onTap 2  $role");
                           role = '2';
-                        }
-                        //  enabled: _authController.isMedical.value,
+                        },
+                        enabled: _authController.isMedical.value,
                       ),
                       DropdownMenuItem<String>(
                         value: AppLocalizations.of(context).general,
@@ -204,28 +225,26 @@ class LoginScreen extends StatelessWidget {
                         ),
                         enabled: _authController.isGeneral.value,
                         onTap: () {
-                          print("onTap 1");
+                          // print("onTap 1  $role");
                           role = '1';
                         },
                       )
                     ],
                     onChanged: (String? newValue) {
-                      print("onChanged");
-                    
+                      // print("onChanged");
                     },
                     onSaved: (String? newValue) {
-                      print("onSaved");
-                      
+                      // print("onSaved");
                     },
-                    value: _selectedRole),
+                   // value: _selectedRole
+                    ),
               ),
             ),
             const SizedBox(height: defaultPadding),
             ElevatedButton(
               style: kPrimeryBtnStyle(context),
               onPressed: () async {
-              
-                print("sending role to controller: $role");
+                // print("sending role to controller: $role");
                 // Error dialog box shows up by auth controller
                 await _authController.login(_emailTFController.text,
                     _passwordTFController.text, role!, context);

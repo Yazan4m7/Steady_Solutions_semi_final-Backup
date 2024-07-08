@@ -19,6 +19,7 @@ import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/screens/auth/login_screen.dart';
 import 'package:steady_solutions/screens/dashboard/dashboard.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
+import 'package:steady_solutions/screens/initialScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -147,7 +148,7 @@ class _SteadySolutionsApplicationState
     //  builder: (_ , child) {
 
 _locale = Locale("en","us");
-// SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+//  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
 //   SystemUiOverlay.
 // ]);
   ScreenUtil.ensureScreenSizeAndInit(
@@ -156,30 +157,19 @@ _locale = Locale("en","us");
   splitScreenMode: true,
   context);
     return MediaQuery(
-  //Setting font does not change with system font size
+  // Setting font does not change with system font size
   
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
       child: GlobalLoaderOverlay(
         useDefaultLoading: true,
         overlayWidgetBuilder: (_) {
-          //ignored progress for the moment
+          // ignored progress for the moment
           return Center(
               child: SpinKitCubeGrid(
             color: kPrimaryColor3BrightBlue,
             size: 50.0,
           )
-              // child: Lottie.asset(
-              //   fit: BoxFit.contain,
-              //      // frameRate: FrameRate.max,
-              //      //repeat: true,
-              //      // reverse: false,
-              //      // animate: true,
-              //       filterQuality: FilterQuality.high,
-              //      // width: 200,
-              //      // height: 200,
-              //   'assets/json_animations/gradient_loading.json',
-      
-              // ),
+
               );
         },
         overlayColor: Color.fromARGB(255, 233, 233, 233).withOpacity(0.8),
@@ -198,17 +188,20 @@ _locale = Locale("en","us");
           // GetX Controller Binding is in the main method
           debugShowCheckedModeBanner: false,
           //navigatorKey: navigatorKey,
-          home:ApiAddressScreen() ,
-          // home: Dashboard(),
+          home:InitialScreen() ,
+        
         ),
       ),
     );
  // }
  // );
-    }
+    } 
+    
+  
+}
 
 
-    }
+    
 // class FatalErrorScreen extends StatelessWidget {
 //   final FlutterErrorDetails details;
 //   const FatalErrorScreen({super.key, required this.details});
@@ -242,22 +235,3 @@ _locale = Locale("en","us");
 //   }
 // }
 
-
-// class SplashScreen extends StatelessWidget {
-//   const SplashScreen({super.key});
-
-//   SendToHome(){
-//      Future.delayed(const Duration(seconds: 3), () {
-//       Get.offAll(() => initalScreen());
-//     });
-  
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     SendToHome();
-//     return Container( 
-//       color: Colors.white, 
-//       child: Image.asset( 'assets/splash_screen/steadyOMS_Colored.png', fit: BoxFit.contain, width: 200.w, height: 200.h,  )
-//     ); 
-//   } 
-// }

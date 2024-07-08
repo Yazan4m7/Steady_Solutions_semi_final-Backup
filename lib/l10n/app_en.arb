@@ -67,11 +67,11 @@
       "travel_time" : "Travel Time",
       "end_time" : "End Time",
       "start_time":"Start Time",
-      "installed_base_screen_title" : "Master Equipment List",
+      "installed_base_screen_title" : "Master Assets List",
       "serial_no" : "Serial Number",
       "manufacturer" : "Manufacturer",
       "department_desc" : "Dept.",
-      "warrenty" : "warrenty",
+      "warrenty" : "Warrenty",
          "filter_data" : "Filter Data",
       "manafacturer": "Manafacturer",
       "all": "All",
@@ -161,11 +161,16 @@
 "failure_status" : "Failure Status",
 "approved_successfully" : "Approved Successfully",
 "select_an_option_from_the_drawer" : "Select an option from the drawer",
-            "service" : "Service",
-            "welcome_to_steady": "Welcome To Steady App!",
-            "pm_only" : "PM",
-            "work_order" : "Work Order"
-          
+"service" : "Service",
+"welcome_to_steady": "Welcome To Steady App!",
+"pm_only" : "PM",
+"work_order" : "Work Order",
+"change_portal_address" : "Change Portal URL",
+"asset_number" : "Asset Number",
+"asset_name" : "Asset Name",
+"department_subzone_1" : "Dept./Sub zone 1",
+"asset_work_order" : "Asset Work Order"
+
  }
 
 

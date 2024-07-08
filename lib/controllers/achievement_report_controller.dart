@@ -22,7 +22,7 @@ class AchievementReportsController extends GetxController {
   Rx<bool> isLoading = false.obs;
 
   Future<WorkOrderDetails> getWODetailsForNotification(String jobNumber) async {
-    print("wo number : $jobNumber");
+    // print("wo number : $jobNumber");
     WorkOrderDetails woDetails;
     final Map<String, String> params = {
       'UserID': storageBox.read("id").toString(),
@@ -32,11 +32,11 @@ class AchievementReportsController extends GetxController {
 
     try {
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
               .replace(queryParameters: params));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print("wo response: $data");
+        // print("wo response: $data");
         woDetails = WorkOrderDetails.fromJson(data);
       } else {
         woDetails = WorkOrderDetails(
@@ -56,7 +56,7 @@ class AchievementReportsController extends GetxController {
   }
 
   Future<void> getWOJobINfo(String jobNumber) async {
-    print("wo number : $jobNumber");
+    // print("wo number : $jobNumber");
     final Map<String, String> params = {
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
@@ -65,11 +65,11 @@ class AchievementReportsController extends GetxController {
 
     try {
       final response = await http.get(
-          Uri.parse("http://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
+          Uri.parse("https://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
               .replace(queryParameters: params));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print("wo response: $data");
+        // print("wo response: $data");
         selectedControlItem.value = ControlItemFromAchievement.fromJson(data);
       } else {
         selectedControlItem.value = ControlItemFromAchievement(
@@ -103,9 +103,10 @@ class AchievementReportsController extends GetxController {
     print(repairDate);
     print(startTime);
      print(endTime);
+     
     final response = await http.post(
         Uri.parse(
-          "http://${storageBox.read('api_url')}$createAchievementReportEndPoint",
+          "https://${storageBox.read('api_url')}$createAchievementReportEndPoint",
         ),
         body: {
           'JobNo': jobNumber,
@@ -130,7 +131,7 @@ class AchievementReportsController extends GetxController {
     );
     // Rest of the code...
     try{
-      print(response.body);
+       print("Generate acheivment report response : ${response.body}");
     var json = jsonDecode(response.body);
     
     String responseMsg = "No connection made";

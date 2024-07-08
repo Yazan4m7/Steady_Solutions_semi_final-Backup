@@ -20,7 +20,7 @@ onReady(){
 
 Future<void> fetchCalendarItems() async {
 // Your code here
-print("xxxxxxxxxx");
+// print("xxxxxxxxxx");
 isLoading.value = true;
   try {
 final Map<String, String> params = {
@@ -32,9 +32,9 @@ final Map<String, String> params = {
 };
 
 final response = await http.get(
-    Uri.parse("http://${storageBox.read('api_url')}$getCalendarEndPoint")
+    Uri.parse("https://${storageBox.read('api_url')}$getCalendarEndPoint")
         .replace(queryParameters: params));
- print("Get calender response : " + response.body);
+ // print("Get calender response : " + response.body);
 List temp = jsonDecode(response.body);
 //TODO Test
 // String response =
@@ -45,9 +45,9 @@ List temp = jsonDecode(response.body);
 // '{"title":"699","CDesc":"0039LAB","start":"2024-05-03","endDate":"2024-05-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},{"title":"66","CDesc":"0039LAB","start":"2024-05-03","endDate":"2024-05-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null}'
 // ',{"title":"67","CDesc":"0039LAB","start":"2024-06-03","endDate":"2024-06-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},{"title":"68","CDesc":"0039LAB","start":"2024-07-03","endDate":"2024-07-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},{"title":"69","CDesc":"0039LAB","start":"2024-08-03","endDate":"2024-08-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null}]';
 
-print("Get calender response : " + temp.toString());
+// print("Get calender response : " + temp.toString());
 temp.forEach((item) {
-print("add");
+// print("add");
 calendarItems[item["start"]] = CalendarItem.fromJson(item);
 });
  } catch (e) {
@@ -59,28 +59,28 @@ calendarItems[item["start"]] = CalendarItem.fromJson(item);
 
    }
 
-print(calendarItems.toString());
-print(calendarItems.runtimeType);
+// print(calendarItems.toString());
+// print(calendarItems.runtimeType);
 isLoading.value = false;
 }
 
 // loopThroughKeys();
 // int count =0;
 //   for (var item in calendarItems.values) {
-//     print("loop");
+//     // print("loop");
 //       if (item.start == "2024-01-17") {
 //         count++;
 //       }
 
-//       print("COOOOOUNT" + count.toString());
+//       // print("COOOOOUNT" + count.toString());
 //   // Your code here
 // }
 //   }
 // void loopThroughKeys() {
-//   print("lenggg ${calendarItems.length}");
+//   // print("lenggg ${calendarItems.length}");
 //   for (final key in calendarItems.keys) {
 //     CalendarItem item = calendarItems["2024-01-17"]!; // Access value using key  safety
-//     print("Key: $key, Value: ${item}");
+//     // print("Key: $key, Value: ${item}");
 //   }
 // }
 }

@@ -36,8 +36,8 @@ class _AgendaViewCalendarState extends State<AgendaViewCalendar> {
     //_controller = CalendarController();
     _calendarController.selectedDate = DateTime.now();
     //source = _PMWODataSource(_pmController.calendarItems.value.values.toList());
-    //print("events lingth: " + source.appointments.length.toString());
-    print(_pmController.calendarItems.values.length);
+    //// print("events lingth: " + source.appointments.length.toString());
+    // print(_pmController.calendarItems.values.length);
     super.initState();
   }
 
@@ -113,8 +113,8 @@ class _AgendaViewCalendarState extends State<AgendaViewCalendar> {
  
 
 
-       print(_pmController.calendarItems.value.values.toList().length);
-       print(_pmController.calendarItems.value.values.toList());
+       // print(_pmController.calendarItems.value.values.toList().length);
+       // print(_pmController.calendarItems.value.values.toList());
     return 
    Obx(()
      => SfCalendar(
@@ -134,7 +134,7 @@ class _AgendaViewCalendarState extends State<AgendaViewCalendar> {
             monthViewSettings: const MonthViewSettings(
               
               dayFormat: 'EEE',
-              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+              appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
               showAgenda: true,
               numberOfWeeksInView:6,
             ),

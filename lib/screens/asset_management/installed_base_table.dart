@@ -12,6 +12,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:simple_animated_icon/simple_animated_icon.dart';
@@ -253,20 +254,20 @@ class _InstalledBaseListState extends State<InstalledBaseList>
     return WillPopScope(
       onWillPop: () async {
         if (_overlayManfEntry != null) {
-          print("overlay1 entry is not null");
+          // print("overlay1 entry is not null");
           _overlayManfEntry?.remove();
           _overlayManfEntry = null;
           return false;
         }
         if (_overlayDeptfEntry != null) {
-          print("overlay2 entry is not null");
+          // print("overlay2 entry is not null");
 
           _overlayDeptfEntry?.remove();
           _overlayDeptfEntry = null;
           return false;
         }
         if (_overlayEntry != null) {
-          print("overlay3 entry is not null");
+          // print("overlay3 entry is not null");
 
           _overlayEntry?.remove();
           _overlayEntry = null;
@@ -274,11 +275,11 @@ class _InstalledBaseListState extends State<InstalledBaseList>
         }
         ;
         // _overlayEntry?.remove();
-        print(_overlayManfEntry);
-        print(_overlayDeptfEntry);
-        print(_overlayEntry);
+        // print(_overlayManfEntry);
+        // print(_overlayDeptfEntry);
+        // print(_overlayEntry);
 
-        print("no overlays, poping");
+        // print("no overlays, poping");
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -303,8 +304,8 @@ class _InstalledBaseListState extends State<InstalledBaseList>
           // ),
 
       //       IconButton(
-      //       icon: const Icon(Icons.print),
-      //       onPressed: _printData,
+      //       icon: const Icon(Icons.// print),
+      //       onPressed: _// printData,
       //     ),
       //   ],
       // ),
@@ -332,10 +333,10 @@ class _InstalledBaseListState extends State<InstalledBaseList>
             children: [
               SpeedDialChild(
                 child: Icon(Icons.print),
-                label: "PRINT",
+                label: "// print",
                 labelStyle: TextStyle(color: Colors.black, fontSize: 30.sp),
                 onTap: () async {
-                _printData();
+               // _ printData();
                 },
               ),
               SpeedDialChild(
@@ -359,22 +360,23 @@ class _InstalledBaseListState extends State<InstalledBaseList>
             child: Column(
               children: [
                 Expanded(flex: 1, child: header(context)),
-                Obx(
-                  () => _assetsManagementController
-                          .isInstalledBaseListEmpty.value
-                      ? Expanded(
-                          flex: 10,
-                          child: Center(
-                            child: Container(
-                                color: Colors.white,
-                                child: Text(
-                                  AppLocalizations.of(context).no_data_found,
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
-                                )),
-                          ),
-                        )
-                      : Expanded(
+               
+                  // _assetsManagementController
+                  //         .isInstalledBaseListEmpty.value
+                  //     ? Expanded(
+                  //         flex: 10,
+                  //         child: Center(
+                  //           child: Container(
+                  //               color: Colors.white,
+                  //               child: Text(
+                  //                 AppLocalizations.of(context).no_data_found,
+                  //                 style:
+                  //                     Theme.of(context).textTheme.headlineLarge,
+                  //               )),
+                  //         ),
+                  //       )
+                  //     : 
+                      Expanded(
                           flex: 10,
                           child: SfDataGridTheme(
                             data: SfDataGridThemeData(
@@ -426,7 +428,7 @@ class _InstalledBaseListState extends State<InstalledBaseList>
                                             child: Text(
                                               style: headerTextStyle,
                                               AppLocalizations.of(context)
-                                                  .control_no,
+                                                  .asset_number,
                                               // overflow: TextOverflow.clip,
                                             ))),
                                     GridColumn(
@@ -439,7 +441,7 @@ class _InstalledBaseListState extends State<InstalledBaseList>
                                             child: Text(
                                               style: headerTextStyle,
                                               AppLocalizations.of(context)
-                                                  .equip_name,
+                                                  .asset_name,
                                             ))),
                                     GridColumn(
                                         width: maxColumnWidths['serNO']!,
@@ -476,7 +478,7 @@ class _InstalledBaseListState extends State<InstalledBaseList>
                                             child: Text(
                                               style: headerTextStyle,
                                               AppLocalizations.of(context)
-                                                  .department_desc,
+                                                  .department_subzone_1,
                                             ))),
                                     GridColumn(
                                         width: maxColumnWidths['warrenty']!,
@@ -494,7 +496,7 @@ class _InstalledBaseListState extends State<InstalledBaseList>
                             ),
                           ),
                         ),
-                ),
+               
               ],
             ),
           ),
@@ -546,7 +548,7 @@ class _InstalledBaseListState extends State<InstalledBaseList>
         ),
       ),
     );
-    print("inserting overlay entry");
+    // print("inserting overlay entry");
     setState(() {
       Overlay.of(context).insert(_overlayEntry!);
     });
@@ -639,17 +641,31 @@ class _InstalledBaseListState extends State<InstalledBaseList>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                    child: Text(
-                        AppLocalizations.of(context)
-                            .installed_base_screen_title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(
-                                letterSpacing: 0.2,
-                                color: Colors.white,
-                                fontSize: 55.sp,
-                                fontWeight: FontWeight.normal))),
+                    child: Column(
+                      children: [
+                        Text(
+                            AppLocalizations.of(context)
+                                .installed_base_screen_title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    letterSpacing: 0.2,
+                                    color: Colors.white,
+                                    fontSize: 55.sp,
+                                    fontWeight: FontWeight.normal)),
+                                         Obx(()=>
+                                           Text("Total : ${_installedBaseDataSource.value.dataGridRows.length.toString()}", style: Theme.of(context)
+                                                                           .textTheme
+                                                                           .titleMedium!
+                                                                           .copyWith(
+                                                                              
+                                                                               color: const Color.fromARGB(255, 225, 225, 225),
+                                                                               fontSize: 45.sp,
+                                                                               fontWeight: FontWeight.normal)),
+                                         )
+                      ],
+                    )),
                 // Container(
                 //   child: Center(
                 //       child: Text(
@@ -758,22 +774,22 @@ void _printData() async {
   // }
 
   // Future<void> exportDataGridTPdf() async {
-  //   print("pdf");
+  //   // print("pdf");
   //   PdfDocument document = PdfDocument();
-  //   print("add");
+  //   // print("add");
   //   PdfPage pdfPage = document.pages.add();
-  //   print("added");
-  //   print(_key321.currentState);
+  //   // print("added");
+  //   // print(_key321.currentState);
 
   //   PdfGrid? pdfGrid = _key321.currentState!.exportToPdfGrid();
-  //   print(pdfGrid);
+  //   // print(pdfGrid);
   //   pdfGrid?.draw(
   //     page: pdfPage,
   //     bounds: Rect.fromLTWH(0, 0, 0, 0),
   //   );
-  //   print("pdf exporting : ");
+  //   // print("pdf exporting : ");
   //   final List<int> bytes = document.saveSync();
-  //   print(bytes);
+  //   // print(bytes);
   //   final directory = await getApplicationDocumentsDirectory();
   //   final file = File('${directory.path}/Installed Base.xlsx');
   //   File fileObj = await file.writeAsBytes(bytes);
@@ -784,7 +800,7 @@ void _printData() async {
   //       ext: 'xlsx',
   //       file: fileObj,
   //       mimeType: MimeType.microsoftExcel);
-  //   print("saved");
+  //   // print("saved");
 
   //   log("saved");
   // }

@@ -29,12 +29,12 @@ class NotificationsController extends GetxController {
       };
       await Future.delayed(Duration(seconds: 2));
       final apiUrl =
-          "http://${storageBox.read('api_url')}$getNotificationsEndPoint";
-      print(Uri.parse(apiUrl).replace(queryParameters: params));
+          "https://${storageBox.read('api_url')}$getNotificationsEndPoint";
+      //print(Uri.parse(apiUrl).replace(queryParameters: params));
       final response =
           await http.get(Uri.parse(apiUrl).replace(queryParameters: params));
       final data = jsonDecode(response.body)["NotificationsList"];
-      print("notifications respoinse : ${data} ");
+     // print("notifications respoinse : ${data} ");
       // Convert data to Notification model and add to the map
 
       data.forEach((item) {
@@ -45,7 +45,8 @@ class NotificationsController extends GetxController {
       if (kDebugMode) rethrow;
       // Handle error
     }
-    print("fetch notifications : ${notificationsList.length}");
+    //
+    //print("fetch notifications : ${notificationsList.length}");
     isLoading.value = false;
     loadSeenNotifications();
     setUnSeenNotificationsCount();
@@ -57,7 +58,7 @@ class NotificationsController extends GetxController {
 
   void loadSeenNotifications() {
     List<dynamic>? seenNotifications = storageBox.read('seenNotifications');
-    print("seenNotifications: $seenNotifications");
+   // print("seenNotifications: $seenNotifications");
     if (seenNotifications != null) {
      
       for (var i = 0; i < seenNotifications.length; i++) {
@@ -94,13 +95,13 @@ class NotificationsController extends GetxController {
     //         "You have new ${unSeenNotificationsCount.value} Notifications");
     // });
     //     }
-    print(" unseen count : current ${unSeenNotificationsCount.value} previous ${previousCount}");
+    //print(" unseen count : current ${unSeenNotificationsCount.value} previous ${previousCount}");
   }
 
   void markNotificationAsSeen({required String ForID1 , required String PassedPar1 ,required String NotificationTypeID}) async {
        final response = await http.post(
         Uri.parse(
-          "http://${storageBox.read('api_url')}/OMS/WOSeen?",
+          "https://${storageBox.read('api_url')}/OMS/WOSeen?",
         ),
         body: {
           'ForID1': ForID1,
@@ -111,16 +112,16 @@ class NotificationsController extends GetxController {
           
       },
     );
-    print("Notification seen respoinse : ${response.body}");
+    //print("Notification seen respoinse : ${response.body}");
    
   }
 
 
   Future<String> sendApproveOrEval ({required int reportId, required String repairDate,required int NotificationTypeId}) async{
  String responseMsg = "No connection made";
- print("repaired: "+ reportId.toString());
-  print("repair date: "+ repairDate.toString());
-   print(" ntype id: "+ NotificationTypeId.toString());
+ //print("repaired: "+ reportId.toString());
+ // print("repair date: "+ repairDate.toString());
+ //  print(" ntype id: "+ NotificationTypeId.toString());
 
 
 
@@ -128,11 +129,11 @@ class NotificationsController extends GetxController {
 
   String newRepaireDate = parts[0].replaceAll("/", "-");
 
-  print("Formatted sctring $newRepaireDate");
+  //print("Formatted sctring $newRepaireDate");
 //  prin(reportId, required String repairDate,required int NotificationTypeId)
       final response = await http.post(
         Uri.parse(
-          "http://${storageBox.read('api_url')}$sendApprovOrEvalEndPoint",
+          "https://${storageBox.read('api_url')}$sendApprovOrEvalEndPoint",
         ),
         body: {
           'CMReportID': reportId.toString(),

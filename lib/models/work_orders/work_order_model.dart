@@ -71,7 +71,7 @@ class WorkOrder {
       'callerName': callerName,
       'tel': tel,
       'faultStatues': faultStatues,
-     // 'imageFile': imageFile,
+      'imageFile': imageFile,
       'newOrEdit': newOrEdit,
       "type": type
     };

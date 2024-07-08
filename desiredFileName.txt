@@ -53,6 +53,8 @@
     "select_an_option_from_the_drawer",
     "service",
     "welcome_to_steady",
-    "pm_only"
+    "pm_only",
+    "department_subzone_1",
+    "asset_work_order"
   ]
 }

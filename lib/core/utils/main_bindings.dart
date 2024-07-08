@@ -27,69 +27,69 @@ class MainBindings implements Bindings {
   }
 
 
-  void overloadAPI()async {
-    final Map<String, String> params = {
-      'EquipmentTypeID': '2',
-      'UserID':'1',
-      'Flag': '0',
-      'ID':  '0',
-    };
-    print(params.toString());
-    http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
+  // void overloadAPI()async {
+  //   final Map<String, String> params = {
+  //     'EquipmentTypeID': '2',
+  //     'UserID':'1',
+  //     'Flag': '0',
+  //     'ID':  '0',
+  //   };
+  //   print(params.toString());
+  //   http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
 
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-     http.get(
-      Uri.parse(
-        "http://oms-livedemo.com$getInstalledBaseEndPoint",
-      ).replace(queryParameters: params),
-    );
-  }
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  //    http.get(
+  //     Uri.parse(
+  //       "https://oms-livedemo.com$getInstalledBaseEndPoint",
+  //     ).replace(queryParameters: params),
+  //   );
+  // }
 }

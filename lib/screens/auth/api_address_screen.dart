@@ -5,6 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
+import 'package:steady_solutions/core/services/local_storage.dart';
+import 'package:steady_solutions/screens/auth/login_screen.dart';
+import 'package:steady_solutions/screens/home_screen.dart';
 
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,15 +22,31 @@ class ApiAddressScreen extends StatefulWidget {
 
 class _ApiAddressScreenState extends State<ApiAddressScreen> {
   final TextEditingController _controller = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  ApiAddressController _apiController = Get.find<ApiAddressController>();
+  late final GlobalKey<FormState> _formKey;  
+   ApiAddressController _apiController = Get.find<ApiAddressController>();
 
   StreamSubscription<bool>? lisenter;
   Rx<bool> isLoading = false.obs;
 
   @override
   initState() {
+  storageBox.erase();
+  String? apiUrl =   storageBox.read("api_url");
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (apiUrl != null) {
+      
     
+    if (storageBox.read("isLoggedIn") == true && storageBox.read("api_url") != null) {
+      // _authController.isLoggedIn.value = true;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen())); 
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+   
+    }
+    }
+  });
+    _formKey = GlobalKey<FormState>();
     if (mounted) {
       lisenter = isLoading.listen((value) {
         if (value) {
@@ -43,6 +62,7 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Background(
         child: SingleChildScrollView(
             child: Column(
@@ -107,7 +127,7 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
                       onPressed:() async  {
                         
                         await _apiController.testAndSaveAPI(_controller.text , context);},
-                      child:  Text('Submit',style: Theme.of(context).textTheme.displayLarge?.copyWith(),),
+                      child:  Text('Submit',style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 39.sp,color: Colors.white),),
                     ),
                   ],
                 ),

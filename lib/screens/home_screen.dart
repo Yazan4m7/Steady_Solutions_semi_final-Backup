@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:move_to_background/move_to_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen>
   StreamSubscription<bool>? lisenter;
   @override
   void initState() {
+    
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300))
           ..addListener(() {
@@ -71,107 +72,121 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
   }
 
+  dispose(){
+  
+    _authController.checkingInOrOut.close();
+      super.dispose();  }
+    
+
   Key _key123 = Key("123");
   @override
   Widget build(BuildContext context) {
-    return Background(
-      child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: DashboardAppBar(),
-          ),
-          bottomNavigationBar: _bottomNavigationBar(context),
-          // backgroundColor: Colors.white,
-          floatingActionButton: Obx(
-            () => !_authController.checkedIn.value
-                ? SizedBox()
-                : SpeedDial(
-                    label: Text(
-                      AppLocalizations.of(context).work_order,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(color: Colors.white),
+    return WillPopScope(
+       onWillPop: () async {
+        MoveToBackground.moveTaskToBack();
+        return false;
+      },
+      child: Background(
+        child: SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: DashboardAppBar(),
+            ),
+            bottomNavigationBar: _bottomNavigationBar(context),
+            // backgroundColor: Colors.white,
+            floatingActionButton: Obx(
+              () => !_authController.checkedIn.value
+                  ? SizedBox()
+                  : SpeedDial(
+                    
+                    curve : Curves.easeIn,
+                      label: Text(
+                        AppLocalizations.of(context).work_order,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      spacing: 0,
+                      spaceBetweenChildren: 0,
+                      backgroundColor: _authController.checkedIn.value
+                          ? primery_blue_color
+                          : const Color.fromARGB(255, 112, 112, 112),
+                      //animatedIcon: AnimatedIcons.arrow_menu,
+                      overlayColor: Color.fromARGB(255, 46, 46, 46),
+                      overlayOpacity: 0.9,
+                      onOpen: animate,
+                      onClose: animate,
+                      direction: Get.locale?.languageCode.toString() == "ar"
+                          ? SpeedDialDirection.up
+                          : SpeedDialDirection.up,// Change the direction to up
+                      children: !_authController.checkedIn.value
+                          ? []
+                          : [
+                              SpeedDialChild(
+                                child: Icon(FontAwesomeIcons.wrench),
+                                label: AppLocalizations.of(context)
+                                    .asset_work_order,
+                                labelStyle: TextStyle(
+                                    color: kPrimeryBlack, fontSize: 30.sp),
+                                onTap: () {
+                                  Get.to(() => NewEquipWorkOrderFrom());
+                                },
+                              ),
+                              SpeedDialChild(
+                                child: Icon(FontAwesomeIcons.microchip),
+                                label: AppLocalizations.of(context)
+                                    .service_work_order,
+                                labelStyle:
+                                    Theme.of(context).textTheme.displayLarge,
+                                onTap: () {
+                                  Get.to(() => NewServiceWorkOrderFrom());
+                                },
+                              )
+                            ],
+                      child: SimpleAnimatedIcon(
+                        color: Colors.white,
+                        startIcon: Icons.add,
+                        endIcon: Icons.close,
+                        progress: _progress,
+                      ),
                     ),
-                    spacing: 0,
-                    spaceBetweenChildren: 0,
-                    backgroundColor: _authController.checkedIn.value
-                        ? primery_blue_color
-                        : const Color.fromARGB(255, 112, 112, 112),
-                    //animatedIcon: AnimatedIcons.arrow_menu,
-                    overlayColor: Color.fromARGB(255, 46, 46, 46),
-                    overlayOpacity: 0.9,
-                    onOpen: animate,
-                    onClose: animate,
-                    direction: Get.locale?.languageCode.toString() == "ar"
-                        ? SpeedDialDirection.right
-                        : SpeedDialDirection.left, // Change the direction to up
-                    children: !_authController.checkedIn.value
-                        ? []
-                        : [
-                            SpeedDialChild(
-                              child: Icon(FontAwesomeIcons.wrench),
-                              label: AppLocalizations.of(context)
-                                  .equipment_work_order,
-                              labelStyle: TextStyle(
-                                  color: kPrimeryBlack, fontSize: 30.sp),
-                              onTap: () {
-                                Get.to(() => NewEquipWorkOrderFrom());
-                              },
-                            ),
-                            SpeedDialChild(
-                              child: Icon(FontAwesomeIcons.microchip),
-                              label: AppLocalizations.of(context)
-                                  .service_work_order,
-                              labelStyle:
-                                  Theme.of(context).textTheme.displayLarge,
-                              onTap: () {
-                                Get.to(() => NewServiceWorkOrderFrom());
-                              },
-                            )
-                          ],
-                    child: SimpleAnimatedIcon(
-                      color: Colors.white,
-                      startIcon: Icons.add,
-                      endIcon: Icons.close,
-                      progress: _progress,
-                    ),
-                  ),
-          ),
-          key: scaffoldKey,
-          drawer: SideBar(),
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    // width: MediaQuery.of(context).size.width,
-                    // height: MediaQuery.of(context).size.height * 0.8,
-                    child: PageView(
-                      key: _key123,
-                      controller: _pageController,
-                      onPageChanged: (page) {
-                        setState(() {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            // _pageController.keepPage;
-
-                            _currentIndex = page;
+            ),
+            key: scaffoldKey,
+            drawer: SideBar(),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      // width: MediaQuery.of(context).size.width,
+                      // height: MediaQuery.of(context).size.height * 0.8,
+                      child: PageView(
+                        key: _key123,
+                        controller: _pageController,
+                        onPageChanged: (page) {
+                          setState(() {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                               _pageController.keepPage;
+      
+                              _currentIndex = page;
+                            });
                           });
-                        });
-                      },
-                      children: [
-                        DashboardScreen(),
-                        QRScannerView(),
-                        // SizedBox(
-                        //   child: Text(AppLocalizations.of(context).approvals),
-                        // ),
-                      ],
+                        },
+                        children: [
+                          DashboardScreen(),
+                          QRScannerView(),
+                          // SizedBox(
+                          //   child: Text(AppLocalizations.of(context).approvals),
+                          // ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -218,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen>
         _currentIndex = index;
         _pageController.jumpToPage(index);
         setState(() {
-          print(index);
+          // printindex);
         });
       },
       //type: BottomNavigationBarType.fixed,
@@ -226,7 +241,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget DashboardAppBar() {
-    log(
+    _notificationsController.fetchNotifications();
+    log(" notification count: "+
       _notificationsController.notificationsList.length.toString(),
     );
     return Container(

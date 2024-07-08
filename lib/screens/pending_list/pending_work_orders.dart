@@ -9,6 +9,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
+import 'package:steady_solutions/models/pending_work_order.dart';
 import 'package:steady_solutions/screens/pending_list/pending_wo_table_data_structure.dart';
 import 'package:steady_solutions/screens/work_orders/achievment_report.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -33,6 +34,7 @@ class _PendingOrdersListState extends State<PendingOrdersList> {
       PendingWorkOrderDataSource(woList: []).obs;
 
   void structureDataForDataGrid() async {
+    _workOrderController.pendingWorkOrders = RxList<PendingWorkOrder>();
     await _workOrderController.fetchPendingOrders();
     _woListDataSource.value = PendingWorkOrderDataSource(
         woList: _workOrderController.pendingWorkOrders);
@@ -72,12 +74,12 @@ class _PendingOrdersListState extends State<PendingOrdersList> {
     Size screenSize = MediaQuery.of(context).size;
 
     Map<String, double> maxColumnWidths = {
-      'jobNumber': 220.w,
-      'departmentDesc': 220.w,
+      'jobNumber': 320.w,
+      'departmentDesc': 320.w,
       'controlNumber': 320.w,
       'failureDateTime': 300.w,
       'statusDesc': 450.w,
-      'isUrgent': 230.w
+      'isUrgent': 290.w
     };
     TextStyle headerTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
         color: Colors.white, fontSize: 36.sp, fontWeight: FontWeight.bold);
@@ -126,14 +128,30 @@ class _PendingOrdersListState extends State<PendingOrdersList> {
                             Container(
                               child: Center(
                                   child: Text(
+                                    textAlign: TextAlign.center,
                                       AppLocalizations.of(context)
                                           .double_check_to_sort_click_to_generate_report,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium!
                                           .copyWith(
-                                              color: Colors.white,
+                                              color: Colors.white70,
                                               fontWeight: FontWeight.bold))),
+                            ),
+                             Container(
+                              child: Center(
+                                  child: Obx(()=>
+                                     Text(
+                                      textAlign: TextAlign.center,
+                                        "Total : ${_woListDataSource.value.dataGridRows.length.toString()}",
+                                            
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold)),
+                                  )),
                             ),
                           ],
                         ),
@@ -351,7 +369,7 @@ class _PendingOrdersListState extends State<PendingOrdersList> {
                                     child: Text(
                                       style: headerTextStyle,
                                       AppLocalizations.of(context)
-                                          .department_abbrv,
+                                          .department_subzone_1,
                                     ))),
                             GridColumn(
                                 maximumWidth: maxColumnWidths['controlNumber']!,
@@ -362,7 +380,7 @@ class _PendingOrdersListState extends State<PendingOrdersList> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       style: headerTextStyle,
-                                      AppLocalizations.of(context).control_no,
+                                      AppLocalizations.of(context).asset_number,
                                     ))),
                             GridColumn(
                                 maximumWidth:

@@ -31,7 +31,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("KPI ADDRESS : ${widget.url}");
+    // print("KPI ADDRESS : ${widget.url}");
     _animationController.play();
     return WillPopScope(
       onWillPop: () async {
@@ -60,7 +60,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
                   setState(
                     () {
                       _progress.value = progress / 100;
-                      print(_progress.value);
+                      // print(_progress.value);
                     },
                   );
                 },

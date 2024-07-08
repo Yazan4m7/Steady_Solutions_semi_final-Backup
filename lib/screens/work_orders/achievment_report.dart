@@ -46,7 +46,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
   @override
   void initState() {
       _selectedRepairDateTime = false;
-    print("Job num ${widget.jobNum}");
+    // print("Job num ${widget.jobNum}");
     _achievementReportController.selectedControlItem =
         ControlItemFromAchievement().obs;
     if (widget.jobNum != null) {
@@ -67,7 +67,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF4e7ca2)),
           title: Text(AppLocalizations.of(context).generate_achiev_report,
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Color(0xFF4e7ca2,))),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xFF4e7ca2,))),
         ),
         body: Form(
           child: Container(
@@ -122,7 +122,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                AppLocalizations.of(context).equip_name,
+                                AppLocalizations.of(context).asset_name,
                                 style: GoogleFonts.nunitoSans(
                                     color: Colors.grey[500],
                                     fontSize: 40.sp,
@@ -358,7 +358,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                             ).then((pickedDate) {
                               if (pickedDate != null)  {
                                 setState(() {
-                                    print("SelectedDate: " +pickedDate.toString());
+                                    // print("SelectedDate: " +pickedDate.toString());
                                   _selectedRepairDateTime =
                                       true; // Save value on change
                                  // _selectedDateTime =
@@ -442,9 +442,11 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                   Center(
                     child: ElevatedButton(
                         onPressed: () async {
-                          print("Date: " +_travelTime.toString().substring(1,11));
+                          
                           String response = await _achievementReportController
+                          
                               .createAchievementReport(
+                       
                             jobNumber: jobNumTEController.text,
                             travelTime: _travelTime,
                             remedy: remedyTEController.text,
@@ -457,6 +459,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                             actionTakenToClosePendingJob:
                                 actionTakenToClosePendingJoEController.text,
                           );
+                          print("GENERATE REPORT APIresponse ${response}");
 
                           if (RegExp(r'\d').hasMatch(response)) {
                             Dialogs.materialDialog(
@@ -606,7 +609,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
       },
       onSelected: (String selection) {
         {
-          print("called in $selection");
+          // print("called in $selection");
           _achievementReportController.getWOJobINfo(selection);
           /* selectedControlItem.value = ControlItemFromAchievement(
             controlNumber: object.controlNumber,

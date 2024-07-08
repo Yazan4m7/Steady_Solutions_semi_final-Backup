@@ -14,8 +14,9 @@ class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Material(
-      child: Stack(
+    return  
+    
+    Stack(
           alignment: Alignment.center,
           children: <Widget>[
             Positioned(
@@ -56,8 +57,7 @@ class Background extends StatelessWidget {
             //   child: Image.asset(bottomImage, width: 120),
             // ),
           ],
-        ),
-    );
+        );
     
   }
 }

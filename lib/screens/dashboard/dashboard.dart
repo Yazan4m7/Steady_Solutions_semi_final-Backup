@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   initState() {
     _notificationsController.fetchNotifications();
     // _dashboardsController.loadSelectedWidgets();
-    if (DashboardController.isDataLoaded.value)
-      _dashboardsController.fetchChartsData();
+    
+      //_dashboardsController.fetchChartsData();
     super.initState();
   }
 
@@ -53,6 +55,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    log("build");
+    // print("BUILD");
     // List selectedWidgetsCopy = _dashboardsController.selectedWidgets;
     List cmPerformanceCharts = [
       TitledChartContainer(
@@ -69,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List assetManagementCharts = [
       TitledChartContainer(
           child: workingEquipmentIndicator(context),
-          title: "Working Equipemtn"),
+          title: "Working Assets"),
       TitledChartContainer(
           child: fetchEquipByClass(context), title: "Equipment By Class"),
     ];
@@ -90,7 +94,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 // fetchPartsConsumption
 // fetchEquipByClass
     // if (DashboardController.isDataLoaded.value)
-    //   _dashboardsController.fetchChartsData();
+    
+       _dashboardsController.fetchChartsData();
     return SingleChildScrollView(
         //padding: sizes.defaultPadding,
         child:
@@ -123,11 +128,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         endIndent: 10,
       ),
       SizedBox(
-        height: 30.h,
+        height: 10.h,
       ),
       ////////////////////////////////////  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM
       Container(
-        height: MediaQuery.of(context).size.height / 3,
+        height: MediaQuery.of(context).size.height / 3.1,
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(bottom: 40),
         child: Column(
@@ -255,7 +260,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SwiperPagination(builder: SwiperPagination.rect),
                 control: const SwiperControl(size: 0),
                 outer: true,
-
                 loop: false,
                 fade: .8,
                 viewportFraction: 0.8,
@@ -312,8 +316,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ]));
   }
 
-  static CMPerformanceChart(BuildContext context) {
-    print("cm container");
+   CMPerformanceChart(BuildContext context) {
+    // print("cm container");
     return Obx(
       () => _dashboardsController.dashboardWidgets["CM"] == null
           ? SpinKitThreeBounce(
@@ -353,12 +357,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   dataSource: [
                     ChartData(
                         //text: "hi",
-                        x: "Pending",
+                        x: "Done",
                         y: _dashboardsController.dashboardWidgets["CM"]?.x ??
                             0.00,
                         color: Color.fromARGB(255, 11, 115, 149)),
                     ChartData(
-                        x: "Done",
+                        x: "Pending",
                         y: _dashboardsController.dashboardWidgets["CM"]?.y ??
                             0.00,
                         color: Color.fromARGB(255, 128, 184, 204))
@@ -377,9 +381,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  static PMPerformanceChart(BuildContext context) {
-    print("pm container");
-    print("pm data :  ${_dashboardsController.dashboardWidgets["PM"]}");
+   PMPerformanceChart(BuildContext context) {
+    // print("pm container");
+    // print("pm data :  ${_dashboardsController.dashboardWidgets["PM"]}");
     // if (_dashboardsController.dashboardWidgets["PM"]== null)
     // _dashboardsController.fetchCMPerformance(1);
     //_dashboardsController.toggleWidgetSelection(DashboardWidgets.CMPerformanceChart);
@@ -412,12 +416,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             DoughnutSeries<ChartData, String>(
               dataSource: [
                 ChartData(
-                  x: "Pending",
+                  x: "Done",
                   y: _dashboardsController.dashboardWidgets["PM"]?.x,
                   color: Color.fromARGB(255, 11, 115, 149),
                 ),
                 ChartData(
-                  x: "Done",
+                  x: "Pending",
                   y: _dashboardsController.dashboardWidgets["PM"]?.y,
                   color: Color.fromARGB(255, 128, 184, 204),
                 ),
@@ -435,7 +439,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ));
   }
 
-  static MTTRContainer(BuildContext context) {
+   MTTRContainer(BuildContext context) {
     //      if (_dashboardsController.dashboardWidgets["MTTR"]== null)
     // _dashboardsController.fetchMTTR();
     return SingleChildScrollView(
@@ -528,7 +532,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   static AvgDownTimeContainer(BuildContext context) {
-    print("returning Avg down time container");
+    // print("returning Avg down time container");
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -708,7 +712,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   static workingEquipmentIndicator(BuildContext context) {
-    print("returning working eqcontainer");
+    // print("returning working eqcontainer");
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -716,10 +720,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Working Equipment",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              // Text(
+              //   "Working Equipment",
+              //   style: Theme.of(context).textTheme.headlineMedium,
+              // ),
             ],
           ),
           Row(
@@ -735,11 +739,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              _dashboardsController
-                                      .workingEquipmentData["Working"] ??
-                                  "...",
-                              style: Theme.of(context).textTheme.headlineLarge,
+                            Obx(
+                            ()=> Text(
+                                _dashboardsController
+                                        .workingEquipmentData["Working"] ??
+                                    "...",
+                                style: Theme.of(context).textTheme.headlineLarge,
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 10),
@@ -768,11 +774,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           SizedBox(
                             width: 30.w,
                           ),
-                          Text(
-                            _dashboardsController
-                                    .workingEquipmentData["Working"] ??
-                                "Loading..",
-                            style: Theme.of(context).textTheme.labelMedium,
+                          Obx(()=>
+                            Text(
+                              _dashboardsController
+                                      .workingEquipmentData["Working"] ??
+                                  "Loading..",
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
                           ),
                         ],
                       ),
@@ -785,33 +793,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           SizedBox(
                             width: 30.w,
                           ),
-                          Expanded(
-                            child: _dashboardsController
-                                        .workingEquipmentData["Condem"] ==
-                                    null
-                                ? Text("Loading...")
-                                : Row(
-                                    children: [
-                                      Text(
-                                        _dashboardsController
-                                            .workingEquipmentData["Condem"]!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
-                                      ),
-                                      SizedBox(
-                                        width: 15.w,
-                                      ),
-                                      Text(
-                                        _dashboardsController
-                                            .workingEquipmentData["Condem"]!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium!
-                                            .copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
+                          Obx(
+                            ()=> Expanded(
+                              child: _dashboardsController
+                                          .workingEquipmentData["Condem"] ==
+                                      null
+                                  ? Text("Loading...")
+                                  : Row(
+                                      children: [
+                                        Text(
+                                          _dashboardsController
+                                              .workingEquipmentData["Condem"]!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        ),
+                                        SizedBox(
+                                          width: 15.w,
+                                        ),
+                                        Text(
+                                          _dashboardsController
+                                              .workingEquipmentData["Condem"]!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .copyWith(color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                            ),
                           ),
                         ],
                       )
@@ -855,7 +865,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           interval: 2,
           majorGridLines: MajorGridLines(width: 0)),
       primaryYAxis: const NumericAxis(
-          labelFormat: '{value}%',
+          labelFormat: '{value}',
           axisLine: AxisLine(width: 0),
           majorTickLines: MajorTickLines(color: Colors.transparent)),
       series: list,
@@ -916,57 +926,79 @@ class TitledChartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 700.h,
-      child: Stack(
-        children: [
-          // Child Widget
-          // child,
-
-          // Gradient Shadow Container
-          GestureDetector(
-            onDoubleTap: () {
-              _showActionSheet(context);
-            },
-            child: Container(
-              height: 700,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: DecoratedBox(
+    return Column(
+      children: [
+        // Child Widget
+        // child,
+    
+        // Gradient Shadow Container
+        GestureDetector(
+          onDoubleTap: () {
+            _showActionSheet(context);
+          },
+          child: Column(
+            children: [
+              Container(
+                height: 400.h,
                 decoration: BoxDecoration(
-                  //   color: Colors.white,
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(10),
-                  // gradient: LinearGradient(
-                  //   begin: Alignment.bottomCenter,
-                  //   end: Alignment.center,
-                  //   colors: [
-                  //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
-                  //     Colors.transparent,
-                  //   ],
-                  // ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 8.0, left: 8.0, right: 8.0, bottom: 18.0),
-                  child: child,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    //   color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    // gradient: LinearGradient(
+                    //   begin: Alignment.bottomCenter,
+                    //   end: Alignment.center,
+                    //   colors: [
+                    //     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Adjust opacity as needed
+                    //     Colors.transparent,
+                    //   ],
+                    // ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 0, left: 8.0, right: 0.0, bottom: 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 14,
+                          child: child),
+                         Expanded(
+                          flex: 2,
+                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               Text(
+                                
+                                textAlign: TextAlign.end,
+                                title,
+                                               style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                                     color: primery_blue_grey_color,
+                                                   )),
+                             ],
+                           ),
+                         ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+             
+            ],
           ),
-
-          // Title Text
-          Positioned(
-            bottom: 10,
-            left: 16,
-            child: Text(title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: primery_blue_grey_color,
-                    )),
-          ),
-        ],
-      ),
+        ),
+    
+        // Title Text
+        Column(
+           crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            
+          ],
+        ),
+      ],
     );
   }
 
@@ -986,7 +1018,7 @@ class TitledChartContainer extends StatelessWidget {
               //   screenshotController.captureFromWidget(widget)
               //  Navigator.pop(context);
             },
-            child: const Text('Print'),
+            child: const Text('// print'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {

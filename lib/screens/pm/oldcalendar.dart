@@ -24,8 +24,8 @@
     
 //     _pmController.fetchCalendarItems().then((value) 
 //     {
-//       print("dpne");
-//       print(_pmController.calendarItems.length.toString() + "000000");
+//       // print("dpne");
+//       // print(_pmController.calendarItems.length.toString() + "000000");
       
 
 //       setState(() {
@@ -35,11 +35,11 @@
 //     super.initState();
 //   }
 
-//   Future start () async {print("stary");
+//   Future start () async {// print("stary");
     
 // //       int count = 0;
 // //       _pmController.calendarItems.value["2024-01-17"].forEach((key, value) {
-// //         print("key: $key, value: $value");
+// //         // print("key: $key, value: $value");
 // //         if (value.start == "2024-01-17") {
 // //           count++;
 // //         }
@@ -51,7 +51,7 @@
      
 // // }
 
-//       print("COOOOOUNT" + _pmController!.calendarItems!.value!["2024-01-17"]!.start!);
+//       // print("COOOOOUNT" + _pmController!.calendarItems!.value!["2024-01-17"]!.start!);
 //   // Your code here
 
 //   }
@@ -90,12 +90,12 @@
 //      // });
       
 //     });
-//     print("selected date: ${args.value}");
+//     // print("selected date: ${args.value}");
 //   }
 
 //   void viewChanged(ViewChangedDetails viewChangedDetails) {
-//      print(viewChangedDetails.toString());
-//     print("viewChangedDetails"+ viewChangedDetails.visibleDates[0].toString());
+//      // print(viewChangedDetails.toString());
+//     // print("viewChangedDetails"+ viewChangedDetails.visibleDates[0].toString());
 //     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
 //       _dateRangePickerController.selectedDate =
 //           viewChangedDetails.visibleDates[0];
@@ -141,7 +141,7 @@
 //   }
 
 //   Widget calendar(Size screenSize)  {
-//    print("returning");
+//    // print("returning");
 //     return Container(
 //       width: double.infinity,
 //       height: screenSize.height * .81,
@@ -203,17 +203,17 @@
   
 //   Widget monthCellBuilder(BuildContext context, MonthCellDetails details)  {
 //      final PMController _pmController = Get.find<PMController>();
-//     print("building " + details.date.toString().substring(0,10).trim());  
+//     // print("building " + details.date.toString().substring(0,10).trim());  
    
-// //     print(details.date.toString().substring(0,10) + "details");
-// //     print (_pmController!.calendarItems[details.date.toString().substring(0,10).trim()]);
+// //     // print(details.date.toString().substring(0,10) + "details");
+// //     // print (_pmController!.calendarItems[details.date.toString().substring(0,10).trim()]);
 // //   _pmController!.calendarItems!.values.where((element) =>  (
 // //   element.start!.trim().contains(details.date.toString().substring(0,10).trim()))).length.toString();
  
-// //  print(
+// //  // print(
 // //   _pmController.calendarItems[details.date.toString().substring(0,10).trim()]?.start?.contains(details.date.toString().substring(0,10).trim())
 // //   );  
-// print("checking ${details.date.toString().substring(0,10).trim()}");
+// // print("checking ${details.date.toString().substring(0,10).trim()}");
 //   if(counts2[details.date.toString().substring(0,10).trim()] == null)
 //     // ignore: curly_braces_in_flow_control_structures
 //     if(_pmController.calendarItems[details.date.toString().substring(0,10).trim()] != null) {
@@ -223,7 +223,7 @@
 //       for (var element in _pmController.calendarItems.keys) {
 //         if(_pmController.calendarItems[element]!.start!.contains(details.date.toString().substring(0,10).trim()))
 //         {
-//           print("elemnt : ${element} date : ${details.date.toString().substring(0,10).trim()}");
+//           // print("elemnt : ${element} date : ${details.date.toString().substring(0,10).trim()}");
 //           //setState(() {
 //            counts2[details.date.toString().substring(0,10).trim()] = counts2[details.date.toString().substring(0,10).trim()] == null? 1 : counts2[details.date.toString().substring(0,10).trim()]!+1;
 //           //});
@@ -232,7 +232,7 @@
 //       }
 //       // if(element.contains(details.date.toString().substring(0,10).trim()))
 //       // {
-//       //   print("elemnt : ${element} date : ${details.date.toString().substring(0,10).trim()}");
+//       //   // print("elemnt : ${element} date : ${details.date.toString().substring(0,10).trim()}");
 //       //    count++;
 //       // }
 //     // }

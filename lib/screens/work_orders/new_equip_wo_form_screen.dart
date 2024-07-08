@@ -85,10 +85,10 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
   _workOrderController.controlItem.value = ControlItem();
       if(lisenter == null )
       lisenter = _workOrderController.controlItem.listen((value) {
-        print("LISENING TO CONTROL ITEM");
-        print(value.toString());
+        // print("LISENING TO CONTROL ITEM");
+        // print(value.toString());
         if (value.havePendingWO == true) {
-          print("have pending work order");
+          // print("have pending work order");
               Dialogs.materialDialog(
               context: context,
               title: "Pending Work Order",
@@ -153,11 +153,9 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
           title:  Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // TODO remove /s on production
+             
               Text( AppLocalizations.of(context).create_work_order ,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xFF4e7ca2,),fontWeight: FontWeight.w600)),
-                     Text( "/E" ,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize:35.sp,color: Color.fromARGB(255, 116, 35, 35),fontWeight: FontWeight.w400)),
             ],
           ),
         ),
@@ -202,7 +200,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                   children: [
                     Expanded(
                       child: _textFormField(
-                          labelText: AppLocalizations.of(context).control_number,
+                          labelText: AppLocalizations.of(context).asset_number,
                           required: true,
                           prefixIcon: Icons.confirmation_number_outlined,
                           controller: controlNumberTEController,
@@ -269,7 +267,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context).equip_name,
+                                  AppLocalizations.of(context).asset_name,
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 SizedBox(height: 5.h),
@@ -405,7 +403,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                          await _getImageFromCamera();
                         setState(() {
                          
-                          print("Image is ${_image?.path}");
+                          // print("Image is ${_image?.path}");
                         });
                         },
                         //style: kSmallBtnStyle(context),
@@ -418,7 +416,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                              await _getImageFromCamera();
                           setState(() {
                            
-                            print("Image is ${_image?.path}");
+                            // print("Image is ${_image?.path}");
                           });
                           },
                            child: Container(

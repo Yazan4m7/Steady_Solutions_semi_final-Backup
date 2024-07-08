@@ -282,7 +282,7 @@ class NotificationTile extends StatelessWidget {
       date = '${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${parts[1]}';
       return DateTime.now().difference(DateTime.parse(date)).inHours.toString();
     } catch (e) {
-      print(e);
+      // print(e);
       return '0';
     }
   }

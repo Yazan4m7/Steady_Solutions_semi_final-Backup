@@ -69,7 +69,7 @@
     "travel_time" : "وقت السفر",
     "end_time" : "وقت الانهاء",
     "start_time" :"وقت البدء",
-    "installed_base_screen_title" : "قائمة الاجهزة",
+    "installed_base_screen_title" : "قائمة الاصول",
     "serial_no" : "الرقم التسلسلي",
     "manufacturer" : "الشركة الصانعة",
     "department_desc" : "القسم",
@@ -82,12 +82,12 @@
     "filter" : "تصفية",
     "list": "قائمة",
     "choose_how_to_filter_installed_base" :"اختر تصنيف قائمة المعدات",
-      "asset_management":"ادارة الاصول",
-      "work_orders" : "اعمال الاصلاح",
-      "create":"أنشاء طلبات عمل",
-      "equipment_work_order":    "معدات",
-      "service_work_order":    "خدمات عامة",
-      "pending_list":    "طلبات الاصلاح غير المنجزة",
+    "asset_management":"ادارة الاصول",
+    "work_orders" : "اعمال الاصلاح",
+    "create":"أنشاء طلبات عمل",
+    "equipment_work_order":    "معدات",
+    "service_work_order":    "خدمات عامة",
+    "pending_list":    "طلبات الاصلاح غير المنجزة",
       "generate_report":    "اضافة تقرير اصلاح",
       "pm":    "صيانة وقائية",
       "calendar":    "تقويم اعمال الصيانة",
@@ -106,5 +106,7 @@
       "rooms" : "الغرف",
       "work_order" : "عمل أصلاح",
 
-      "change_portal_address" : "Change Portal Address"
+      "change_portal_address" : "Change Portal Address",
+      "asset_number" : "رقم الاصل",
+      "asset_name" : "اسم الاصل"
     }
