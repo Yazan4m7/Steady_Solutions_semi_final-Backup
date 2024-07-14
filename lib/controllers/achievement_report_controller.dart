@@ -34,11 +34,15 @@ class AchievementReportsController extends GetxController {
       final response = await http.get(
           Uri.parse("https://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
               .replace(queryParameters: params));
+              print(Uri.parse("https://${storageBox.read('api_url')}$getWOJobInfoEndPoint")
+              .replace(queryParameters: params));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         // print("wo response: $data");
         woDetails = WorkOrderDetails.fromJson(data);
+        print("1");
       } else {
+          print("2");
         woDetails = WorkOrderDetails(
           equipName: "N/A",
           faultStatus:"N/A",
@@ -46,6 +50,7 @@ class AchievementReportsController extends GetxController {
       }
       return woDetails;
     } catch (e) {
+        print("3");
       woDetails = WorkOrderDetails(
         equipName: "N/A",
         faultStatus: "N/A",

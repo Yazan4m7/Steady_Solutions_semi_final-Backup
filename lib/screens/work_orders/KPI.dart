@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:simple_animated_icon/simple_animated_icon.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:steady_solutions/app_config/style.dart';
-import 'package:steady_solutions/screens/work_orders/new_equip_wo_form_screen.dart';
+import 'package:steady_solutions/screens/work_orders/new_asset_wo_form_screen.dart';
+import 'package:steady_solutions/widgets/utils/qr_scanner.dart';
 
 class KPIWebsite extends StatefulWidget {
   final String url;
@@ -26,7 +29,8 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
       parent: _animationController,
       curve: Curves.easeInOut, // Apply the curve to the CurvedAnimation
     );
-    ;
+   
+  log("cleared previous urls");
   }
 
   @override
@@ -35,6 +39,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
     _animationController.play();
     return WillPopScope(
       onWillPop: () async {
+          QRScannerView.previousURLs = [];
         var isLastPage = await inAppWebViewController.canGoBack();
 
         if (isLastPage) {

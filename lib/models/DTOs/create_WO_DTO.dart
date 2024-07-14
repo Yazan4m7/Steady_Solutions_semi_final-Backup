@@ -18,7 +18,7 @@ class CreateWorkOrderDTO {
     return {
       'success': success,
       'message': message,
-      'jobNO' : 0
+      'jobNO' : jobNum
     };
   }
 }

@@ -5,8 +5,9 @@
     String? id;
     String? controlNo;
     bool? havePendingWO;
+    String? serviceDesc;
 
-    ControlItem({this.equipName, this.serNO, this.id, this.controlNo, this.havePendingWO});
+    ControlItem({this.equipName, this.serNO, this.id, this.controlNo, this.havePendingWO, this.serviceDesc});
 
     factory ControlItem.fromJson(Map<String, dynamic> json) {
       return ControlItem(
@@ -15,6 +16,8 @@
         id: json['ID'].toString(),
         controlNo: json['ControlNo'].toString(),
         havePendingWO: json['HavePendingWO'],
+ serviceDesc: json['ServiceDesc'],
+          
       );
     }
 
@@ -25,6 +28,7 @@
         'ID': this.id,
         'ControlNo': this.controlNo,
         'HavePendingWO': this.havePendingWO,
+        'ServiceDesc' : serviceDesc
       };
     }
   }

@@ -64,80 +64,83 @@ class _ApiAddressScreenState extends State<ApiAddressScreen> {
   Widget build(BuildContext context) {
     
     return Background(
-        child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-        SizedBox(height: MediaQuery.of(context).size.height / 4.5,),
-        _logo(context),
-        SizedBox(
-          height: 100.h,
-        ),
-        Row(
-          children: [
-            const Spacer(),
-            Expanded(
-              flex: 10,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                          style: inputTextStyle,
-                          keyboardType: TextInputType.url,
-                         // autofocus: true,
-                          controller: _controller,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .please_enter_url;
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 23, 23,
-                                      23)), // Change this color to your preference
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .black), // Change this color to your preference
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            prefixIcon: const Icon(Icons.link),
-                            border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelText:
-                                AppLocalizations.of(context).portalAddress,
-                            labelStyle: inputHintStyle,
-                          )),
-                    ),
-                    SizedBox(height: 60.h),
-                    ElevatedButton(
-                      style: kPrimeryBtnStyle(context),
-                      onPressed:() async  {
-                        
-                        await _apiController.testAndSaveAPI(_controller.text , context);},
-                      child:  Text('Submit',style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 39.sp,color: Colors.white),),
-                    ),
-                  ],
+        child: Material(
+          color: Colors.transparent,
+          child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+          SizedBox(height: MediaQuery.of(context).size.height / 4.5,),
+          _logo(context),
+          SizedBox(
+            height: 100.h,
+          ),
+          Row(
+            children: [
+              const Spacer(),
+              Expanded(
+                flex: 10,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                            style: inputTextStyle,
+                            keyboardType: TextInputType.url,
+                           // autofocus: true,
+                            controller: _controller,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context)!
+                                    .please_enter_url;
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 23, 23,
+                                        23)), // Change this color to your preference
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors
+                                        .black), // Change this color to your preference
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              prefixIcon: const Icon(Icons.link),
+                              border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              labelText:
+                                  AppLocalizations.of(context).portalAddress,
+                              labelStyle: inputHintStyle,
+                            )),
+                      ),
+                      SizedBox(height: 60.h),
+                      ElevatedButton(
+                        style: kPrimeryBtnStyle(context),
+                        onPressed:() async  {
+                          
+                          await _apiController.testAndSaveAPI(_controller.text , context);},
+                        child:  Text('Submit',style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 39.sp,color: Colors.white),),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Spacer(),
-          ],
-        ),
-              ],
-            )));
+              const Spacer(),
+            ],
+          ),
+                ],
+              )),
+        ));
   }
 }
 

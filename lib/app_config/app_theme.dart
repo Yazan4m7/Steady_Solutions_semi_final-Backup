@@ -45,13 +45,13 @@ ThemeData defaultWhiteTheme = ThemeData(
     contentTextStyle: TextStyle(
       color: kPrimeryColor2NavyDark,
       fontSize: bodyMTextSize,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.w500,
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
     ),
   ),
-  primarySwatch: Colors.green,
+  //primarySwatch: Colors.green,
   scaffoldBackgroundColor: Colors.transparent,
   disabledColor: Colors.grey,
   dialogBackgroundColor: Colors.white,
@@ -59,7 +59,7 @@ ThemeData defaultWhiteTheme = ThemeData(
   hintColor: kPrimeryBlack,
 
   //brightness: Brightness.light,
-  primaryColor: kPrimaryColor3BrightBlue,
+  primaryColor: primery_blue_grey_color,
   textTheme: TextTheme(
     displayLarge: GoogleFonts.jost(
       color: Colors.black,
@@ -132,8 +132,8 @@ ThemeData defaultWhiteTheme = ThemeData(
 
   dividerColor: Colors.grey,
   highlightColor: Colors.blue[300],
-  splashColor: Colors.blue[100],
-  unselectedWidgetColor: const Color.fromARGB(255, 225, 225, 225),
+  splashColor: const Color.fromARGB(255, 145, 206, 255),
+  unselectedWidgetColor: Colors.white,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     selectedIconTheme: IconThemeData(size: 50.h),
     selectedLabelStyle: TextStyle(
@@ -177,11 +177,11 @@ ThemeData defaultWhiteTheme = ThemeData(
 
   ///////////////////////// App Bar Theme /////////////////////////
   appBarTheme: AppBarTheme(
-    titleTextStyle: TextStyle(
+    titleTextStyle: GoogleFonts.hindVadodara(
       color: kPrimeryColor2NavyDark,
-      fontSize: 20.0,
+      fontSize: 50.0.sp,
       fontWeight: FontWeight.bold,
-      fontFamily: fontFamily,
+      letterSpacing: 2
     ),
     surfaceTintColor: Colors.transparent,
     shadowColor: Colors.transparent,

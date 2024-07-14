@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
@@ -25,7 +26,7 @@ import 'package:steady_solutions/widgets/utils/qr_scanner.dart';
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:image_compression/image_compression.dart';
 // required paramaters from user roomID, EquipmentID, Call type
 // required paramaters for API : uisUrgent,  roomID, EquipmentID, CallTypeID, Type
 class NewEquipWorkOrderFrom extends StatefulWidget {
@@ -74,17 +75,18 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
 }
   @override
   void initState() {
+    _workOrderController.clearData();
     _workOrderController.fetchNewWorkOrderOptions();
-  
+   _workOrderController.isCreating.value=false;
     if(widget.controlNumber != null){
-   _workOrderController.getControlItem(
-                                  controlNum: widget.controlNumber!);
+   _workOrderController.getAssetItemById(
+                                  assetIdOrLink: widget.controlNumber!);
       controlNumberTEController.text = widget.controlNumber!;              
                     }
      WidgetsBinding.instance.addPostFrameCallback((_) {
-  _workOrderController.controlItem.value = ControlItem();
+  _workOrderController.assetItem.value = ControlItem();
       if(lisenter == null )
-      lisenter = _workOrderController.controlItem.listen((value) {
+      lisenter = _workOrderController.assetItem.listen((value) {
         // print("LISENING TO CONTROL ITEM");
         // print(value.toString());
         if (value.havePendingWO == true) {
@@ -123,27 +125,22 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
 
 @override
   void dispose() {
+   
     lisenter?.cancel();
     super.dispose();
   }
   var QRResult = "";
   bool isLoading = false;
- // Function to capture image from camera
-  Future<void> captureImage() async {
-    // final imagePicker = ImagePicker();
-    // final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
 
-    // setState(() {
-    //   imageFile = pickedFile;
-    // });
-  }
  
   @override
   Widget build(BuildContext context) {
+    log( _workOrderController.assetItem.value.controlNo.toString());
     Size screenSize = MediaQuery.of(context).size;
-
+    
     return Background(
       child: Scaffold(
+        
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
@@ -198,26 +195,35 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: _textFormField(
-                          labelText: AppLocalizations.of(context).asset_number,
-                          required: true,
-                          prefixIcon: Icons.confirmation_number_outlined,
-                          controller: controlNumberTEController,
-                         // enabled: widget.controlNumber != null ? true : false,
-                         
-                          suffexIcon: IconButton(
-                            icon:  Icon(Icons.search ,color: widget.controlNumber != null ? Color.fromARGB(255, 95, 95, 95): Color(0xFF4e7ca2)),
-                            onPressed: () {
-                              _workOrderController.getControlItem(
-                                  controlNum: controlNumberTEController.text);
-                            },
-                          ),
-                         
-                          keyboardType: TextInputType.text,
-                          ),
+                    GetX<WorkOrdersController>(
+                 builder: (controller) {
+                 controlNumberTEController.text = controller.assetItem.value.controlNo == null 
+                  ? "" 
+                  : controller.assetItem.value.controlNo.toString();
+                 return Expanded(
+                      child:  _textFormField(
+                            labelText: AppLocalizations.of(context).asset_number,
+                            required: false,
+                            prefixIcon: Icons.confirmation_number_outlined,
+                            controller: controlNumberTEController,
+                           // enabled: widget.controlNumber != null ? true : false,
+                        
+                            //value: "42",
+                            suffexIcon: IconButton(
+                              icon:  Icon(Icons.search ,color: widget.controlNumber != null ? Color.fromARGB(255, 95, 95, 95): Color(0xFF4e7ca2)),
+                              onPressed: () {
+                                _workOrderController.getAssetItemById(
+                                    assetIdOrLink: controlNumberTEController.text);
+                              },
+                            ),
+                           
+                            keyboardType: TextInputType.text,
+                            ),
                       //width:  mediaQuery.width*0.7,
-                    ),
+                    );
+                   
+              },
+            ),
                     SizedBox(
                       width: 15.w,
                     ),
@@ -237,7 +243,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                         icon:
                              Icon(Icons.qr_code, color: widget.controlNumber != null ? Color.fromARGB(255, 42, 42, 42): Color(0xFF4e7ca2)),
                         onPressed: widget.controlNumber != null ?  null: () async {
-                          Navigator.push( context, MaterialPageRoute(builder :(context) => QRScannerView()));
+                          Navigator.push( context, MaterialPageRoute(builder :(context) => QRScannerView(goToKPIScreen: false,)));
                        
                          
                         
@@ -273,7 +279,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 SizedBox(height: 5.h),
                                 Text(
                                   _workOrderController
-                                          .controlItem.value.equipName ??
+                                          .assetItem.value.equipName ??
                                       "----",
                                   style: GoogleFonts.nunitoSans(
                                       color: Colors.grey[500],
@@ -316,7 +322,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 SizedBox(height: 5.h),
                                 Text(
                                   _workOrderController
-                                          .controlItem.value.serNO ??
+                                          .assetItem.value.serNO ??
                                       "----",
                                   style: GoogleFonts.nunitoSans(
                                       color: Colors.grey[500],
@@ -435,7 +441,9 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                 //Save Btn
                 ElevatedButton(
                     onPressed: () async {
+                      log("onPress");
                       if (_formKey.currentState!.validate()) {
+                        log("validated" );
                       WorkOrder WO = WorkOrder()
                           .setEquipmentID(controlNumberTEController.text)
                           .setCallTypeID(callType.value.value.toString())
@@ -448,10 +456,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                               .toString())
                           .setType("1")
                           .build();
-                        
+                        log("sent");
                       CreateWorkOrderDTO response =
                           await _workOrderController.createWorkOrder(WO);
-                      if (response.success == 1) {
+                          log("response : ${response}");
+                      if (response.success == 1 || response.success == '1') {
                         Dialogs.materialDialog(
                             color: Colors.white,
                             msg: AppLocalizations.of(context).work_order_created_successfully,
@@ -468,17 +477,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 CustomViewPosition.BEFORE_ACTION,
                             context: context,
                             actions: [
-                              // IconsButton(
-                              //   onPressed: () {
-                              //     Get.back();
-                              //   },
-                              //   text: 'Close',
-                              //   iconData: Icons.copy,
-                              //   color: Colors.blue,
-                              //   textStyle:  Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white,),
-                              //   iconColor: Colors.white,
-                              // ),
-                              IconsButton(
+                             IconsButton(
                                 onPressed: () {
                                   Get.offAll(HomeScreen());
                                 },
@@ -521,7 +520,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                     }},
                     // },
                     style: kPrimeryBtnStyle(context),
-                    child: isLoading
+                    child: _workOrderController.isCreating.value
                         ?  CircularProgressIndicator(
                             strokeWidth: 1,
                             color: Colors.white,

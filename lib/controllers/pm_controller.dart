@@ -19,6 +19,7 @@ onReady(){
 }
 
 Future<void> fetchCalendarItems() async {
+  calendarItems = RxMap();
 // Your code here
 // print("xxxxxxxxxx");
 isLoading.value = true;
@@ -26,7 +27,6 @@ isLoading.value = true;
 final Map<String, String> params = {
 'start': '01-01-2024',
 'end': '30-08-2024',
-'companyID': '150',
 'UserID': storageBox.read("id").toString(),
 'EquipmentTypeID': storageBox.read("role").toString(),
 };
@@ -34,7 +34,10 @@ final Map<String, String> params = {
 final response = await http.get(
     Uri.parse("https://${storageBox.read('api_url')}$getCalendarEndPoint")
         .replace(queryParameters: params));
- // print("Get calender response : " + response.body);
+
+        print(Uri.parse("https://${storageBox.read('api_url')}$getCalendarEndPoint")
+        .replace(queryParameters: params));
+  print("Get calender response : " + response.body);
 List temp = jsonDecode(response.body);
 //TODO Test
 // String response =
@@ -48,7 +51,7 @@ List temp = jsonDecode(response.body);
 // print("Get calender response : " + temp.toString());
 temp.forEach((item) {
 // print("add");
-calendarItems[item["start"]] = CalendarItem.fromJson(item);
+calendarItems[item["title"]] = CalendarItem.fromJson(item);
 });
  } catch (e) {
     if(kDebugMode)
@@ -58,9 +61,10 @@ calendarItems[item["start"]] = CalendarItem.fromJson(item);
     }
 
    }
+print(calendarItems.length);
 
-// print(calendarItems.toString());
-// print(calendarItems.runtimeType);
+print(calendarItems.toString());
+print(calendarItems.runtimeType);
 isLoading.value = false;
 }
 

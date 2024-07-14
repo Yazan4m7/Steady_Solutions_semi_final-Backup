@@ -3,15 +3,18 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:flutter/gestures.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:steady_solutions/controllers/api_adderss_controller.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
-
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
-
+import 'package:http_parser/http_parser.dart';
 import 'package:steady_solutions/models/DTOs/create_wo_DTO.dart';
 import 'package:steady_solutions/models/work_orders/achievement_report.dart';
 import 'package:steady_solutions/models/work_orders/room.dart';
@@ -23,6 +26,7 @@ import 'package:steady_solutions/models/work_orders/category.dart';
 import 'package:steady_solutions/models/work_orders/control_item_model.dart';
 import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/pending_work_order.dart';
+import 'package:steady_solutions/screens/home_screen.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
 
 class WorkOrdersController extends GetxController {
@@ -37,8 +41,8 @@ class WorkOrdersController extends GetxController {
   RxMap<String, Category> categories = <String, Category>{}.obs;
   RxMap<String, Department> departments = <String, Department>{}.obs;
   RxMap<String, Room> rooms = <String, Room>{}.obs;
-  Rx<ControlItem> controlItem = ControlItem().obs;
-  Rx<ServiceInfo> serviceInfo = ServiceInfo().obs;
+  Rx<ControlItem> assetItem = ControlItem().obs;
+
   Rx<String> equipName = "".obs;
   Rx<String> serialNumber = "".obs;
   Rx<WorkOrder> currentNewWorkOrder = WorkOrder().obs;
@@ -50,18 +54,14 @@ class WorkOrdersController extends GetxController {
       <String, Map<String, Department>>{}.obs;
   //RxMap<String, Map<String, Room>> allRooms = <String, Map<String, Room>>{}.obs;
   bool isDataLoaded = false;
-  // void clearData() {
-  //   siteNames = <String, Site>{}.obs;
-  //   callTypes = <String, CallType>{}.obs;
-  //   categories = <String, Category>{}.obs;
-  //   departments = <String, Department>{}.obs;
-  //   rooms = <String, Room>{}.obs;
-  //   controlItem = ControlItem().obs;
-  //   serviceInfo = ServiceInfo().obs;
-  //   equipName = "".obs;
-  //   serialNumber = "".obs;
-  //   isLoading = false.obs;
-  // }
+  void clearData() {
+
+;
+    departments = <String, Department>{}.obs;
+    rooms = <String, Room>{}.obs;
+    assetItem.value = ControlItem();
+
+  }
 
   onInit() {
     super.onInit();
@@ -80,6 +80,7 @@ class WorkOrdersController extends GetxController {
         }
       });
     }
+    
   }
 
   Future<void> fetchDepartments() async {
@@ -94,7 +95,9 @@ class WorkOrdersController extends GetxController {
       //   "retarned to global deps:${allDepartments[value.value]} site: ${value.value}");
     });
   }
-  Future< RxMap<String, Department>> getRoomsList({required String departmentId}) async {
+
+  Future<RxMap<String, Department>> getRoomsList(
+      {required String departmentId}) async {
     // // print"GET DEPARTMENTS XXXXXXXXXXXXXXXXXXXXXXXX");
     // if (allDepartments.containsKey(siteId)) {
     //   departments.value = allDepartments[siteId]!;
@@ -106,20 +109,20 @@ class WorkOrdersController extends GetxController {
     print("departmentId id : $departmentId");
     final Map<String, String> params = {
       // 'SiteID': departmentId,
-        'EquipmentTypeID': storageBox.read("role").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
       'UserID': storageBox.read("id").toString(),
       'DepID': departmentId,
     };
-    final response = await http.get(Uri.parse(
-            "https://${storageBox.read('api_url')}$getRoomsListEndPoint")
-        .replace(queryParameters: params));
+    final response = await http.get(
+        Uri.parse("https://${storageBox.read('api_url')}$getRoomsListEndPoint")
+            .replace(queryParameters: params));
     if (response.statusCode == 200) {
       List temp = jsonDecode(response.body);
 
       temp.forEach((item) {
         rooms[item["Text"]] = Room.fromJson(item);
       });
-         print("found ${rooms.length} rooms");
+      print("found ${rooms.length} rooms");
       // return departments;
     } else
       print(response.body);
@@ -155,7 +158,7 @@ class WorkOrdersController extends GetxController {
   //         },
   //       );
   //     }
-  //     // CONNECTION ERROR 
+  //     // CONNECTION ERROR
 
   //     else {
   //       Get.dialog(CupertinoAlertDialog(
@@ -167,7 +170,7 @@ class WorkOrdersController extends GetxController {
   //             onPressed: () {
   //               Get.back();
   //             },
-  //           ) 
+  //           )
   //         ],
   //       ));
   //     }
@@ -233,57 +236,19 @@ class WorkOrdersController extends GetxController {
     // return pendingWorkOrders;
   }
 
-  // Future<Map<String, Room>> getRoomsList({required String departmentId}) async {
-  //   //       // // printallRooms.keys);
-  //   // if (allRooms.containsKey(departmentId)) {
-  //   //   // // print"Dep id : $departmentId  pre rooms  ${rooms.values.length} new rooms : ${allRooms[departmentId]!.values.length}" );
-  //   //   rooms.value = allRooms[departmentId]!;
-  //   //   // // print"returning from global list : ${rooms.length} rooms");
-  //   //   return rooms;
-  //   // }
-  //   // // print"deparm id : $departmentId");
-  //   // // printstorageBox.read("role").toString());
-
-  //   final Map<String, String> params = {
-  //     //'DepID': departmentId,
-  //     'EquipmentTypeID': storageBox.read("role").toString(),
-  //     'UserID': storageBox.read("id").toString(),
-  //   };
-
-  //   try {
-  //     final response = await http.get(
-  //         Uri.parse("https://${storageBox.read('api_url')}$getRoomsListEndPoint")
-  //             .replace(queryParameters: params));
-  //     // // print
-  //         Uri.parse("https://${storageBox.read('api_url')}$getRoomsListEndPoint")
-  //             .replace(queryParameters: params));
-  //     if (response.statusCode == 200) {
-  //       jsonDecode(response.body).forEach((item) {
-  //         if (allRooms['DepartmentID'] == null)
-  //           allRooms['DepartmentID'] = Map<String, Room>();
-  //         allRooms['DepartmentID']?['RoomID'] = Room.fromJson(item);
-  //       });
-  //     }
-  //     // // print"Get rooms response : " + response.body);
-  //   } catch (e) {
-  //     if (foundation.kDebugMode) rethrow;
-  //   }
-  //   return rooms;
-  // }
-
   Future<AchievementReport> getAchievementReport(int reportId) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isLoading.value = true;
     });
     AchievementReport report = AchievementReport();
-    // // print"sending report id : $reportId");
+    print("sending report id : $reportId");
     final Map<String, String> params = {
       'CMReportID': reportId.toString(),
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
     };
     // // print Uri.parse(
-    //        "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
+    //     ghryS   "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
     //    .replace(queryParameters: params));
     final response = await http.get(
       Uri.parse(
@@ -291,7 +256,7 @@ class WorkOrdersController extends GetxController {
           .replace(queryParameters: params),
     );
 
-    // // print"Get ach report info response : " + response.body);
+    print("Get ach report info response : " + response.body);
     if (response.statusCode == 200) {
       report = AchievementReport.fromJson(jsonDecode(response.body));
     } else {
@@ -315,37 +280,6 @@ class WorkOrdersController extends GetxController {
       isLoading.value = false;
     });
     return report;
-  }
-
-  Future<void> getServiceInfo(
-      {required String categoryId, required String departmentId}) async {
-    final Map<String, String> params = {
-      'CategoryID': categoryId,
-      'DepartmentID': departmentId,
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(),
-    };
-    final response = await http.get(
-      Uri.parse(
-              "https://${storageBox.read('api_url')}${getInfoServiceEndPoint}")
-          .replace(queryParameters: params),
-    );
-    // // // print"Get service url : " +
-    //     Uri.parse(
-    //             "https://${storageBox.read('api_url')}${getInfoServiceEndPoint}")
-    //         .replace(queryParameters: params)
-    //         .toString());
-    print("Get Service info response : " + response.body);
-    if (response.statusCode == 200) {
-      // // print"Get Service info response : 200");
-
-      serviceInfo.value = ServiceInfo.fromJson(jsonDecode(response.body));
-    } else {
-      // Connection error
-      serviceInfo.value = ServiceInfo(
-          Id: '0', controlNo: "Not found", serviceDesc: "Not found");
-    }
-    print("Service info : ${serviceInfo.toString()}");
   }
 
   Future<void> getDepartments({required String siteId}) async {
@@ -378,61 +312,97 @@ class WorkOrdersController extends GetxController {
     //return RxMap<String, Department>();
   }
 
-  Future<void> getControlItem({required String controlNum}) async {
-    String CNO = "";
-    if (isLink(controlNum)) {
-      final Uri uri = Uri.parse(controlNum);
-      final queryParameters = uri.queryParameters;
+  Future<void> getAssetItemById({required String assetIdOrLink}) async {
 
-      if (queryParameters.containsKey('CNo')) {
-        log("contains CNO");
-        CNO = queryParameters['CNo']!;
-        controlNum = CNO;
-        log("controlNum is $controlNum now");
-        Get.back();
-      } else {
-        log(" doesnt contains CNO");
-        if (Get.context != null){}
-          // showCupertinoDialog(
-          //     context: Get.context!,
-          //     builder: (builder) => CupertinoAlertDialog(
-          //             title: Text("Error"),
-          //             content: Text("Invalid Control Number"),
-          //             actions: [
-          //               CupertinoDialogAction(
-          //                   child: Text("OK"),
-          //                   onPressed: () {
-          //                     Get.back();
-          //                   })
-          //             ]));
-        else
-          controlItem.value =
-              ControlItem(controlNo: "Control # Not found in link");
-
-        //return ""; // Or throw an exception if CNO is mandatory
-      }
-    } else {
-      log("not a link");
+    if (isLink(assetIdOrLink)) {
+      assetIdOrLink = extractControlNumberFromLink(assetIdOrLink);
     }
-
-    // // print"getControlItem called");
-    // // printcontrolNum);
-    // // print"Get Control Info : ${storageBox.read("role").toString()}");
+    
     final Map<String, String> params = {
       'type': "1",
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
       'EquipmentID': "0",
-      'ControlNo': controlNum
+      'ControlNo': assetIdOrLink
     };
-    //Get Id from QR code
+
+
     final response = await http.get(Uri.parse(
-            "https://${storageBox.read('api_url')}$getControlInfoEndpoint")
+            "https://${storageBox.read('api_url')}$GetControlInfoByIDEndPoint")
         .replace(queryParameters: params));
-     print("Get control item response : " + response.body);
-    controlItem.value = ControlItem.fromJson(jsonDecode(response.body));
-   print("getControlItem equip ${controlItem.value.equipName}");
-  // print"getControlItem equip ${storageBox.read("role").toString()}");
+    print("Get control/service item response : " + response.body);
+    assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
+
+    print("getControlItem equip ${assetItem.toJson()}");
+   
+  }
+
+  String extractControlNumberFromLink(String assetId, ) {
+     log("extractControlNumberFromLink ");;
+    String CNO = "";
+    final Uri uri = Uri.parse(assetId);
+    final queryParameters = uri.queryParameters;
+    
+    if (queryParameters.containsKey('CNo')) {
+      log("contains CNO");
+      CNO = queryParameters['CNo']!;
+      assetId = CNO;
+      log("controlNum from link is $assetId now");
+     return assetId;
+    }
+      else
+       showCupertinoDialog(
+           context: Get.context!,
+           builder: (builder) => CupertinoAlertDialog(
+                   title: Text("Error"),
+                   content: Text("Link doesnt has a control number in it\n ERR385CNO"),
+                   actions: [
+                     CupertinoDialogAction(
+                         child: Text("OK"),
+                         onPressed: () {
+                           Get.offAll(()=>  HomeScreen());
+                         })
+                   ]));
+      
+    
+      return ""; 
+    }
+  
+
+  
+Future<void> getAssetItemByCatAndDept(
+      {required String departmentId, required String categoryId}) async {
+    print(
+        " getAssetItemByIdGet Control Info : categoryId $categoryId   - departmentId : $departmentId");
+    final Map<String, String> params = {
+      'CategoryID': categoryId,
+      'DepartmentID': departmentId,
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+
+    final response = await http.get(Uri.parse(
+            "https://${storageBox.read('api_url')}$GetServiceInfoByCatByDep")
+        .replace(queryParameters: params));
+    print(Uri.parse(
+            "https://${storageBox.read('api_url')}$GetServiceInfoByCatByDep")
+        .replace(queryParameters: params)
+        .toString());
+    print("Get getAssetItemByCatAndDept item response : " + response.body);
+    assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
+
+    print("getAssetItemByCatAndDept equip ${assetItem.toJson()}");
+  }
+
+  Future<void> getAssetItemByQRCode({required String assetId}) async {
+    //Get Id from QR code
+    // final response = await http.get(Uri.parse(
+    //         "https://${storageBox.read('api_url')}$getControlInfoEndpoint")
+    //     .replace(queryParameters: params));
+    // print("Get control item response : " + response.body);
+    // assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
+    // print("getControlItem equip ${assetItem.value.equipName}");
+    // print("getControlItem equip ${assetItem.toJson()}");
     // Get.to(() => const NewEquipWorkOrderFrom());
   }
 
@@ -492,75 +462,143 @@ class WorkOrdersController extends GetxController {
       }
     }
   }
-Rx<bool> isCreating = false.obs;
+
+  Rx<bool> isCreating = false.obs;
   Future<CreateWorkOrderDTO> createWorkOrder(WorkOrder workOrder) async {
     // // printworkOrder.imageFile);
-  isCreating.value = true;
+    isCreating.value = true;
     var url =
         "https://${storageBox.read('api_url')}${createWorkOrderEndpoint}"; // Replace with your URL
     var request = http.MultipartRequest('POST', Uri.parse(url));
-    var multipartFile;
+   request.headers['Content-Type'] = 'application/json';
     // Prepare the image file for upload
-    if (workOrder.imageFile != null) {
-      multipartFile = await http.MultipartFile.fromPath(
-          'imageFile', workOrder.imageFile!.path);
-      request.files.add(multipartFile);
-    }
-    log(storageBox.read('api_url'));
-
-    log("serviceInfo num # : ${serviceInfo.value.Id}");
-
-    String role = storageBox.read("role").toString();
-    // if (role == "" || role.isEmpty) role = "2";
-    // Add other data (replace with your actual data fields)
-    request.fields['EquipmentID'] = serviceInfo.value.Id ?? "0";
+    // if (workOrder.imageFile != null) {
+    //   multipartFile = await http.MultipartFile.fromPath(
+    //       'imageFile', workOrder.imageFile!.path);
+    //   request.files.add(multipartFile);
+    // }
+  
+    String userId = workOrder.userId ?? storageBox.read("id").toString();
+    request.fields['EquipmentID'] = assetItem.value.id ?? "0";
     request.fields['CallTypeID'] = workOrder.callTypeID ?? "";
     request.fields['IsUrgent'] = workOrder.isUrgent.toString();
     request.fields['FaultStatus'] = workOrder.faultStatues ?? "";
-    request.fields['RoomID'] = workOrder.roomId ?? "12";
+    request.fields['RoomID'] = workOrder.roomId ?? "0";
     request.fields['Type'] = workOrder.type.toString();
-    request.fields['UserID'] = storageBox.read("id").toString();
-    request.fields['EquipmentTypeID'] =storageBox.read("role").toString();
-    
-
+    request.fields['UserID'] = userId;
+    request.fields['EquipmentTypeID'] = storageBox.read("role").toString();
     request.fields['NewOrEdit'] = "0";
 
+
+
+/// TODO : Valided Request Fields before sending
+/////////////////// IMAGE UPLOAD
+///
+ if (workOrder.imageFile != null) {
+   
+
+// request.fields['ImageFile'] = ''; 
+//     final imageAsBytes = workOrder.imageFile!.readAsBytesSync();
+
+//     log(imageAsBytes.toString());
+
+// final compressedBytes = await testCompressFile(workOrder.imageFile!);
+// request.files.add(http.MultipartFile.fromBytes(
+//   'ImageFile', // Replace with the expected field name in your API
+//   compressedBytes,
+//   contentType: MediaType('image', 'jpeg'), // Set the image content type (adjust if needed)
+//  ),);
+ //  request.files.add(await http.MultipartFile.fromPath('ImageFile', workOrder.imageFile!.path, filename: "noty"));
+
+  
+ }
+ 
+//  final compressedImage = await compressImage(workOrder.imageFile!);
+//     final bytes = await compressedImage.readAsBytes();
+//     final base64Image = base64Encode(bytes);
+//    request.fields['ImageFile'] = base64Image;
+// String encodeImageToBase64(List<int> imageBytes) {
+//   return base64Encode(imageBytes);
+// }
+
+final compressedImage = await compressImage(workOrder.imageFile!);
+    final bytes = await compressedImage.readAsBytes();
+    final base64Image = base64Encode(bytes);
+
+final imagePart = http.MultipartFile.fromString(
+  'ImageFile', // Use the expected parameter name here
+  base64Image, // Pass the Base64-encoded string directly
+  contentType: MediaType('image', 'jpg'), // Specify content type with MIME type
+);
+request.files.add(imagePart);
+print("data:image/jpeg;base64" +base64Image);
+//////////////////// END OF IMAGE UPLOAD
+try{
     // Send the request
+    log("response 2 : ${"sendting create WO request"}");
+     log(request.fields.toString());
     var response = await request.send();
-    //// // print"Response status: ${response.reasonPhrase}");
+    log("Response status: ${response.reasonPhrase}");
+    log("user id # : ${storageBox.read("id").toString()}");
     //final response2 = await http.Response.fromStream(response);
-
-    // final body = response2.body;
-    // // // print"Crete WO response : " + body);
-    //      var data =await responseData(response);
-    //        // // print"Crete WO MAP : " + data.toString());
-
-    if (response.statusCode == 200) {
-      CreateWorkOrderDTO createWODTO =
-          CreateWorkOrderDTO(success: 0, message: "Connaction faliure");
+    //log("response 2 : ${response2.body}");
+    //final body = response.stream.transform(utf8.decoder).join();
+    //log("Crete WO response : " + body.toString());
+    var data = await responseData(response);
+    // // print"Crete WO MAP : " + data.toString());
+    log(response.toString());
+ CreateWorkOrderDTO createWODTO = CreateWorkOrderDTO(success: 0, message: "");
       if (response.statusCode == 200) {
-        var data = await responseData(response);
-         await Future.delayed(Duration(seconds: 1));
-  isCreating.value = false;
+       
+        log("Crete WO MAP1 : " + data.toString());
+        isCreating.value = false;
         return CreateWorkOrderDTO(
             success: 1, message: "Created successfully", jobNum: data["JobNO"]);
       } else {
         createWODTO.message = "MISSING DATA";
       }
-       await Future.delayed(Duration(seconds: 1));
-        isCreating.value = false;
+      log("Crete WO MAP2 Failed : " + data.toString());
+      isCreating.value = false;
       return createWODTO;
-    } else {
-       await Future.delayed(Duration(seconds: 1));
+      } catch(e){
         isCreating.value = false;
-      return CreateWorkOrderDTO(success: 0, message: "Connaction faliure");
-    }
-    
-  }
+        if(foundation.kDebugMode){
+          rethrow;
+        }
+        print("ERROR : " + e.toString());
+        return CreateWorkOrderDTO(success: 0, message: "Failed to create WO (err185)");
 
+      }
+   
+   
+  }
+  Future<XFile> compressImage(File file) async {
+  final dir = await getTemporaryDirectory();
+  final targetPath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+  var result = await FlutterImageCompress.compressAndGetFile(
+    file.absolute.path,
+    targetPath,
+    quality: 50,
+  );
+
+  return result!;
+}
+Future<foundation.Uint8List> testCompressFile(File file) async {
+  final imageBytes = await file.readAsBytes();
+  var result = await FlutterImageCompress.compressWithList(
+    imageBytes,
+    minWidth: 2300,
+    minHeight: 1500,
+    quality: 94,
+    rotate: 90,
+  );
+  return result;
+}
   Future<Map<String, dynamic>> responseData(
       http.StreamedResponse response) async {
     final responseBody = await response.stream.bytesToString();
+    log("get control response : " + responseBody.toString());
     final data = jsonDecode(responseBody); // Assuming JSON response
     return data; // Return the decoded data
   }

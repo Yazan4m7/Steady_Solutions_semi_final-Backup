@@ -28,6 +28,7 @@ void main() async {
 //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
 //   statusBarColor: Colors.transparent, 
 // ));
+
 SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
   statusBarColor: Colors.transparent, // Set the status bar color to transparent
  statusBarIconBrightness: Brightness.light, // Set the icon color (light or dark)
@@ -75,7 +76,7 @@ class SteadySolutionsApplication extends StatefulWidget {
   static void setLocale(BuildContext context, Locale newLocale) async {
     _SteadySolutionsApplicationState? state =
         context.findAncestorStateOfType<_SteadySolutionsApplicationState>();
-
+ 
     storageBox.write('languageCode', newLocale.languageCode);
     storageBox.write('countryCode', "");
 
@@ -89,6 +90,7 @@ final ApiAddressController _apiController = Get.find<ApiAddressController>();
 
 class _SteadySolutionsApplicationState
     extends State<SteadySolutionsApplication> {
+      
   final AuthController _authController = Get.find<AuthController>();
   final ApiAddressController _apiController = Get.find<ApiAddressController>();
   late Locale _locale;
@@ -117,7 +119,11 @@ class _SteadySolutionsApplicationState
 
   @override
   void initState() {
-    
+     ScreenUtil.ensureScreenSizeAndInit(
+  designSize: const Size(1080, 1920),
+   minTextAdapt: true,
+  splitScreenMode: true,
+  context);
     super.initState();
     _fetchLocale().then((locale) {
       _locale = locale;
@@ -151,11 +157,7 @@ _locale = Locale("en","us");
 //  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
 //   SystemUiOverlay.
 // ]);
-  ScreenUtil.ensureScreenSizeAndInit(
-  designSize: const Size(1080, 1920),
-   minTextAdapt: true,
-  splitScreenMode: true,
-  context);
+
     return MediaQuery(
   // Setting font does not change with system font size
   

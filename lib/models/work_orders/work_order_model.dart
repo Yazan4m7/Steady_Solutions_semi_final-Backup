@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -20,6 +21,7 @@ class WorkOrder {
   File? imageFile;
   String? newOrEdit;
   String? type;
+  String? userId;
   WorkOrder({
       this.serialNumber,
       this.equipName,
@@ -35,50 +37,75 @@ class WorkOrder {
       this.faultStatues,
       this.imageFile,
       this.newOrEdit,
-      this.type});
-
+      this.type,
+      this.userId
+      });
+  WorkOrder build() {
+    return WorkOrder(
+      controlNumber: controlNumber,
+      equipmentID: equipmentID,
+      equipTypeID: equipTypeID,
+      callTypeID: callTypeID,
+      isUrgent: isUrgent,
+      roomId: roomId,
+      requstedAttendEngEmpID: requstedAttendEngEmpID,
+      callerName: callerName,
+      tel: tel,
+      faultStatues: faultStatues,
+      imageFile: imageFile,
+      newOrEdit: newOrEdit,
+      type:   type,
+      userId: userId
+    );
+  }
   factory WorkOrder.fromJson(Map<String, dynamic> json)  {
+    print("user id factory : ${json['UserID']} ");
     return WorkOrder(
       serialNumber: json['SerNO'],
-      equipName: json['equipName'],
-      equipTypeID: json['equipTypeID'],
-      controlNumber: json['controlNumber'],
-      equipmentID: json['equipmentID'],
-      callTypeID: json['callTypeID'],
-      isUrgent: json['isUrgent'],
+      equipName: json['EquipName'],
+      equipTypeID: json['EquipmentTypeID'],
+      controlNumber: json['ControlNumber'],
+      equipmentID: json['EquipmentID'],
+      callTypeID: json['CallTypeID'],
+      isUrgent: json['IsUrgent'],
       roomId: json["RoomID"],
-      requstedAttendEngEmpID: json['requstedAttendEngEmpID'],
+      //requstedAttendEngEmpID: json['requstedAttendEngEmpID'],
       callerName: json['callerName'],
       tel: json['tel'],
       faultStatues: json['faultStatues'],
-     // imageFile: json['imageFile'],
-      newOrEdit: json['newOrEdit'],
-      type: json['type'],
+      imageFile: json['ImageFile'],
+      newOrEdit: json['NewOrEdit'],
+      type: json['Type'],
+      userId : json['UserID']
     );
   }
 
   Map<String, dynamic> toJson() {
+    print("user id : $userId");
     return {
       'SerNO': serialNumber,
-      "equipName": equipName,
-      "equipTypeID": equipTypeID,
-      'controlNumber': controlNumber,
-      'equipmentID': equipmentID,
-      'callTypeID': callTypeID,
-      'isUrgent': isUrgent,
+      "EquipName": equipName,
+      "EquipmentTypeID": equipTypeID,
+      'ControlNumber': controlNumber,
+      'EquipmentID': equipmentID,
+      'CallTypeID': callTypeID,
+      'IsUrgent': isUrgent,
       "RoomID": roomId,
-      'requstedAttendEngEmpID': requstedAttendEngEmpID,
-      'callerName': callerName,
-      'tel': tel,
-      'faultStatues': faultStatues,
-      'imageFile': imageFile,
-      'newOrEdit': newOrEdit,
-      "type": type
+      'RequstedAttendEngEmpID': requstedAttendEngEmpID,
+      'CallerName': callerName,
+      'Tel': tel,
+      'FaultStatus': faultStatues,
+      'ImageFile': imageFile,
+      'NewOrEdit': newOrEdit,
+      "Type": type,
+      "UserID": userId
     };
   }
 
   WorkOrderBuilder({WorkOrder? workOrder}) {
+     print("BUILDER user id : $userId");
     if (workOrder != null) {
+       print("work order not null");
       serialNumber = workOrder.serialNumber;
       controlNumber = workOrder.controlNumber;
       equipName = workOrder.equipName;
@@ -91,7 +118,8 @@ class WorkOrder {
       callerName = workOrder.callerName;
       tel = workOrder.tel;
       faultStatues = workOrder.faultStatues;
-     // imageFile = workOrder.imageFile;
+      imageFile = workOrder.imageFile;
+      userId = workOrder.userId;
       newOrEdit = workOrder.newOrEdit;
       type = workOrder.type;
     }
@@ -129,6 +157,12 @@ class WorkOrder {
 
   setEquipName(String? equipmentName) {
     this.equipName = equipmentName;
+    
+    return this;
+  }
+ setUserId(String id) {
+  print("setting user id : $id");
+    this.userId = id;
     return this;
   }
 
@@ -175,21 +209,5 @@ class WorkOrder {
     return this;
   }
 
-  WorkOrder build() {
-    return WorkOrder(
-      controlNumber: controlNumber,
-      equipmentID: equipmentID,
-      equipTypeID: equipTypeID,
-      callTypeID: callTypeID,
-      isUrgent: isUrgent,
-      roomId: roomId,
-      requstedAttendEngEmpID: requstedAttendEngEmpID,
-      callerName: callerName,
-      tel: tel,
-      faultStatues: faultStatues,
-      imageFile: imageFile,
-      newOrEdit: newOrEdit,
-      type:   type
-    );
-  }
+
 }

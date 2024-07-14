@@ -22,7 +22,7 @@ import 'package:steady_solutions/screens/home_screen.dart';
 class AuthController extends GetxController with GPSMixin {
   static AuthController get instance => Get.find();
 
-  ApiAddressController _apiController = Get.find<ApiAddressController>();
+  // ApiAddressController _apiController = Get.find<ApiAddressController>();
 
   Rx<bool> isLoggedIn = false.obs;
   Rx<Employee> employee = Employee().obs;
@@ -31,7 +31,9 @@ class AuthController extends GetxController with GPSMixin {
   Rx<bool> isMedical = false.obs;
   Rx<bool> isGeneral = false.obs;
   Rx<bool> checkingInOrOut = false.obs;
-  bool isDevMode = false;
+
+  //// DEV MODE MUST BE DISABLED IN PRODUCTION
+  bool isDevMode = true;
   @override
   void onReady() {
     isLoggedIn.value = storageBox.read("isLoggedIn") ?? false;
@@ -42,48 +44,13 @@ class AuthController extends GetxController with GPSMixin {
     employee.value.role = storageBox.read("role");
     employee.value.firstName = storageBox.read("firstName");
     employee.value.lastName = storageBox.read("lastName");
+
+    if(isDevMode){  
+      checkedIn.value =true;
+    
+  }
   }
 
-  // navigateToinitalScreen() {
-  //   if (_apiController.isApiRunning.value) {
-  //     if (isLoggedIn.value) {
-  //       WidgetsBinding.instance.addPostFrameCallback((_) {
-  //         Get.offAll(HomeScreen());
-  //       });
-  //     } else {
-  //       // print ("isLoggedIn.valu false}");
-  //       WidgetsBinding.instance.addPostFrameCallback((_) {
-  //         Get.offAll(LoginScreen());
-  //       });
-  //     }
-  //   } else {
-  //     // print("Api: ${_apiController.isApiRunning.value}");
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       Get.offAll(ApiAddressScreen());
-  //     });
-  //   }
-  //   // Navigator.of(context).pushAndRemoveUntil( MaterialPageRoute(builder: (context) =>  ApiAddressScreen()),(route) => false,);
-  //   // print("STARTING Api listner running ");
-  //   _apiController.isApiRunning.listen((value) {
-  //     // print("Api listner running : $value");
-  //     if (value) {
-
-  //       WidgetsBinding.instance.addPostFrameCallback((_) {
-  //         if (storageBox.read("isLoggedIn") == true) {
-  //           WidgetsBinding.instance.addPostFrameCallback((_) {
-  //             Get.offAll(HomeScreen());
-  //           });
-  //         } else {
-  //           debug// print("API LISTNER REDIRECTED TO LOGIN");
-  //           WidgetsBinding.instance.addPostFrameCallback((_) {
-  //             Get.offAll(LoginScreen());
-  //           });
-  //           // return ApiAddressScreen();
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
 
   Future<void> getEquipIds() async {
     try{
@@ -93,24 +60,6 @@ class AuthController extends GetxController with GPSMixin {
     final response = await http.get(Uri.parse(url));
     String text =response.body
     
-//      """
-// {
-//     'EquipmentTypeList': [R
-//         {
-//             "EquipmentTypeID": 2,
-//             "EquipmentTypeName": "Medical",
-//             "EquipmentTypeNameAR": "طبي",
-//             "AcceptMoreThanOnePPMtype": false
-//         },
-//         {
-//             "EquipmentTypeID": 1,
-//             "EquipmentTypeName": "General",
-//             "EquipmentTypeNameAR": "عام",
-//             "AcceptMoreThanOnePPMtype": false
-//         }
-//     ]
-// }
-// """
 
 ;
     // print("Equip ids response ${response.body}");

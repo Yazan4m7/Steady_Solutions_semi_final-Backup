@@ -91,6 +91,9 @@ dependencies:
   excel: ^4.0.2
   move_to_background: ^1.0.2
   flutter_typeahead: ^5.2.0
+  http_parser: ^4.0.2
+  image_compression: ^1.0.5
+  flutter_image_compress: ^2.3.0
 
 
 dev_dependencies:
@@ -149,6 +152,17 @@ flutter:
     - family: ProductSans
       fonts:
       - asset: assets/fonts/Product-Sans-Regular.ttf
+  #    - asset: assets/fonts/Product-Sans-Bold.ttf
+  #       weight: bold
+  #     - asset: assets/fonts/Product-Sans-Italic.ttf
+  #       style: italic
+  # - family: RobotoMono
+  #   fonts:
+  #     - asset: fonts/RobotoMono-Regular.ttf
+  #     - asset: fonts/RobotoMono-Bold.ttf
+  #       weight: 700
+
+
   assets:
     - assets/
     - assets/fonts/

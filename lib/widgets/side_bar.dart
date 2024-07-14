@@ -17,7 +17,7 @@ import 'package:steady_solutions/screens/notifications/notifications_screen.dart
 import 'package:steady_solutions/screens/pending_list/pending_work_orders.dart';
 import 'package:steady_solutions/screens/pm/calendar.dart';
 import 'package:steady_solutions/screens/work_orders/achievment_report.dart';
-import 'package:steady_solutions/screens/work_orders/new_equip_wo_form_screen.dart';
+import 'package:steady_solutions/screens/work_orders/new_asset_wo_form_screen.dart';
 import 'package:steady_solutions/screens/work_orders/new_service_wo_form_screen.dart';
 import 'package:steady_solutions/widgets/language_icon_button.dart';
 import 'package:steady_solutions/widgets/utils/qr_scanner.dart';
@@ -157,7 +157,7 @@ class SideBar extends StatelessWidget {
                                     DrawerListInnerTile(
                                       context: context,
                                       title: AppLocalizations.of(context)
-                                          .equipment_work_order,
+                                          .asset_work_order,
                                       icon: Icon(Icons.devices_other_rounded,
                                           size: level2IconSize),
                                       onTap: () {

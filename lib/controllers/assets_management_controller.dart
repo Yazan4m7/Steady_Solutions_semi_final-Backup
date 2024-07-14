@@ -21,7 +21,7 @@ class AssetsManagementController extends GetxController  {
   Rx<bool> isLoading = false.obs;
   Rx<bool> isInstalledBaseListEmpty = false.obs;
   final ApiAddressController _apiController = Get.find<ApiAddressController>(); 
-
+  Rx<String> total = "-".obs;
   Future<void> fetchFilterData() async {
     isLoading.value = true;
     List temp;
@@ -58,6 +58,10 @@ class AssetsManagementController extends GetxController  {
   Future<void> fetchDataAndInsertIntoMap(
       [String? manafacturer, String? department]) async {
     //Flag 0 --> all ,Flag 1-->By Manf,Flag 2-->By Department
+ 
+   total.value = "-"; 
+   
+    installedBase.value = <String, InstalledBase>{}.obs;
     isLoading.value = true;
     
     String flag = "0";
@@ -67,16 +71,19 @@ class AssetsManagementController extends GetxController  {
     if(department != null) {
       flag= "2";
     }
-log("installed base log : $flag");
-    // print(
-    //    "fetching installed base with : department : $department , manafacturer : $manafacturer ID : ${department ?? manafacturer ?? '0'}");
+log("installed base flag : $flag");
+     print(
+       "fetching installed base with : department : $department , manafacturer : $manafacturer ID : ${department ?? manafacturer ?? '0'}");
     // Fetch data from API or local file
     final Map<String, String> params = {
       'EquipmentTypeID': storageBox.read("role").toString(),
       'UserID': storageBox.read("id").toString(),
       'Flag': flag,
-      'ID': '0',
+      'ID': department ?? manafacturer ?? '0',
     };
+    print(Uri.parse(
+        "https://${storageBox.read('api_url')}$getInstalledBaseEndPoint",
+      ).replace(queryParameters: params));
     // print(params.toString());
     final response = await http.get(
       Uri.parse(
@@ -93,8 +100,11 @@ log("installed base log : $flag");
         (item) => tempInstalledBaseMap["${index++}"] = InstalledBase.fromJson(item),
       );
     }
+      log(installedBase.length.toString() + " assets");
+        log(installedBase.length.toString() + "temp assets");
     installedBase = tempInstalledBaseMap;
      log(installedBase.length.toString() + " assets");
+     total.value = installedBase.length.toString(); 
     if(installedBase.isEmpty) isInstalledBaseListEmpty.value = true;
     isLoading.value = false;
   }

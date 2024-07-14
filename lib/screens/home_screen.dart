@@ -15,7 +15,7 @@ import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/notifications_controller.dart';
 import 'package:steady_solutions/screens/dashboard/dashboard.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
-import 'package:steady_solutions/screens/work_orders/new_equip_wo_form_screen.dart';
+import 'package:steady_solutions/screens/work_orders/new_asset_wo_form_screen.dart';
 import 'package:steady_solutions/screens/work_orders/new_service_wo_form_screen.dart';
 import 'package:steady_solutions/widgets/side_bar.dart';
 import 'package:steady_solutions/widgets/utils/qr_scanner.dart';
@@ -73,8 +73,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   dispose(){
-  
+  lisenter?.cancel();
+  try{
+  if (_authController.checkingInOrOut.isTrue)
     _authController.checkingInOrOut.close();
+  }catch(e){
+    print ("authController.checkingInOrOut.close() error : $e");
+  }
       super.dispose();  }
     
 
@@ -129,8 +134,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 child: Icon(FontAwesomeIcons.wrench),
                                 label: AppLocalizations.of(context)
                                     .asset_work_order,
-                                labelStyle: TextStyle(
-                                    color: kPrimeryBlack, fontSize: 30.sp),
+                                labelStyle:   Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
                                 onTap: () {
                                   Get.to(() => NewEquipWorkOrderFrom());
                                 },
@@ -140,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 label: AppLocalizations.of(context)
                                     .service_work_order,
                                 labelStyle:
-                                    Theme.of(context).textTheme.displayLarge,
+                                      Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black),
                                 onTap: () {
                                   Get.to(() => NewServiceWorkOrderFrom());
                                 },

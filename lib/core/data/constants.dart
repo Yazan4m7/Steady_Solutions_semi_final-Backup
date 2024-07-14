@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 //String API_URL = storageBox.read('api_url') ?? "";
 const String API_KEY = 'g8h9434749qt9723hqp3g892';
 String loginEndpoint = "/OMS/Login?";
-String getControlInfoEndpoint = "/OMS/GetControlInfo?";
+
+/// By ID
+String GetControlInfoByIDEndPoint = "/OMS/GetControlInfo?";
 String createWorkOrderEndpoint = "/OMS/CreateWO?";
 String getDepartmentsEndpoint = "/OMS/GetDepartmentsListBySiteID?";
 String getNewOrderOptionsEndPoint = "/OMS/CreateWO?";
 String getRoomsListEndPoint = "/OMS/GetRoomListByDepID?";
-String getInfoServiceEndPoint = "/OMS/GetServiceInfoByCatByDep?";
+
+// By category and department
+String GetServiceInfoByCatByDep = "/OMS/GetServiceInfoByCatByDep?";
 String getWOJobInfoEndPoint = "/OMS/GetWoJobInfo?";
 String getPendingOrdersEndPoint = "/OMS/GetPendingWOByEng?";
 String createAchievementReportEndPoint = "/OMS/SaveCmReport?";
@@ -34,7 +38,7 @@ String sendApprovOrEvalEndPoint = "/OMS/SendEvalOrApprove?";
 String getNotificationsEndPoint = "/OMS/GetNotifications?";
 String getAllRoomsEndPoint = '/OMS/GetRoomListBySiteID?';
 String getEquipTypeIdsEndPoint = '/OMS/GetEquipmentTypeList';
- String kMainSuccessIconPath = 'assets/json_animations/success_blue.json';
+String kMainSuccessIconPath = 'assets/json_animations/success_blue.json';
 String getAchievementReportEndPoint = '/OMS/GetAchievmentReport?';
 
 final navigatorKey = GlobalKey<NavigatorState>();
