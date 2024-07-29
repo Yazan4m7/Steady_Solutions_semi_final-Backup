@@ -50,7 +50,11 @@ class DashboardController extends GetxController {
   Rx<String> MTBF = "".obs;
   RxList<PartsConsumptionChartData> partsConsumptionChartData = <PartsConsumptionChartData>[].obs;
   List<ChartData> chartData = [];
+<<<<<<< HEAD
 
+=======
+  Rx<double> maxOfWOByYearChartData = 0.0.obs;
+>>>>>>> 045059f (First Testing Version)
   final List<WOByYearChartData> woByYearChartData = [
   ];
 
@@ -384,7 +388,11 @@ class DashboardController extends GetxController {
           for (int i = 0; i < monthNames.length; i++) {
             woByYearChartData.add(WOByYearChartData(monthNumber: i, WOCount: monthdata[i],monthName: monthNames[i]));
           }
+<<<<<<< HEAD
           
+=======
+          maxOfWOByYearChartData.value = woByYearChartData.map((data) => data.WOCount).reduce((a, b) => a > b ? a : b).toDouble();
+>>>>>>> 045059f (First Testing Version)
     
       } else {
       //  // print"FALSE2");

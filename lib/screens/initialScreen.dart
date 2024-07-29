@@ -1,5 +1,8 @@
 import 'dart:developer';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 045059f (First Testing Version)
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,7 +13,10 @@ import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
 import 'dart:async';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 045059f (First Testing Version)
 import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/screens/auth/login_screen.dart';
 import 'package:steady_solutions/screens/home_screen.dart';

@@ -38,12 +38,22 @@ class Background extends StatelessWidget {
                           end: Alignment.topCenter,
                           stops: [
                             0.4,
+<<<<<<< HEAD
                             0.9,
                           ],
                           colors: [
                             grey_bg_color.withOpacity(0.8),
                             grey_bg_color
                             ,
+=======
+                            0.6,
+                            0.9,
+                          ],
+                          colors: [
+                           grey_bg_color.withOpacity(0.85),
+                            grey_bg_color.withOpacity(0.75),
+                            grey_bg_color.withOpacity(0.95)
+>>>>>>> 045059f (First Testing Version)
                             // Adjust opacity as needed
                           ],
                         ),

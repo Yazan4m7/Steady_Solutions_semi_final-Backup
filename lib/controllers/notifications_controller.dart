@@ -112,12 +112,20 @@ class NotificationsController extends GetxController {
           
       },
     );
+<<<<<<< HEAD
     //print("Notification seen respoinse : ${response.body}");
+=======
+    print("Notification seen response : ${response.body}");
+>>>>>>> 045059f (First Testing Version)
    
   }
 
 
+<<<<<<< HEAD
   Future<String> sendApproveOrEval ({required int reportId, required String repairDate,required int NotificationTypeId}) async{
+=======
+  Future<String> sendApproveOrEval ({required int reportId, required String repairDate,required int NotificationTypeId,required int approveOrEval}) async{
+>>>>>>> 045059f (First Testing Version)
  String responseMsg = "No connection made";
  //print("repaired: "+ reportId.toString());
  // print("repair date: "+ repairDate.toString());
@@ -141,6 +149,10 @@ class NotificationsController extends GetxController {
           'RepairDate': repairDate.toString(),
           'NotificationTypeID': NotificationTypeId.toString(),
           'UserID':  storageBox.read("id").toString(), 
+<<<<<<< HEAD
+=======
+          'SendEvalOrApprove': approveOrEval.toString()
+>>>>>>> 045059f (First Testing Version)
           
       },
     );

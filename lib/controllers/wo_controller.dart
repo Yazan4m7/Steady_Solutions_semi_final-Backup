@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import 'dart:async';
+>>>>>>> 045059f (First Testing Version)
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -28,6 +32,12 @@ import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/pending_work_order.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
+<<<<<<< HEAD
+=======
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+import 'package:path/path.dart';
+>>>>>>> 045059f (First Testing Version)
 
 class WorkOrdersController extends GetxController {
   int? lastWorkOrderJobId;
@@ -236,7 +246,11 @@ class WorkOrdersController extends GetxController {
     // return pendingWorkOrders;
   }
 
+<<<<<<< HEAD
   Future<AchievementReport> getAchievementReport(int reportId) async {
+=======
+  Future<AchievementReport> getAchievementReport(int reportId, String passedParDate, String notificationedTypeId) async {
+>>>>>>> 045059f (First Testing Version)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isLoading.value = true;
     });
@@ -246,6 +260,11 @@ class WorkOrdersController extends GetxController {
       'CMReportID': reportId.toString(),
       'UserID': storageBox.read("id").toString(),
       'EquipmentTypeID': storageBox.read("role").toString(),
+<<<<<<< HEAD
+=======
+      'NotificationTypeID': notificationedTypeId,
+      'PassedParDate' : passedParDate.toString()
+>>>>>>> 045059f (First Testing Version)
     };
     // // print Uri.parse(
     //     ghryS   "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
@@ -301,13 +320,22 @@ class WorkOrdersController extends GetxController {
     final response = await http.get(Uri.parse(
             "https://${storageBox.read('api_url')}$getDepartmentsEndpoint")
         .replace(queryParameters: params));
+<<<<<<< HEAD
+=======
+         log(response.body);
+>>>>>>> 045059f (First Testing Version)
     if (response.statusCode == 200) {
       List temp = jsonDecode(response.body)["Departments"];
       debugPrint(temp.length.toString() + " departments");
       temp.forEach((item) {
         departments[item["Text"]] = Department.fromJson(item);
       });
+<<<<<<< HEAD
       // return departments;
+=======
+     
+       log("get dpartments response with none 200 code : ${response.body}");
+>>>>>>> 045059f (First Testing Version)
     }
     //return RxMap<String, Department>();
   }
@@ -315,9 +343,16 @@ class WorkOrdersController extends GetxController {
   Future<void> getAssetItemById({required String assetIdOrLink}) async {
 
     if (isLink(assetIdOrLink)) {
+<<<<<<< HEAD
       assetIdOrLink = extractControlNumberFromLink(assetIdOrLink);
     }
     
+=======
+      log("assetIdOrLink is link");
+      assetIdOrLink = extractControlNumberFromLink(assetIdOrLink);
+    }
+     print("assetIdOrLink is not link :  $assetIdOrLink");
+>>>>>>> 045059f (First Testing Version)
     final Map<String, String> params = {
       'type': "1",
       'UserID': storageBox.read("id").toString(),
@@ -394,7 +429,11 @@ Future<void> getAssetItemByCatAndDept(
     print("getAssetItemByCatAndDept equip ${assetItem.toJson()}");
   }
 
+<<<<<<< HEAD
   Future<void> getAssetItemByQRCode({required String assetId}) async {
+=======
+ // Future<void> getAssetItemByQRCode({required String assetId}) async {
+>>>>>>> 045059f (First Testing Version)
     //Get Id from QR code
     // final response = await http.get(Uri.parse(
     //         "https://${storageBox.read('api_url')}$getControlInfoEndpoint")
@@ -404,10 +443,17 @@ Future<void> getAssetItemByCatAndDept(
     // print("getControlItem equip ${assetItem.value.equipName}");
     // print("getControlItem equip ${assetItem.toJson()}");
     // Get.to(() => const NewEquipWorkOrderFrom());
+<<<<<<< HEAD
   }
 
   bool isLink(String text) {
     return (text.contains("https://") || text.contains("www"));
+=======
+ //}
+
+  bool isLink(String text) {
+    return (text.contains("http") || text.contains(".com"));
+>>>>>>> 045059f (First Testing Version)
   }
 
   Future<void> fetchNewWorkOrderOptions() async {
@@ -467,17 +513,35 @@ Future<void> getAssetItemByCatAndDept(
   Future<CreateWorkOrderDTO> createWorkOrder(WorkOrder workOrder) async {
     // // printworkOrder.imageFile);
     isCreating.value = true;
+<<<<<<< HEAD
     var url =
         "https://${storageBox.read('api_url')}${createWorkOrderEndpoint}"; // Replace with your URL
     var request = http.MultipartRequest('POST', Uri.parse(url));
    request.headers['Content-Type'] = 'application/json';
+=======
+ 
+    if (!validateRequestFields(workOrder)) {
+       isCreating.value = false;
+      return CreateWorkOrderDTO(success: -1, message: "Missing data");
+    }
+
+    var url =
+        "https://${storageBox.read('api_url')}${createWorkOrderEndpoint}"; // Replace with your URL
+ 
+>>>>>>> 045059f (First Testing Version)
     // Prepare the image file for upload
     // if (workOrder.imageFile != null) {
     //   multipartFile = await http.MultipartFile.fromPath(
     //       'imageFile', workOrder.imageFile!.path);
     //   request.files.add(multipartFile);
     // }
+<<<<<<< HEAD
   
+=======
+ 
+   var request = http.MultipartRequest('POST', Uri.parse(url));
+   request.headers['Content-Type'] = 'application/json';
+>>>>>>> 045059f (First Testing Version)
     String userId = workOrder.userId ?? storageBox.read("id").toString();
     request.fields['EquipmentID'] = assetItem.value.id ?? "0";
     request.fields['CallTypeID'] = workOrder.callTypeID ?? "";
@@ -489,6 +553,7 @@ Future<void> getAssetItemByCatAndDept(
     request.fields['EquipmentTypeID'] = storageBox.read("role").toString();
     request.fields['NewOrEdit'] = "0";
 
+<<<<<<< HEAD
 
 
 /// TODO : Valided Request Fields before sending
@@ -532,11 +597,36 @@ final imagePart = http.MultipartFile.fromString(
 );
 request.files.add(imagePart);
 print("data:image/jpeg;base64" +base64Image);
+=======
+///  Valided Request Fields before sending///
+  if (workOrder.imageFile != null) {
+    final mimeType = lookupMimeType(workOrder.imageFile!.path);
+    if (mimeType == null) {
+      throw Exception('Could not determine file mime type');
+    }
+    final contentType = MediaType(mimeType.split('/')[0], mimeType.split('/')[1]);
+
+    // Compress the image if needed
+    final compressedImage = await compressImage(workOrder.imageFile!);
+    final bytes = await compressedImage.readAsBytes();
+
+    // Add the file to the request
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'imageFile',
+        bytes,
+        filename: basename(workOrder.imageFile!.path),
+        contentType: contentType,
+      ),
+    );
+  }
+>>>>>>> 045059f (First Testing Version)
 //////////////////// END OF IMAGE UPLOAD
 try{
     // Send the request
     log("response 2 : ${"sendting create WO request"}");
      log(request.fields.toString());
+<<<<<<< HEAD
     var response = await request.send();
     log("Response status: ${response.reasonPhrase}");
     log("user id # : ${storageBox.read("id").toString()}");
@@ -546,6 +636,12 @@ try{
     //log("Crete WO response : " + body.toString());
     var data = await responseData(response);
     // // print"Crete WO MAP : " + data.toString());
+=======
+    var response = await request.send().timeout(Duration(seconds: 10));
+    log("Response status: ${response.reasonPhrase}");
+    var data = await responseData(response);
+
+>>>>>>> 045059f (First Testing Version)
     log(response.toString());
  CreateWorkOrderDTO createWODTO = CreateWorkOrderDTO(success: 0, message: "");
       if (response.statusCode == 200) {
@@ -561,12 +657,24 @@ try{
       isCreating.value = false;
       return createWODTO;
       } catch(e){
+<<<<<<< HEAD
         isCreating.value = false;
+=======
+          if (e is TimeoutException) {
+            print('The request timed out.');
+          } else {
+            print('Error occurred while uploading image: $e');
+          }
+>>>>>>> 045059f (First Testing Version)
         if(foundation.kDebugMode){
           rethrow;
         }
         print("ERROR : " + e.toString());
+<<<<<<< HEAD
         return CreateWorkOrderDTO(success: 0, message: "Failed to create WO (err185)");
+=======
+        return CreateWorkOrderDTO(success: 0, message: "Server respond is unknown (ERR185)");
+>>>>>>> 045059f (First Testing Version)
 
       }
    
@@ -602,4 +710,49 @@ Future<foundation.Uint8List> testCompressFile(File file) async {
     final data = jsonDecode(responseBody); // Assuming JSON response
     return data; // Return the decoded data
   }
+<<<<<<< HEAD
+=======
+
+
+bool validateRequestFields(WorkOrder workOrder) {
+
+  /*    String userId = workOrder.userId ?? storageBox.read("id").toString();
+    request.fields['EquipmentID'] = assetItem.value.id ?? "0";
+    request.fields['CallTypeID'] = workOrder.callTypeID ?? "";
+    request.fields['IsUrgent'] = workOrder.isUrgent.toString();
+    request.fields['FaultStatus'] = workOrder.faultStatues ?? "";
+    request.fields['RoomID'] = workOrder.roomId ?? "0";
+    request.fields['Type'] = workOrder.type.toString();
+    request.fields['UserID'] = userId;
+    request.fields['EquipmentTypeID'] = storageBox.read("role").toString();
+    request.fields['NewOrEdit'] = "0";
+*/
+log("validate request fields call type : ${workOrder.callTypeID}");
+  if (assetItem.value.id == null ) {
+    Get.snackbar("Fail", "Asset is required");
+    return false;
+  }
+   if (workOrder.roomId == null ) {
+    Get.snackbar("Fail", "Room is required");
+     return false;
+  }
+    if (workOrder.callTypeID == null ||  workOrder.callTypeID == "null" ) {
+    Get.snackbar("Fail", "Call Type is required");
+     return false;
+  }
+       if (storageBox.read("id") == null ) {
+    Get.snackbar("Fail", "Emp. ID is required");
+     return false;
+  }
+       if (workOrder.isUrgent == null ) {
+    Get.snackbar("Fail", "is Urgent is required");
+     return false;
+  }
+     if (storageBox.read("role") == null ) {
+    Get.snackbar("Fail", "Emp. Role is required");
+     return false;
+  }
+  return true;
+}
+>>>>>>> 045059f (First Testing Version)
 }
