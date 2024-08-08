@@ -10,7 +10,7 @@ import 'package:steady_solutions/app_config/style.dart';
 import 'package:steady_solutions/controllers/auth_controller.dart';
 import 'package:steady_solutions/controllers/wo_controller.dart';
 import 'package:steady_solutions/models/pending_work_order.dart';
-import 'package:steady_solutions/screens/pending_list/pending_wo_table_data_structure.dart';
+import 'package:steady_solutions/screens/cm_pending_list/pending_wo_table_data_structure.dart';
 import 'package:steady_solutions/screens/work_orders/achievment_report.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';

@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-<<<<<<< HEAD
-=======
+import 'dart:io';
 import 'package:flutter/services.dart';
->>>>>>> 045059f (First Testing Version)
 import 'package:move_to_background/move_to_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,12 +12,10 @@ import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:simple_animated_icon/simple_animated_icon.dart';
 import 'package:steady_solutions/app_config/app_theme.dart';
-<<<<<<< HEAD
+
 import 'package:steady_solutions/app_config/style.dart';
-=======
-import 'dart:io';
->>>>>>> 045059f (First Testing Version)
 import 'package:steady_solutions/controllers/auth_controller.dart';
+
 import 'package:steady_solutions/controllers/notifications_controller.dart';
 import 'package:steady_solutions/screens/dashboard/dashboard.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
@@ -96,10 +92,6 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return WillPopScope(
        onWillPop: () async {
-<<<<<<< HEAD
-        MoveToBackground.moveTaskToBack();
-        return false;
-=======
         bool exitApp = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -131,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen>
       );
 
         return exitApp;
->>>>>>> 045059f (First Testing Version)
       },
       child: Background(
         child: SafeArea(

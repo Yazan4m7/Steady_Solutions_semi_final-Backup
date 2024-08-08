@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import 'dart:async';
->>>>>>> 045059f (First Testing Version)
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -32,12 +29,9 @@ import 'package:steady_solutions/models/department.dart';
 import 'package:steady_solutions/models/pending_work_order.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
-<<<<<<< HEAD
-=======
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';
->>>>>>> 045059f (First Testing Version)
 
 class WorkOrdersController extends GetxController {
   int? lastWorkOrderJobId;
@@ -105,6 +99,222 @@ class WorkOrdersController extends GetxController {
       //   "retarned to global deps:${allDepartments[value.value]} site: ${value.value}");
     });
   }
+
+  Future<void> fetchAllData() async {
+    if (isDataLoaded) {
+      return;
+    }
+
+    // // print"<<<<<<<<<< LOADING ALL DATA>>>>>>>>");
+    fetchNewWorkOrderOptions();
+    log("loaded options");
+    await Future.delayed(Duration(seconds: 1));
+    fetchDepartments();
+    // // print" <<<<<<<<<<<<<<<<<<< FETCHED DEPARTMENTS >>>>>>>>>>>>>>>>");
+    // await Future.delayed(Duration(seconds: 3));
+    //await getallRooms();
+    // // print" <<<<<<<<<<<<<<<<<<< FETCHED ROOMS >>>>>>>>>>>>>>>>");
+    // // print"<<<<<<<<<< FINISHED LOADING ALL DATA FUNCTION >>>>>>>>");
+    // // print
+    //    "DATA FETCHED : departments : ${allDepartments.length} rooms : ${allRooms.length} sites : ${siteNames.length}");
+
+    isDataLoaded = true;
+  }
+
+  Future<void> fetchPendingOrders() async {
+    isLoading.value = true;
+    final Map<String, String> params = {
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+
+      /// todo CHANGE
+      'flag': '2' //today=0 ,week=1,month=2
+    };
+    final response = await http.get(Uri.parse(
+            "https://${storageBox.read('api_url')}$getPendingOrdersEndPoint")
+        .replace(queryParameters: params));
+    // // print"Get pending orders response : " + response.body);
+    List temp = jsonDecode(response.body)['data'];
+    for (var item in temp) {
+      pendingWorkOrders.add(PendingWorkOrder.fromJson(item));
+    }
+
+    isLoading.value = false;
+    // return pendingWorkOrders;
+  }
+
+  Future<AchievementReport> getAchievementReport(int reportId, String passedParDate, String notificationedTypeId) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isLoading.value = true;
+    });
+    AchievementReport report = AchievementReport();
+    print("sending report id : $reportId");
+    final Map<String, String> params = {
+      'CMReportID': reportId.toString(),
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+      'NotificationTypeID': notificationedTypeId,
+      'PassedParDate' : passedParDate.toString()
+    };
+    // // print Uri.parse(
+    //     ghryS   "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
+    //    .replace(queryParameters: params));
+    final response = await http.get(
+      Uri.parse(
+              "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
+          .replace(queryParameters: params),
+    );
+
+    print("Get ach report info response : " + response.body);
+    if (response.statusCode == 200) {
+      report = AchievementReport.fromJson(jsonDecode(response.body));
+    } else {
+      // Connection error
+      Get.dialog(CupertinoAlertDialog(
+        title: Text("Error"),
+        content: Text("Could not get report data from server"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text("OK"),
+            onPressed: () {
+              Get.back();
+              Get.off(NotificationsScreen());
+            },
+          )
+        ],
+      ));
+    }
+    //  debug// // print"Aciev report :${report.equipName} ${report.failureDateTime} ${report.remedy}");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isLoading.value = false;
+    });
+    return report;
+  }
+
+  Future<void> getDepartments({required String siteId}) async {
+    departments.value = RxMap<String, Department>();
+    // // print"GET DEPARTMENTS XXXXXXXXXXXXXXXXXXXXXXXX");
+    if (allDepartments.containsKey(siteId)) {
+      departments.value = allDepartments[siteId]!;
+      print("returning from global list : ${departments.length} DEPARTMENTS");
+      // return departments;
+    }
+
+    print("Get departments");
+    print("site id : $siteId");
+    final Map<String, String> params = {
+      'SiteID': siteId,
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+    final response = await http.get(Uri.parse(
+            "https://${storageBox.read('api_url')}$getDepartmentsEndpoint")
+        .replace(queryParameters: params));
+         log(response.body);
+    if (response.statusCode == 200) {
+      List temp = jsonDecode(response.body)["Departments"];
+      debugPrint(temp.length.toString() + " departments");
+      temp.forEach((item) {
+        departments[item["Text"]] = Department.fromJson(item);
+      });
+     
+       log("get dpartments response with none 200 code : ${response.body}");
+    }
+    //return RxMap<String, Department>();
+  }
+
+  Future<void> getAssetItemById({required String assetIdOrLink}) async {
+
+    if (isLink(assetIdOrLink)) {
+      log("assetIdOrLink is link");
+      assetIdOrLink = extractControlNumberFromLink(assetIdOrLink);
+    }
+     print("assetIdOrLink is not link :  $assetIdOrLink");
+    final Map<String, String> params = {
+      'type': "1",
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+      'EquipmentID': "0",
+      'ControlNo': assetIdOrLink
+    };
+
+
+    final response = await http.get(Uri.parse(
+            "https://${storageBox.read('api_url')}$GetControlInfoByIDEndPoint")
+        .replace(queryParameters: params));
+    print("Get control/service item response : " + response.body);
+    assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
+
+    print("getControlItem equip ${assetItem.toJson()}");
+   
+  }
+
+  String extractControlNumberFromLink(String assetId, ) {
+     log("extractControlNumberFromLink ");;
+    String CNO = "";
+    final Uri uri = Uri.parse(assetId);
+    final queryParameters = uri.queryParameters;
+    
+    if (queryParameters.containsKey('CNo')) {
+      log("contains CNO");
+      CNO = queryParameters['CNo']!;
+      assetId = CNO;
+      log("controlNum from link is $assetId now");
+     return assetId;
+    }
+      else
+       showCupertinoDialog(
+           context: Get.context!,
+           builder: (builder) => CupertinoAlertDialog(
+                   title: Text("Error"),
+                   content: Text("Link doesnt has a control number in it\n ERR385CNO"),
+                   actions: [
+                     CupertinoDialogAction(
+                         child: Text("OK"),
+                         onPressed: () {
+                           Get.offAll(()=>  HomeScreen());
+                         })
+                   ]));
+      
+    
+      return ""; 
+    }
+  
+Future<void> getAssetItemByCatAndDept(
+      {required String departmentId, required String categoryId}) async {
+    print(
+        " getAssetItemByIdGet Control Info : categoryId $categoryId   - departmentId : $departmentId");
+    final Map<String, String> params = {
+      'CategoryID': categoryId,
+      'DepartmentID': departmentId,
+      'UserID': storageBox.read("id").toString(),
+      'EquipmentTypeID': storageBox.read("role").toString(),
+    };
+
+    final response = await http.get(Uri.parse(
+            "https://${storageBox.read('api_url')}$GetServiceInfoByCatByDep")
+        .replace(queryParameters: params));
+    print(Uri.parse(
+            "https://${storageBox.read('api_url')}$GetServiceInfoByCatByDep")
+        .replace(queryParameters: params)
+        .toString());
+    print("Get getAssetItemByCatAndDept item response : " + response.body);
+    assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
+
+    print("getAssetItemByCatAndDept equip ${assetItem.toJson()}");
+  }
+
+ // Future<void> getAssetItemByQRCode({required String assetId}) async {
+    //Get Id from QR code
+    // final response = await http.get(Uri.parse(
+    //         "https://${storageBox.read('api_url')}$getControlInfoEndpoint")
+    //     .replace(queryParameters: params));
+    // print("Get control item response : " + response.body);
+    // assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
+    // print("getControlItem equip ${assetItem.value.equipName}");
+    // print("getControlItem equip ${assetItem.toJson()}");
+    // Get.to(() => const NewEquipWorkOrderFrom());
+
 
   Future<RxMap<String, Department>> getRoomsList(
       {required String departmentId}) async {
@@ -203,257 +413,8 @@ class WorkOrdersController extends GetxController {
   //   }
   // }
 
-  Future<void> fetchAllData() async {
-    if (isDataLoaded) {
-      return;
-    }
-
-    // // print"<<<<<<<<<< LOADING ALL DATA>>>>>>>>");
-    fetchNewWorkOrderOptions();
-    log("loaded options");
-    await Future.delayed(Duration(seconds: 1));
-    fetchDepartments();
-    // // print" <<<<<<<<<<<<<<<<<<< FETCHED DEPARTMENTS >>>>>>>>>>>>>>>>");
-    // await Future.delayed(Duration(seconds: 3));
-    //await getallRooms();
-    // // print" <<<<<<<<<<<<<<<<<<< FETCHED ROOMS >>>>>>>>>>>>>>>>");
-    // // print"<<<<<<<<<< FINISHED LOADING ALL DATA FUNCTION >>>>>>>>");
-    // // print
-    //    "DATA FETCHED : departments : ${allDepartments.length} rooms : ${allRooms.length} sites : ${siteNames.length}");
-
-    isDataLoaded = true;
-  }
-
-  Future<void> fetchPendingOrders() async {
-    isLoading.value = true;
-    final Map<String, String> params = {
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(),
-
-      /// todo CHANGE
-      'flag': '2' //today=0 ,week=1,month=2
-    };
-    final response = await http.get(Uri.parse(
-            "https://${storageBox.read('api_url')}$getPendingOrdersEndPoint")
-        .replace(queryParameters: params));
-    // // print"Get pending orders response : " + response.body);
-    List temp = jsonDecode(response.body)['data'];
-    for (var item in temp) {
-      pendingWorkOrders.add(PendingWorkOrder.fromJson(item));
-    }
-
-    isLoading.value = false;
-    // return pendingWorkOrders;
-  }
-
-<<<<<<< HEAD
-  Future<AchievementReport> getAchievementReport(int reportId) async {
-=======
-  Future<AchievementReport> getAchievementReport(int reportId, String passedParDate, String notificationedTypeId) async {
->>>>>>> 045059f (First Testing Version)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      isLoading.value = true;
-    });
-    AchievementReport report = AchievementReport();
-    print("sending report id : $reportId");
-    final Map<String, String> params = {
-      'CMReportID': reportId.toString(),
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(),
-<<<<<<< HEAD
-=======
-      'NotificationTypeID': notificationedTypeId,
-      'PassedParDate' : passedParDate.toString()
->>>>>>> 045059f (First Testing Version)
-    };
-    // // print Uri.parse(
-    //     ghryS   "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
-    //    .replace(queryParameters: params));
-    final response = await http.get(
-      Uri.parse(
-              "https://${storageBox.read('api_url')}$getAchievementReportEndPoint")
-          .replace(queryParameters: params),
-    );
-
-    print("Get ach report info response : " + response.body);
-    if (response.statusCode == 200) {
-      report = AchievementReport.fromJson(jsonDecode(response.body));
-    } else {
-      // Connection error
-      Get.dialog(CupertinoAlertDialog(
-        title: Text("Error"),
-        content: Text("Could not get report data from server"),
-        actions: [
-          CupertinoDialogAction(
-            child: Text("OK"),
-            onPressed: () {
-              Get.back();
-              Get.off(NotificationsScreen());
-            },
-          )
-        ],
-      ));
-    }
-    //  debug// // print"Aciev report :${report.equipName} ${report.failureDateTime} ${report.remedy}");
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      isLoading.value = false;
-    });
-    return report;
-  }
-
-  Future<void> getDepartments({required String siteId}) async {
-    departments.value = RxMap<String, Department>();
-    // // print"GET DEPARTMENTS XXXXXXXXXXXXXXXXXXXXXXXX");
-    if (allDepartments.containsKey(siteId)) {
-      departments.value = allDepartments[siteId]!;
-      print("returning from global list : ${departments.length} DEPARTMENTS");
-      // return departments;
-    }
-
-    print("Get departments");
-    print("site id : $siteId");
-    final Map<String, String> params = {
-      'SiteID': siteId,
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(),
-    };
-    final response = await http.get(Uri.parse(
-            "https://${storageBox.read('api_url')}$getDepartmentsEndpoint")
-        .replace(queryParameters: params));
-<<<<<<< HEAD
-=======
-         log(response.body);
->>>>>>> 045059f (First Testing Version)
-    if (response.statusCode == 200) {
-      List temp = jsonDecode(response.body)["Departments"];
-      debugPrint(temp.length.toString() + " departments");
-      temp.forEach((item) {
-        departments[item["Text"]] = Department.fromJson(item);
-      });
-<<<<<<< HEAD
-      // return departments;
-=======
-     
-       log("get dpartments response with none 200 code : ${response.body}");
->>>>>>> 045059f (First Testing Version)
-    }
-    //return RxMap<String, Department>();
-  }
-
-  Future<void> getAssetItemById({required String assetIdOrLink}) async {
-
-    if (isLink(assetIdOrLink)) {
-<<<<<<< HEAD
-      assetIdOrLink = extractControlNumberFromLink(assetIdOrLink);
-    }
-    
-=======
-      log("assetIdOrLink is link");
-      assetIdOrLink = extractControlNumberFromLink(assetIdOrLink);
-    }
-     print("assetIdOrLink is not link :  $assetIdOrLink");
->>>>>>> 045059f (First Testing Version)
-    final Map<String, String> params = {
-      'type': "1",
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(),
-      'EquipmentID': "0",
-      'ControlNo': assetIdOrLink
-    };
-
-
-    final response = await http.get(Uri.parse(
-            "https://${storageBox.read('api_url')}$GetControlInfoByIDEndPoint")
-        .replace(queryParameters: params));
-    print("Get control/service item response : " + response.body);
-    assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
-
-    print("getControlItem equip ${assetItem.toJson()}");
-   
-  }
-
-  String extractControlNumberFromLink(String assetId, ) {
-     log("extractControlNumberFromLink ");;
-    String CNO = "";
-    final Uri uri = Uri.parse(assetId);
-    final queryParameters = uri.queryParameters;
-    
-    if (queryParameters.containsKey('CNo')) {
-      log("contains CNO");
-      CNO = queryParameters['CNo']!;
-      assetId = CNO;
-      log("controlNum from link is $assetId now");
-     return assetId;
-    }
-      else
-       showCupertinoDialog(
-           context: Get.context!,
-           builder: (builder) => CupertinoAlertDialog(
-                   title: Text("Error"),
-                   content: Text("Link doesnt has a control number in it\n ERR385CNO"),
-                   actions: [
-                     CupertinoDialogAction(
-                         child: Text("OK"),
-                         onPressed: () {
-                           Get.offAll(()=>  HomeScreen());
-                         })
-                   ]));
-      
-    
-      return ""; 
-    }
-  
-
-  
-Future<void> getAssetItemByCatAndDept(
-      {required String departmentId, required String categoryId}) async {
-    print(
-        " getAssetItemByIdGet Control Info : categoryId $categoryId   - departmentId : $departmentId");
-    final Map<String, String> params = {
-      'CategoryID': categoryId,
-      'DepartmentID': departmentId,
-      'UserID': storageBox.read("id").toString(),
-      'EquipmentTypeID': storageBox.read("role").toString(),
-    };
-
-    final response = await http.get(Uri.parse(
-            "https://${storageBox.read('api_url')}$GetServiceInfoByCatByDep")
-        .replace(queryParameters: params));
-    print(Uri.parse(
-            "https://${storageBox.read('api_url')}$GetServiceInfoByCatByDep")
-        .replace(queryParameters: params)
-        .toString());
-    print("Get getAssetItemByCatAndDept item response : " + response.body);
-    assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
-
-    print("getAssetItemByCatAndDept equip ${assetItem.toJson()}");
-  }
-
-<<<<<<< HEAD
-  Future<void> getAssetItemByQRCode({required String assetId}) async {
-=======
- // Future<void> getAssetItemByQRCode({required String assetId}) async {
->>>>>>> 045059f (First Testing Version)
-    //Get Id from QR code
-    // final response = await http.get(Uri.parse(
-    //         "https://${storageBox.read('api_url')}$getControlInfoEndpoint")
-    //     .replace(queryParameters: params));
-    // print("Get control item response : " + response.body);
-    // assetItem.value = ControlItem.fromJson(jsonDecode(response.body));
-    // print("getControlItem equip ${assetItem.value.equipName}");
-    // print("getControlItem equip ${assetItem.toJson()}");
-    // Get.to(() => const NewEquipWorkOrderFrom());
-<<<<<<< HEAD
-  }
-
   bool isLink(String text) {
     return (text.contains("https://") || text.contains("www"));
-=======
- //}
-
-  bool isLink(String text) {
-    return (text.contains("http") || text.contains(".com"));
->>>>>>> 045059f (First Testing Version)
   }
 
   Future<void> fetchNewWorkOrderOptions() async {
@@ -513,12 +474,6 @@ Future<void> getAssetItemByCatAndDept(
   Future<CreateWorkOrderDTO> createWorkOrder(WorkOrder workOrder) async {
     // // printworkOrder.imageFile);
     isCreating.value = true;
-<<<<<<< HEAD
-    var url =
-        "https://${storageBox.read('api_url')}${createWorkOrderEndpoint}"; // Replace with your URL
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-   request.headers['Content-Type'] = 'application/json';
-=======
  
     if (!validateRequestFields(workOrder)) {
        isCreating.value = false;
@@ -528,20 +483,15 @@ Future<void> getAssetItemByCatAndDept(
     var url =
         "https://${storageBox.read('api_url')}${createWorkOrderEndpoint}"; // Replace with your URL
  
->>>>>>> 045059f (First Testing Version)
     // Prepare the image file for upload
     // if (workOrder.imageFile != null) {
     //   multipartFile = await http.MultipartFile.fromPath(
     //       'imageFile', workOrder.imageFile!.path);
     //   request.files.add(multipartFile);
     // }
-<<<<<<< HEAD
-  
-=======
  
    var request = http.MultipartRequest('POST', Uri.parse(url));
    request.headers['Content-Type'] = 'application/json';
->>>>>>> 045059f (First Testing Version)
     String userId = workOrder.userId ?? storageBox.read("id").toString();
     request.fields['EquipmentID'] = assetItem.value.id ?? "0";
     request.fields['CallTypeID'] = workOrder.callTypeID ?? "";
@@ -553,51 +503,6 @@ Future<void> getAssetItemByCatAndDept(
     request.fields['EquipmentTypeID'] = storageBox.read("role").toString();
     request.fields['NewOrEdit'] = "0";
 
-<<<<<<< HEAD
-
-
-/// TODO : Valided Request Fields before sending
-/////////////////// IMAGE UPLOAD
-///
- if (workOrder.imageFile != null) {
-   
-
-// request.fields['ImageFile'] = ''; 
-//     final imageAsBytes = workOrder.imageFile!.readAsBytesSync();
-
-//     log(imageAsBytes.toString());
-
-// final compressedBytes = await testCompressFile(workOrder.imageFile!);
-// request.files.add(http.MultipartFile.fromBytes(
-//   'ImageFile', // Replace with the expected field name in your API
-//   compressedBytes,
-//   contentType: MediaType('image', 'jpeg'), // Set the image content type (adjust if needed)
-//  ),);
- //  request.files.add(await http.MultipartFile.fromPath('ImageFile', workOrder.imageFile!.path, filename: "noty"));
-
-  
- }
- 
-//  final compressedImage = await compressImage(workOrder.imageFile!);
-//     final bytes = await compressedImage.readAsBytes();
-//     final base64Image = base64Encode(bytes);
-//    request.fields['ImageFile'] = base64Image;
-// String encodeImageToBase64(List<int> imageBytes) {
-//   return base64Encode(imageBytes);
-// }
-
-final compressedImage = await compressImage(workOrder.imageFile!);
-    final bytes = await compressedImage.readAsBytes();
-    final base64Image = base64Encode(bytes);
-
-final imagePart = http.MultipartFile.fromString(
-  'ImageFile', // Use the expected parameter name here
-  base64Image, // Pass the Base64-encoded string directly
-  contentType: MediaType('image', 'jpg'), // Specify content type with MIME type
-);
-request.files.add(imagePart);
-print("data:image/jpeg;base64" +base64Image);
-=======
 ///  Valided Request Fields before sending///
   if (workOrder.imageFile != null) {
     final mimeType = lookupMimeType(workOrder.imageFile!.path);
@@ -620,28 +525,15 @@ print("data:image/jpeg;base64" +base64Image);
       ),
     );
   }
->>>>>>> 045059f (First Testing Version)
 //////////////////// END OF IMAGE UPLOAD
 try{
     // Send the request
     log("response 2 : ${"sendting create WO request"}");
      log(request.fields.toString());
-<<<<<<< HEAD
-    var response = await request.send();
-    log("Response status: ${response.reasonPhrase}");
-    log("user id # : ${storageBox.read("id").toString()}");
-    //final response2 = await http.Response.fromStream(response);
-    //log("response 2 : ${response2.body}");
-    //final body = response.stream.transform(utf8.decoder).join();
-    //log("Crete WO response : " + body.toString());
-    var data = await responseData(response);
-    // // print"Crete WO MAP : " + data.toString());
-=======
     var response = await request.send().timeout(Duration(seconds: 10));
     log("Response status: ${response.reasonPhrase}");
     var data = await responseData(response);
 
->>>>>>> 045059f (First Testing Version)
     log(response.toString());
  CreateWorkOrderDTO createWODTO = CreateWorkOrderDTO(success: 0, message: "");
       if (response.statusCode == 200) {
@@ -657,24 +549,16 @@ try{
       isCreating.value = false;
       return createWODTO;
       } catch(e){
-<<<<<<< HEAD
-        isCreating.value = false;
-=======
           if (e is TimeoutException) {
             print('The request timed out.');
           } else {
             print('Error occurred while uploading image: $e');
           }
->>>>>>> 045059f (First Testing Version)
         if(foundation.kDebugMode){
           rethrow;
         }
         print("ERROR : " + e.toString());
-<<<<<<< HEAD
-        return CreateWorkOrderDTO(success: 0, message: "Failed to create WO (err185)");
-=======
         return CreateWorkOrderDTO(success: 0, message: "Server respond is unknown (ERR185)");
->>>>>>> 045059f (First Testing Version)
 
       }
    
@@ -710,8 +594,6 @@ Future<foundation.Uint8List> testCompressFile(File file) async {
     final data = jsonDecode(responseBody); // Assuming JSON response
     return data; // Return the decoded data
   }
-<<<<<<< HEAD
-=======
 
 
 bool validateRequestFields(WorkOrder workOrder) {
@@ -754,5 +636,4 @@ log("validate request fields call type : ${workOrder.callTypeID}");
   }
   return true;
 }
->>>>>>> 045059f (First Testing Version)
-}
+  }

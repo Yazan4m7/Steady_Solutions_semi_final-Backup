@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import 'dart:developer';
 
->>>>>>> 045059f (First Testing Version)
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -158,10 +155,7 @@ class NotificationTile extends StatelessWidget {
                 color: notification.isSeen ? Colors.black : Colors.grey,
               ),
               onPressed: () {
-<<<<<<< HEAD
-=======
                 log("Notification id : ${notification.notificationTypeID}");
->>>>>>> 045059f (First Testing Version)
                 if (notification.notificationTypeID == null) {
                   Get.dialog(
                     AlertDialog(
@@ -179,13 +173,8 @@ class NotificationTile extends StatelessWidget {
                   );
                 } else
 
-<<<<<<< HEAD
-                //////////// CLOSE CM JOB
-                if (notification.notificationTypeID == 1) {
-=======
                 //////////// CLOSE CM JOB [2 Buttons ]
                 if ([1,7].contains(notification.notificationTypeID)) {
->>>>>>> 045059f (First Testing Version)
                   notification.isSeen = true;
                   Navigator.push(
                     context,
@@ -199,10 +188,6 @@ class NotificationTile extends StatelessWidget {
                     ),
                   );
                 }
-<<<<<<< HEAD
-                ///////////// CREATE WORK ORDER
-                else if (notification.notificationTypeID == 22) {
-=======
                  ///////////// CREATE WORK ORDER [1 Buttons ]
                 else if ([5,9].contains(notification.notificationTypeID) ) {
                   
@@ -218,7 +203,6 @@ class NotificationTile extends StatelessWidget {
                 ///////////// CREATE WORK ORDER
                 else if ([22].contains(notification.notificationTypeID) ) {
                   
->>>>>>> 045059f (First Testing Version)
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -229,33 +213,12 @@ class NotificationTile extends StatelessWidget {
                   );
                 }
                 /////// APPROVE EVALUATTION
-<<<<<<< HEAD
-                else if (notification.notificationTypeID == 5) {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewReport(
-                          forId1: notification.forID1!,
-                          passedParDate: notification.passedParDate!,
-                          reportId: notification.forID1!,
-                          notificationedTypeId:
-                              notification.notificationTypeID!),
-                    ),
-                  );
-                  
-                } else {
-=======
                else if ([22].contains(notification.notificationTypeID) ) {
->>>>>>> 045059f (First Testing Version)
                   Get.dialog(
                     AlertDialog(
                       title: const Text('Error'),
                       content: Text(
-<<<<<<< HEAD
-                          "Notification ID  ${notification.notificationTypeID} is not recognized"),
-=======
                           "Notification ID ${notification.notificationTypeID} from the server is not recognized"),
->>>>>>> 045059f (First Testing Version)
                       actions: [
                         TextButton(
                           onPressed: () {

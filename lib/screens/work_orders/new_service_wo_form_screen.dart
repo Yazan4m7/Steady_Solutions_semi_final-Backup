@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import 'dart:async';
->>>>>>> 045059f (First Testing Version)
 import 'dart:developer';
 import 'dart:io';
 
@@ -12,10 +9,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-<<<<<<< HEAD
-=======
 import 'package:loader_overlay/loader_overlay.dart';
->>>>>>> 045059f (First Testing Version)
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/shared/types.dart';
@@ -77,10 +71,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
   SuggestionsController<Department> departmentsSuggestionsController =
       SuggestionsController();
   Rx roomId = "".obs;
-<<<<<<< HEAD
-=======
     StreamSubscription<bool>? lisenter;
->>>>>>> 045059f (First Testing Version)
   Rx<bool> isRoomsLoading = false.obs;
   late AnimationController _loginButtonController;
   bool isLoading = false;
@@ -89,8 +80,6 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
     // _workOrderController.clearData();
     _workOrderController.fetchNewWorkOrderOptions();
  _workOrderController.isCreating.value=false;
-<<<<<<< HEAD
-=======
    if (mounted) {
       lisenter = _workOrderController.isCreating.listen((value) {
         if (value) {
@@ -100,20 +89,16 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
         }
       });
     }
->>>>>>> 045059f (First Testing Version)
     //_workOrderController.controlItem.value = ControlItem();
     super.initState();
   }
 
-<<<<<<< HEAD
-=======
 
   @override
   void dispose() {
     lisenter?.cancel();
     super.dispose();
   }
->>>>>>> 045059f (First Testing Version)
   var QRResult = "";
   Future<void> _getImageFromCamera() async {
     final XFile? pickedFile =
@@ -367,17 +352,10 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                               roomsTEController.text = "";
                               roomsTEController.value =
                                   TextEditingValue(text: "");
-<<<<<<< HEAD
-                              roomsSuggestionsController.refresh();
-                              await _workOrderController.getRoomsList(
-                                  departmentId: department.value.value!);
-
-=======
                              
                               await _workOrderController.getRoomsList(
                                   departmentId: department.value.value!);
  roomsSuggestionsController.refresh();
->>>>>>> 045059f (First Testing Version)
                               print(
                                   "selected department: ${department.value.value}");
                               print(
@@ -397,13 +375,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                       /// ////////////////
                       TypeAheadField<Room>(
                         retainOnLoading: false,
-<<<<<<< HEAD
-                        suggestionsCallback: (search) => isRoomsLoading.value
-                            ? []
-                            : _workOrderController.rooms.values
-=======
                         suggestionsCallback: (search) => _workOrderController.rooms.values
->>>>>>> 045059f (First Testing Version)
                                 .toList()
                                 .where((roomI) => roomI.text!
                                     .toLowerCase()
@@ -691,10 +663,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                                         lottieBuilder: Lottie.asset(
                                           'assets/json_animations/success_blue.json',
                                           fit: BoxFit.contain,
-<<<<<<< HEAD
-=======
                                           repeat: false,
->>>>>>> 045059f (First Testing Version)
                                         ),
                                         //  customView: Container(
                                         //      child:Text("hi" as Function(dynamic context))
@@ -702,14 +671,11 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                                         customViewPosition:
                                             CustomViewPosition.BEFORE_ACTION,
                                         context: context,
-<<<<<<< HEAD
-=======
                                         customView: Container( child:
                                           Text(
                                              "${AppLocalizations.of(context).job_no}: ${response.jobNum ?? "N/A"}"
                                           )
                                         ) , 
->>>>>>> 045059f (First Testing Version)
                                         actions: [
                                           IconsButton(
                                             onPressed: () {
@@ -728,11 +694,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                                             iconColor: Colors.white,
                                           ),
                                         ]);
-<<<<<<< HEAD
-                                  } else {
-=======
                                   } else if (response.success == 0 || response.success == '0') {
->>>>>>> 045059f (First Testing Version)
                                     Dialogs.materialDialog(
                                         color: Colors.white,
                                         msg: AppLocalizations.of(context)
@@ -741,10 +703,7 @@ class _NewServiceWorkOrderFromState extends State<NewServiceWorkOrderFrom> {
                                         lottieBuilder: Lottie.asset(
                                           'assets/json_animations/fail_grey.json',
                                           fit: BoxFit.contain,
-<<<<<<< HEAD
-=======
                                            repeat: false
->>>>>>> 045059f (First Testing Version)
                                           
                                         ),
                                         customView: Column(

@@ -197,17 +197,11 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                   children: [
                     GetX<WorkOrdersController>(
                  builder: (controller) {
-<<<<<<< HEAD
-                 controlNumberTEController.text = controller.assetItem.value.controlNo == null 
-                  ? "" 
-                  : controller.assetItem.value.controlNo.toString();
-=======
                       ControlItem controlNumber = controller.assetItem.value;
                    WidgetsBinding.instance.addPostFrameCallback((_) {
                    
                  controlNumberTEController.text = controller.assetItem.value.controlNo != null ? controller.assetItem.value.controlNo.toString() : controlNumberTEController.text;
                    });
->>>>>>> 045059f (First Testing Version)
                  return Expanded(
                       child:  _textFormField(
                             labelText: AppLocalizations.of(context).asset_number,
@@ -476,10 +470,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                             lottieBuilder: Lottie.asset(
                               'assets/json_animations/success_blue.json',
                               fit: BoxFit.contain,
-<<<<<<< HEAD
-=======
                                repeat: false
->>>>>>> 045059f (First Testing Version)
                             ),
                             customView: Container(
                                 child: Text(
@@ -500,11 +491,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                                 iconColor: Colors.white,
                               ),
                             ]);
-<<<<<<< HEAD
-                      } else {
-=======
                       } else if (response.success == 0 || response.success == '0') {
->>>>>>> 045059f (First Testing Version)
                         Dialogs.materialDialog(
                           titleStyle: Theme.of(context).textTheme.displayLarge!.copyWith(color: Colors.red,),
                           msgStyle: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.redAccent),
@@ -514,10 +501,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                             lottieBuilder: Lottie.asset(
                               'assets/json_animations/fail_grey.json',
                               fit: BoxFit.contain,
-<<<<<<< HEAD
-=======
                                repeat: false
->>>>>>> 045059f (First Testing Version)
                             ),
                             customView:
                                 Container(child: Text(response.message,style: Theme.of(context).textTheme.displayLarge?.copyWith(),)),
@@ -540,17 +524,7 @@ class _NewEquipWorkOrderFromState extends State<NewEquipWorkOrderFrom> {
                     }},
                     // },
                     style: kPrimeryBtnStyle(context),
-<<<<<<< HEAD
-                    child: _workOrderController.isCreating.value
-                        ?  CircularProgressIndicator(
-                            strokeWidth: 1,
-                            color: Colors.white,
-                            backgroundColor: Colors.blueAccent,
-                          )
-                        : Text(
-=======
                     child:Text(
->>>>>>> 045059f (First Testing Version)
                             AppLocalizations.of(context).save,
                             style: GoogleFonts.nunitoSans(
                                 color:  Color.fromARGB(255, 255, 255, 255),

@@ -108,5 +108,52 @@
 
       "change_portal_address" : "Change Portal Address",
       "asset_number" : "رقم الاصل",
-      "asset_name" : "اسم الاصل"
+      "asset_name" : "اسم الاصل",
+      "date" : "التاريخ",
+
+    "call_type" : "نوع الاتصال",
+    "is_urgent" : "عاجل",
+    "upload_documnet" : "تحميل المستند",
+    "upload_pictures" : "تحميل الصور",
+    "no_data_found" : "لم يتم العثور على بيانات",
+    "check_credentials" : "تحقق برايدك الإلكتروني وكلمة المرور",
+    "login_failed" : "فشلت الدخول",
+    "retry" : "إعادة المحاولة",
+    "connection_failed" : "فشل الاتصال",
+    "please_check_your_connection" : "يرجى التحقق من اتصالك",
+
+    "view" : "عرض",
+    "upload_picture" : "تحميل الصورة",
+    "work_order_created_successfully" : "تم إنشاء طلب الاصلاح بنجاح",
+    "failed_to_create_work_order" : "فشل في إنشاء طلب الاصلاح",
+    "go_to_dashboard" : "الذهاب إلى لوحة التحكم",
+
+    "select_department" : "اختر القسم",
+    "select_manafacturer" : "اختر الشركة الصانعة",
+    "no_connection_failed" : "فشل الاتصال",
+    "service_desc" : "وصف الخدمة",
+    "back_to_form" : "العودة إلى النموذج",
+    "create_work_order" : "إنشاء طلب الاصلاح",
+
+    "check_in_failed" : "فشل الدخول",
+    "youre_to_far_away_from_workplace" : "أنت بعيدًا جدًا من المكان العمل",
+    "error" : "خطأ",
+
+    "equipment" : "المعدّات",
+
+    "approve" : "يوافق",
+    "send_evaluation" : "إرسال التقييم",
+    "approve_report" : "يوافق على التقرير",
+    "view_photo" : "عرض الصورة",
+    "view_report" : "عرض التقرير",
+    "stock_management" : "إدارة المخزون",
+
+    "cm_report_id" : "معرّف التقرير",
+    "failure_status" : "حالة الشكل",
+    "approved_successfully" : "تمت الموافقة بنجاح",
+    "select_an_option_from_the_drawer" : "اختر خيارًا من الملف المتعلق به",
+    "service" : "الخدمة",
+
+    "department_subzone_1" : "القسم / المنطقة الفرعية 1",
+    "asset_work_order" : "طلب اصلاح اصل"
     }

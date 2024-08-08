@@ -37,10 +37,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
   Widget build(BuildContext context) {
     // print("KPI ADDRESS : ${widget.url}");
     _animationController.play();
-<<<<<<< HEAD
-=======
     log("widget.url : ${widget.url}");
->>>>>>> 045059f (First Testing Version)
     return WillPopScope(
       onWillPop: () async {
           QRScannerView.previousURLs = [];
@@ -89,13 +86,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
                       ),
                     )
                   : SizedBox(
-<<<<<<< HEAD
-                      child: Center(
-                        child: Text('Connecting'),
-                      ),
-=======
                      
->>>>>>> 045059f (First Testing Version)
                     ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.05,
@@ -127,10 +118,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
 
                           // Get the value associated with the "CNo" key
                           String controlNumber = params['CNo']!; 
-<<<<<<< HEAD
-=======
                           log("CNo read from QR : $controlNumber");
->>>>>>> 045059f (First Testing Version)
 
                         
                          Navigator.push(
@@ -142,7 +130,7 @@ class _KPIWebsiteState extends State<KPIWebsite> with AnimationMixin {
                       child:  Text('Create Work Order'),
                     ),
                 ),
-              )
+              ),
               // animationDuration: Duration(milliseconds: 500),
           )],
           ),

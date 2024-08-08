@@ -1,18 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:steady_solutions/core/data/constants.dart';
 import 'package:steady_solutions/core/services/local_storage.dart';
 import 'package:steady_solutions/models/pm/calendar_item.dart';
+import 'package:steady_solutions/models/pm/pending_pm_work_order.dart';
 import 'package:steady_solutions/screens/home_screen.dart';
 import 'package:steady_solutions/screens/pm/oldcalendar.dart';
 
 class PMController extends GetxController {
 RxMap<String, CalendarItem> calendarItems = RxMap();
 Rx<bool> isLoading = false.obs;
-
+RxList<PendingPMWorkOrder> pendingPMWorkOrders = <PendingPMWorkOrder>[].obs;
 @override
 onReady(){
  
@@ -37,18 +39,9 @@ final response = await http.get(
 
         print(Uri.parse("https://${storageBox.read('api_url')}$getCalendarEndPoint")
         .replace(queryParameters: params));
-  print("Get calender response : " + response.body);
+ 
 List temp = jsonDecode(response.body);
-//TODO Test
-// String response =
-// '[{"title":"7","StatusID":3,"PMReportID":0,"CompanyID":150,"start":"2024-01-17","endDate":"2024-01-17","Url":null,"CDesc":"1634C24"},'
-// '{"title":"8","CDesc":"1634C24","start":"2024-07-17","endDate":"2024-07-17","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null}'
-// ',{"title":"47","CDesc":"0040LAB","start":"2024-01-19","endDate":"2024-01-19","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},'
-// '{"title":"48","CDesc":"0040LAB","start":"2024-07-19","endDate":"2024-07-19","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},'
-// '{"title":"699","CDesc":"0039LAB","start":"2024-05-03","endDate":"2024-05-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},{"title":"66","CDesc":"0039LAB","start":"2024-05-03","endDate":"2024-05-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null}'
-// ',{"title":"67","CDesc":"0039LAB","start":"2024-06-03","endDate":"2024-06-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},{"title":"68","CDesc":"0039LAB","start":"2024-07-03","endDate":"2024-07-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null},{"title":"69","CDesc":"0039LAB","start":"2024-08-03","endDate":"2024-08-03","StatusID":3,"PMReportID":0,"CompanyID":150,"Url":null}]';
 
-// print("Get calender response : " + temp.toString());
 temp.forEach((item) {
 // print("add");
 calendarItems[item["title"]] = CalendarItem.fromJson(item);
@@ -68,23 +61,53 @@ print(calendarItems.runtimeType);
 isLoading.value = false;
 }
 
-// loopThroughKeys();
-// int count =0;
-//   for (var item in calendarItems.values) {
-//     // print("loop");
-//       if (item.start == "2024-01-17") {
-//         count++;
-//       }
+Future<void> fetchPMList() async {
+ isLoading.value = true;
+  try {
+final Map<String, String> params = {
 
-//       // print("COOOOOUNT" + count.toString());
-//   // Your code here
-// }
-//   }
-// void loopThroughKeys() {
-//   // print("lenggg ${calendarItems.length}");
-//   for (final key in calendarItems.keys) {
-//     CalendarItem item = calendarItems["2024-01-17"]!; // Access value using key  safety
-//     // print("Key: $key, Value: ${item}");
-//   }
-// }
+'UserID': storageBox.read("id").toString(),
+'EquipmentTypeID': storageBox.read("role").toString(),
+};
+
+final response = await http.get(
+    Uri.parse("https://${storageBox.read('api_url')}$getPendingPMListEndPoint")
+        .replace(queryParameters: params));
+
+        print(Uri.parse("https://${storageBox.read('api_url')}$getPendingPMListEndPoint")
+        .replace(queryParameters: params));
+  print("Get calender response : " + response.body);
+List temp = jsonDecode(response.body);
+    //List temp = jsonDecode(response.body)['data'];
+    for (var item in temp) {
+      pendingPMWorkOrders.add(PendingPMWorkOrder.fromJson(item));
+    }
+  }catch (e) {
+    if(kDebugMode)
+     rethrow;
+     else {
+      print(e.toString());
+      isLoading.value = false;
+      Get.defaultDialog(
+        barrierDismissible: false,
+        middleText: "Error",
+        middleTextStyle: TextStyle(fontSize: 18),
+        title: "Error",
+        content: Text("Something went wrong. Please try again later."),
+        actions: [
+          TextButton(
+            child: Text("Close"),
+            onPressed: () {
+              Get.back();
+              Get.offAll(HomeScreen());
+            },
+          )
+        ],
+      );
+      Get.to(HomeScreen());
+    }
+
+}
+ isLoading.value = false;
+}
 }

@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import 'dart:developer';
 
->>>>>>> 045059f (First Testing Version)
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -56,11 +53,7 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
   void getReport() async {
     // print("report id is ${widget.reportId}");
     report.value =
-<<<<<<< HEAD
-        await _workOrderController.getAchievementReport(widget.reportId);
-=======
         await _workOrderController.getAchievementReport(widget.reportId, widget.passedParDate, widget.notificationedTypeId.toString());
->>>>>>> 045059f (First Testing Version)
   }
 
   @override
@@ -71,10 +64,7 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-=======
     log("Notification opened approve report NotificationTypeId : ${widget.notificationedTypeId}");
->>>>>>> 045059f (First Testing Version)
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200));
     final spinkit = SpinKitDoubleBounce(
@@ -270,11 +260,7 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
               reponseMsg = await _notificationController.sendApproveOrEval(
                   reportId: widget.forId1,
                   repairDate: widget.passedParDate,
-<<<<<<< HEAD
-                  NotificationTypeId: widget.notificationedTypeId);
-=======
                   NotificationTypeId: widget.notificationedTypeId, approveOrEval: 2);
->>>>>>> 045059f (First Testing Version)
 
             _handleRespnse(reponseMsg);
           },
@@ -287,17 +273,9 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
                 fontSize: screenSize.width * .04),
           ),
         ),
-<<<<<<< HEAD
-        widget.notificationedTypeId == 5
-            ? SizedBox(
-                width: 1,
-              )
-            : ElevatedButton(
-=======
         widget.notificationedTypeId == 1 ||widget.notificationedTypeId == 7
             ? 
              ElevatedButton(
->>>>>>> 045059f (First Testing Version)
                 onPressed: () async {
                   // Notific id and report id is required by the ap
                   if (widget.reportId == 0 ||
@@ -323,11 +301,7 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
                   reponseMsg = await _notificationController.sendApproveOrEval(
                       reportId: widget.reportId,
                       repairDate: widget.passedParDate,
-<<<<<<< HEAD
-                      NotificationTypeId: widget.notificationedTypeId);
-=======
                       NotificationTypeId: widget.notificationedTypeId, approveOrEval: 1);
->>>>>>> 045059f (First Testing Version)
                   _handleRespnse(reponseMsg);
                 },
                 style: kPrimeryBtnNoPaddingStyle(context).copyWith(
@@ -340,15 +314,13 @@ class _ViewReportState extends State<ViewReport> with TickerProviderStateMixin {
                       fontWeight: FontWeight.w600,
                       fontSize: screenSize.width * .04),
                 ),
-<<<<<<< HEAD
-=======
               ) : SizedBox(
                 width: 1,
->>>>>>> 045059f (First Testing Version)
               )
       ],
     );
   }
+
 
   _handleRespnse(String responseMsg) {
     if (responseMsg.toLowerCase() == "success".toLowerCase()) {

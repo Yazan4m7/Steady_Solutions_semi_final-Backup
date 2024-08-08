@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import 'dart:developer';
->>>>>>> 045059f (First Testing Version)
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -55,11 +52,11 @@ class _WorkOrderDetailsScreenState extends State<WorkOrderDetailsScreen>
   }
 
   void getWorkOrderDetails() async {
-<<<<<<< HEAD
+
      print("wo id is ${widget.workOrderId}");
-=======
+
      print("Work order detail screen : wo id is ${widget.workOrderId}");
->>>>>>> 045059f (First Testing Version)
+
     woDetails.value =
         await _reportsController.getWODetailsForNotification(widget.workOrderId.toString());
   }
@@ -72,10 +69,7 @@ class _WorkOrderDetailsScreenState extends State<WorkOrderDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-=======
     log("Notification opened work order details ");
->>>>>>> 045059f (First Testing Version)
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200));
     final spinkit = SpinKitDoubleBounce(

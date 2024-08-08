@@ -28,12 +28,12 @@
       "generate_achiev_report" : "Generate Achievment Report",
 
       "failure_date" : "Failure Date",
-      "status_desc" : "StatusDesc",
+      "status_desc" : "Status Desc.",
       "equip_name" :  "Equip Name",
       "caller": "Caller",
       "fault_status" : "Fault Status",
       "remedy" : "Remedy",
-      "reason_for_not_closing_job" : "Reason fnot closing job",
+      "reason_for_not_closing_job" : "Reason for not closing job",
       "action_taken_to_close_pending_job" : "Action taken to close pending job",
       "travel_date" : "Travel Date",
       "replaced_date" : "Replaced Date",
@@ -169,7 +169,9 @@
 "asset_number" : "Asset Number",
 "asset_name" : "Asset Name",
 "department_subzone_1" : "Dept./Sub zone 1",
-"asset_work_order" : "Asset Work Order"
+"asset_work_order" : "Asset Work Order",
+"date" : "Date",
+"pending_pm_work_orders_list" : "Pending PM Work Orders List"
 
  }
 

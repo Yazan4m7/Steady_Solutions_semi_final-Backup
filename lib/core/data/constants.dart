@@ -40,6 +40,8 @@ String getAllRoomsEndPoint = '/OMS/GetRoomListBySiteID?';
 String getEquipTypeIdsEndPoint = '/OMS/GetEquipmentTypeList';
 String kMainSuccessIconPath = 'assets/json_animations/success_blue.json';
 String getAchievementReportEndPoint = '/OMS/GetAchievmentReport?';
+String getPendingPMListEndPoint = '/OMS/GetPendingPMList?';
+
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

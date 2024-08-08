@@ -14,8 +14,9 @@ import 'package:steady_solutions/screens/asset_management/installed_base_table.d
 
 import 'package:steady_solutions/screens/auth/api_address_screen.dart';
 import 'package:steady_solutions/screens/notifications/notifications_screen.dart';
-import 'package:steady_solutions/screens/pending_list/pending_work_orders.dart';
+import 'package:steady_solutions/screens/cm_pending_list/pending_work_orders.dart';
 import 'package:steady_solutions/screens/pm/calendar.dart';
+import 'package:steady_solutions/screens/pm_pending_list/pm_pending_work_orders.dart';
 import 'package:steady_solutions/screens/work_orders/achievment_report.dart';
 import 'package:steady_solutions/screens/work_orders/new_asset_wo_form_screen.dart';
 import 'package:steady_solutions/screens/work_orders/new_service_wo_form_screen.dart';
@@ -286,6 +287,21 @@ class SideBar extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => AgendaViewCalendar(),
+                                ),
+                              );
+                            },
+                          ),
+                           //=======================================
+                          DrawerListInnerTile(
+                            context: context,
+                            title: AppLocalizations.of(context).pending_list,
+                            icon: Icon(FontAwesomeIcons.list,
+                                size: level2IconSize),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PendingPMWorkOrdersList(),
                                 ),
                               );
                             },

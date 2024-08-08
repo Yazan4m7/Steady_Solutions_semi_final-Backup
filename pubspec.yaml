@@ -2,7 +2,7 @@ name: steady_solutions
 description: "Steady Solutions Mobile application."
 
 
-version: 1.0.0+1
+version: 2.1.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -94,6 +94,7 @@ dependencies:
   http_parser: ^4.0.2
   image_compression: ^1.0.5
   flutter_image_compress: ^2.3.0
+  auto_screenshot: ^0.0.2
 
 
 dev_dependencies:

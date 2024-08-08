@@ -34,13 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   initState() {
     _notificationsController.fetchNotifications();
     // _dashboardsController.loadSelectedWidgets();
-<<<<<<< HEAD
-    
-      //_dashboardsController.fetchChartsData();
-=======
 
     //_dashboardsController.fetchChartsData();
->>>>>>> 045059f (First Testing Version)
     super.initState();
   }
 
@@ -76,13 +71,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: WOByYearChart(context), title: "W.O. By Year"),
     ];
     List assetManagementCharts = [
-      TitledChartContainer(
-<<<<<<< HEAD
-          child: workingEquipmentIndicator(context),
-          title: "Working Assets"),
-=======
-          child: workingEquipmentIndicator(context), title: "Working Assets"),
->>>>>>> 045059f (First Testing Version)
+      // TitledChartContainer(
+      //     child: workingEquipmentIndicator(context), title: "Working Assets"),
       TitledChartContainer(
           child: fetchEquipByClass(context), title: "Equipment By Class"),
     ];
@@ -103,13 +93,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 // fetchPartsConsumption
 // fetchEquipByClass
     // if (DashboardController.isDataLoaded.value)
-<<<<<<< HEAD
-    
-       _dashboardsController.fetchChartsData();
-=======
 
     _dashboardsController.fetchChartsData();
->>>>>>> 045059f (First Testing Version)
     return SingleChildScrollView(
         //padding: sizes.defaultPadding,
         child:
@@ -146,11 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       ////////////////////////////////////  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM  CM
       Container(
-<<<<<<< HEAD
-        height: MediaQuery.of(context).size.height / 3.1,
-=======
         height: MediaQuery.of(context).size.height / 2.5,
->>>>>>> 045059f (First Testing Version)
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(bottom: 40),
         child: Column(
@@ -159,25 +140,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: MediaQuery.of(context).size.height / 3 * 0.2,
               child: Row(
                 children: [
-<<<<<<< HEAD
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Text(
-                      AppLocalizations.of(context).cm,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 65.sp,
-                          ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-=======
-                  Expanded(
+                    // child: Text(
+                    //  // thickness: 3,
+                    // ),
+                  ),
+                   Expanded(
                     flex: 1,
                     child: Divider(
-                       color: primery_blue_grey_color,
+                      color: primery_blue_grey_color,
                       thickness: 3,
                     ),
                   ),
@@ -205,35 +178,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             Container(
                height: MediaQuery.of(context).size.height / 3.3,
->>>>>>> 045059f (First Testing Version)
+
               child: Swiper(
                 itemBuilder: (context, index) {
                   // final image = images[index];
-                  return cmPerformanceCharts[index];
+                   return cmPerformanceCharts[index];
                 },
                 indicatorLayout: PageIndicatorLayout.COLOR,
-<<<<<<< HEAD
                 // itemHeight: 100,
-=======
-                 //itemHeight: 100,
->>>>>>> 045059f (First Testing Version)
                 // itemWidth: 400,
                 autoplay: false,
                 itemCount: cmPerformanceCharts.length,
                 pagination:
                     const SwiperPagination(builder: SwiperPagination.rect),
                 control: const SwiperControl(size: 0),
-<<<<<<< HEAD
-                outer: true,
-                fade: .8,
-                viewportFraction: 0.8,
-                scale: 0.9,
-=======
                // outer: true,
                 fade: .5,
                 viewportFraction: 0.8,
                 scale: 0.87,
->>>>>>> 045059f (First Testing Version)
               ),
             ),
           ],
@@ -241,40 +203,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
 
       ////////////////////////////////////  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM  PM
-      Container(
-<<<<<<< HEAD
-        height: MediaQuery.of(context).size.height / 3,
-=======
+        Container(
         height: MediaQuery.of(context).size.height / 2.5,
->>>>>>> 045059f (First Testing Version)
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(bottom: 40),
         child: Column(
           children: [
             Container(
-                height: MediaQuery.of(context).size.height / 3 * 0.2,
-<<<<<<< HEAD
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        //  TODO
-                        AppLocalizations.of(context).pm_only,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    )
-                  ],
-                )),
-            Expanded(
-              // height: MediaQuery.of(context).size.height / 3 * 0.7,
-=======
-                child:Row(
+              height: MediaQuery.of(context).size.height / 3 * 0.2,
+              child: Row(
                 children: [
-                  Expanded(
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    // child: Text(
+                    //  // thickness: 3,
+                    // ),
+                  ),
+                   Expanded(
                     flex: 1,
                     child: Divider(
-                       color: primery_blue_grey_color,
+                      color: primery_blue_grey_color,
                       thickness: 3,
                     ),
                   ),
@@ -298,13 +247,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                 ],
-              ),),  Container(
-                 height: MediaQuery.of(context).size.height / 3.3,
->>>>>>> 045059f (First Testing Version)
+              ),
+            ),
+            Container(
+               height: MediaQuery.of(context).size.height / 3.3,
+
               child: Swiper(
                 itemBuilder: (context, index) {
                   // final image = images[index];
-                  return pmCharts[index];
+                   return pmCharts[index];
                 },
                 indicatorLayout: PageIndicatorLayout.COLOR,
                 // itemHeight: 100,
@@ -314,19 +265,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 pagination:
                     const SwiperPagination(builder: SwiperPagination.rect),
                 control: const SwiperControl(size: 0),
-                outer: true,
-
-                loop: false,
-
-<<<<<<< HEAD
-                fade: .8,
-                viewportFraction: 0.8,
-                scale: 0.9,
-=======
-                 fade: .5,
+               // outer: true,
+                fade: .5,
                 viewportFraction: 0.8,
                 scale: 0.87,
->>>>>>> 045059f (First Testing Version)
               ),
             ),
           ],
@@ -335,30 +277,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       ///////////////////////////////////////////////////// STOCK MANAGEMENT
       Container(
-<<<<<<< HEAD
-        height: MediaQuery.of(context).size.height / 2.7,
-=======
         height: MediaQuery.of(context).size.height / 2.5,
->>>>>>> 045059f (First Testing Version)
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(bottom: 40),
         child: Column(
           children: [
             Container(
-<<<<<<< HEAD
-                height: MediaQuery.of(context).size.height / 2.7 * 0.15,
-                child: Row(
-                  children: [
-                    Text(
-                      //  TODO
-                      "   Stock Management",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    )
-                  ],
-                )),
-            Expanded(
-              //height: MediaQuery.of(context).size.height / 2.7 * 0.7,
-=======
                 height: MediaQuery.of(context).size.height / 3.5 * 0.25,
                 child: Row(
                 children: [
@@ -393,7 +317,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),),
             Container(
                   height: MediaQuery.of(context).size.height / 3.3,
->>>>>>> 045059f (First Testing Version)
               child: Swiper(
                 itemBuilder: (context, index) {
                   // final image = images[index];
@@ -409,15 +332,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 control: const SwiperControl(size: 0),
                 outer: true,
                 loop: false,
-<<<<<<< HEAD
-                fade: .8,
-                viewportFraction: 0.8,
-                scale: 0.6, // ignored
-=======
                fade: .5,
                 viewportFraction: 0.8,
                 scale: 0.87,
->>>>>>> 045059f (First Testing Version)
               ),
             ),
           ],
@@ -426,30 +343,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       ////////////////////////////////////  Asset Management
       Container(
-<<<<<<< HEAD
-        height: MediaQuery.of(context).size.height / 2.6,
-=======
+        
         height: MediaQuery.of(context).size.height / 2.5,
->>>>>>> 045059f (First Testing Version)
         width: MediaQuery.of(context).size.width,
         // padding: EdgeInsets.only(bottom: 40),
         child: Column(
           children: [
             Container(
-<<<<<<< HEAD
-                height: MediaQuery.of(context).size.height / 3 * 0.2,
-                child: Row(
-                  children: [
-                    Text(
-                      //  TODO
-                      "   Asset Management",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    )
-                  ],
-                )),
-            Expanded(
-              // height: MediaQuery.of(context).size.height / 3 * 0.7,
-=======
                 height: MediaQuery.of(context).size.height / 2.7 * 0.15,
                 child: Row(
                 children: [
@@ -483,7 +383,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),),
             Container(
                   height: MediaQuery.of(context).size.height / 3.3,
->>>>>>> 045059f (First Testing Version)
               child: Swiper(
                 itemBuilder: (context, index) {
                   // final image = images[index];
@@ -499,15 +398,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 control: const SwiperControl(size: 0),
                 outer: true,
                 loop: false,
-<<<<<<< HEAD
-                fade: .8,
-                viewportFraction: 0.8,
-                scale: 0.9,
-=======
                   fade: .5,
                 viewportFraction: 0.8,
                 scale: 0.87,
->>>>>>> 045059f (First Testing Version)
               ),
             ),
           ],
@@ -516,11 +409,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ]));
   }
 
-<<<<<<< HEAD
    CMPerformanceChart(BuildContext context) {
-=======
-  CMPerformanceChart(BuildContext context) {
->>>>>>> 045059f (First Testing Version)
     // print("cm container");
     return Obx(
       () => _dashboardsController.dashboardWidgets["CM"] == null
@@ -585,11 +474,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-<<<<<<< HEAD
    PMPerformanceChart(BuildContext context) {
-=======
-  PMPerformanceChart(BuildContext context) {
->>>>>>> 045059f (First Testing Version)
     // print("pm container");
     // print("pm data :  ${_dashboardsController.dashboardWidgets["PM"]}");
     // if (_dashboardsController.dashboardWidgets["PM"]== null)
@@ -647,7 +532,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ));
   }
 
-<<<<<<< HEAD
    MTTRContainer(BuildContext context) {
     //      if (_dashboardsController.dashboardWidgets["MTTR"]== null)
     // _dashboardsController.fetchMTTR();
@@ -697,43 +581,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
         ),
-=======
-  MTTRContainer(BuildContext context) {
-    //      if (_dashboardsController.dashboardWidgets["MTTR"]== null)
-    // _dashboardsController.fetchMTTR();
-    return SingleChildScrollView(
-      child: Obx(
-        () => _dashboardsController.MTTR.value.isEmpty
-            ? SpinKitThreeBounce(
-                color: Colors.blue,
-                size: 50.w,
-              )
-            : Container(
-                height: 550.h,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                     Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue,
-                      ),
-                      child: Icon(
-                        Icons.monitor_heart_outlined,
-                        color: Colors.white,
-                        size: 90.h,
-                      ),
-                    ),
-                    Obx(() => Text(
-                          _dashboardsController.MTTR.value,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 100.sp)
-                        )),
-                   
-                  ],
-                ),
-            ),
->>>>>>> 045059f (First Testing Version)
       ),
     );
   }
@@ -742,41 +589,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     //   if (_dashboardsController.dashboardWidgets["MTBF"]== null)
     // _dashboardsController.fetchMTBF();
     return SingleChildScrollView(
-<<<<<<< HEAD
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Text(
-              //   "MTBF [D]",
-              //   style: Theme.of(context).textTheme.headlineMedium,
-              // ),
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue,
-                ),
-                child: Icon(
-                  Icons.monitor_heart_outlined,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Obx(() => Text(
-                    _dashboardsController.MTBF.value,
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ))
-            ],
-          ),
-        ],
-      ),
-    );
-=======
       child: 
           Container(
             height: 550.h,
@@ -808,7 +620,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           
     );
   
->>>>>>> 045059f (First Testing Version)
   }
 
   static AvgDownTimeContainer(BuildContext context) {
@@ -817,19 +628,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-<<<<<<< HEAD
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Avg Down Time [D]",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ],
-          ),
-=======
         
->>>>>>> 045059f (First Testing Version)
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -853,20 +652,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     _dashboardsController.avgDownTime["avg"]!,
                                     style: Theme.of(context)
                                         .textTheme
-<<<<<<< HEAD
-                                        .headlineLarge,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue,
-                                    ),
-                                    child: Icon(
-                                      Icons.timer_outlined,
-                                      color: Colors.white,
-=======
                                         .headlineLarge?.copyWith(fontSize: 100.sp),
                                   ),
                                   Padding(
@@ -883,7 +668,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         color: Colors.white,
                                         size: 90.h,
                                       ),
->>>>>>> 045059f (First Testing Version)
                                     ),
                                   ),
                                 ],
@@ -894,11 +678,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     "Min",
                                     style: Theme.of(context)
                                         .textTheme
-<<<<<<< HEAD
-                                        .labelMedium!
-=======
                                         .titleLarge!
->>>>>>> 045059f (First Testing Version)
                                         .copyWith(color: Colors.green[700]),
                                   ),
                                   SizedBox(
@@ -907,25 +687,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Text(
                                     _dashboardsController.avgDownTime["min"]!,
                                     style:
-<<<<<<< HEAD
-                                        Theme.of(context).textTheme.labelMedium,
-=======
+
                                         Theme.of(context).textTheme.titleMedium,
->>>>>>> 045059f (First Testing Version)
-                                  ),
-                                ],
                               ),
-                              Row(
-                                children: [
+                             Column(
+                              children: [
                                   Text(
                                     "Max",
                                     style: Theme.of(context)
                                         .textTheme
-<<<<<<< HEAD
-                                        .labelMedium!
-=======
                                         .titleLarge!
->>>>>>> 045059f (First Testing Version)
                                         .copyWith(color: Colors.red),
                                   ),
                                   SizedBox(
@@ -934,14 +705,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Text(
                                     _dashboardsController.avgDownTime["max"]!,
                                     style:
-<<<<<<< HEAD
-                                        Theme.of(context).textTheme.labelMedium,
-=======
                                         Theme.of(context).textTheme.titleMedium,
->>>>>>> 045059f (First Testing Version)
                                   ),
                                 ],
-                              )
+                             )
+                            ])
                             ],
                           ),
                   ),
@@ -994,41 +762,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _dashboardsController.woByYearChartData.forEach((element) {
       total += element.WOCount!;
     });
-<<<<<<< HEAD
-    return SfCartesianChart(
-      // title: ChartTitle(
-      //     text: 'WO/Year',
-      //     textStyle: Theme.of(context).textTheme.labelLarge,
-      //     alignment: ChartAlignment.center),
-      primaryXAxis: CategoryAxis(
-        labelPosition: ChartDataLabelPosition.outside,
-        labelIntersectAction: AxisLabelIntersectAction.rotate45,
-      ),
-      primaryYAxis: NumericAxis(
-        minimum: 0,
-        maximum: 25,
-        interval: 5,
-
-        majorGridLines: MajorGridLines(width: 0), // Hide major grid lines
-        labelFormat: '{value}',
-      ),
-      // isTransposed: true,
-      series: <ColumnSeries<WOByYearChartData, String>>[
-        ColumnSeries<WOByYearChartData, String>(
-          dataSource: _dashboardsController.woByYearChartData,
-          xValueMapper: (WOByYearChartData data, _) => data.monthName,
-          yValueMapper: (WOByYearChartData data, _) => data.WOCount,
-          dataLabelMapper: (WOByYearChartData data, _) =>
-              "${data.WOCount} / ${(data.WOCount / total * 100).toStringAsFixed(0)}%",
-          color: Color.fromARGB(255, 22, 36, 83),
-          borderRadius: BorderRadius.circular(3),
-          width: 0.5,
-          dataLabelSettings: DataLabelSettings(
-            isVisible: false,
-          ),
-        )
-      ],
-=======
     return Obx(
       () => SfCartesianChart(
         // title: ChartTitle(
@@ -1064,176 +797,135 @@ class _DashboardScreenState extends State<DashboardScreen> {
           )
         ],
       ),
->>>>>>> 045059f (First Testing Version)
     );
   }
 
-  static workingEquipmentIndicator(BuildContext context) {
-    // print("returning working eqcontainer");
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-<<<<<<< HEAD
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Text(
-              //   "Working Equipment",
-              //   style: Theme.of(context).textTheme.headlineMedium,
-              // ),
-            ],
-          ),
-=======
-         
->>>>>>> 045059f (First Testing Version)
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SingleChildScrollView(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Obx(
-<<<<<<< HEAD
-                            ()=> Text(
-                                _dashboardsController
-                                        .workingEquipmentData["Working"] ??
-                                    "...",
-                                style: Theme.of(context).textTheme.headlineLarge,
-=======
-                              () => Text(
-                                _dashboardsController
-                                        .workingEquipmentData["Working"] ??
-                                    "...",
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge,
->>>>>>> 045059f (First Testing Version)
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
-                              ),
-                              child: Icon(
-                                Icons.timer_outlined,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Count all",
-                            style: Theme.of(context)
-                                .textTheme
-<<<<<<< HEAD
-                                .labelMedium!
-=======
-                                .titleMedium!
->>>>>>> 045059f (First Testing Version)
-                                .copyWith(color: Colors.green[700]),
-                          ),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-<<<<<<< HEAD
-                          Obx(()=>
-                            Text(
-                              _dashboardsController
-                                      .workingEquipmentData["Working"] ??
-                                  "Loading..",
-                              style: Theme.of(context).textTheme.labelMedium,
-=======
-                          Obx(
-                            () => Text(
-                              _dashboardsController
-                                      .workingEquipmentData["Working"] ??
-                                  "Loading..",
-                              style: Theme.of(context).textTheme.bodyLarge,
->>>>>>> 045059f (First Testing Version)
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Condem count",
-<<<<<<< HEAD
-                            style: Theme.of(context).textTheme.labelMedium!,
-=======
-                            style: Theme.of(context).textTheme.titleMedium!,
->>>>>>> 045059f (First Testing Version)
-                          ),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-                          Obx(
-<<<<<<< HEAD
-                            ()=> Expanded(
-=======
-                            () => Expanded(
->>>>>>> 045059f (First Testing Version)
-                              child: _dashboardsController
-                                          .workingEquipmentData["Condem"] ==
-                                      null
-                                  ? Text("Loading...")
-                                  : Row(
-                                      children: [
-                                        Text(
-                                          _dashboardsController
-                                              .workingEquipmentData["Condem"]!,
-                                          style: Theme.of(context)
-                                              .textTheme
-<<<<<<< HEAD
-                                              .labelMedium,
-=======
-                                              .bodyLarge,
->>>>>>> 045059f (First Testing Version)
-                                        ),
-                                        SizedBox(
-                                          width: 15.w,
-                                        ),
-                                        Text(
-                                          _dashboardsController
-                                              .workingEquipmentData["Condem"]!,
-                                          style: Theme.of(context)
-                                              .textTheme
-<<<<<<< HEAD
-                                              .labelMedium!
-=======
-                                              .bodyLarge!
->>>>>>> 045059f (First Testing Version)
-                                              .copyWith(color: Colors.red),
-                                        ),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // static workingEquipmentIndicator(BuildContext context) {
+  //   // print("returning working eqcontainer");
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             // Text(
+  //             //   "Working Equipment",
+  //             //   style: Theme.of(context).textTheme.headlineMedium,
+  //             // ),
+  //           ],
+  //         ),
+  //         Row(
+  //           mainAxisSize: MainAxisSize.max,
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   children: [
+  //                     SingleChildScrollView(
+  //                       child: Row(
+  //                         mainAxisSize: MainAxisSize.max,
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Obx(
+
+  //                           ()=> Text(
+  //                               _dashboardsController
+  //                                       .workingEquipmentData["Working"] ?? "",
+  //                               style: Theme.of(context).textTheme.headlineLarge,),
+  //                           ),
+  //                            Obx( () => 
+  //                                        Container(
+  //                             padding: EdgeInsets.all(5),
+  //                             decoration: BoxDecoration(
+  //                               shape: BoxShape.circle,
+  //                               color: Colors.blue,
+  //                             ),
+  //                             child: Icon(
+  //                               Icons.timer_outlined,
+  //                               color: Colors.white,
+  //                             ),
+  //                           ),
+
+  //                         ))],
+  //                       ),
+  //                     ),
+  //                     // Row(
+  //                     //   children: [
+  //                     //     Text(
+  //                     //       "Count all",
+  //                     //       style: Theme.of(context)
+  //                     //           .textTheme
+  //                     //           .titleMedium!
+  //                     //           .copyWith(color: Colors.green[700]),
+  //                     //     ),
+  //                     //     SizedBox(
+  //                     //       width: 30.w,
+  //                     //     ),
+  //                     //     Obx(()=>
+  //                     //       Text(
+  //                     //         _dashboardsController
+  //                     //                 .workingEquipmentData["Working"] ??
+  //                     //             "Loading..",
+  //                     //         style: Theme.of(context).textTheme.labelMedium,
+  //                     //       ),
+  //                     //     ),
+  //                     //   ],
+  //                     // ),
+  //                     // Row(
+  //                     //   children: [
+  //                     //     Text(
+  //                     //       "Condem count",
+  //                     //       style: Theme.of(context).textTheme.labelMedium!,
+  //                     //     ),
+  //                     //     SizedBox(
+  //                     //       width: 30.w,
+  //                     //     ),
+  //                     //     Obx(
+  //                     //       ()=> Expanded(
+  //                     //         child: _dashboardsController
+  //                     //                     .workingEquipmentData["Condem"] ==
+  //                     //                 null
+  //                     //             ? Text("Loading...")
+  //                     //             : Row(
+  //                     //                 children: [
+  //                     //                   Text(
+  //                     //                     _dashboardsController
+  //                     //                         .workingEquipmentData["Condem"]!,
+  //                     //                     style: Theme.of(context)
+  //                     //                         .textTheme
+  //                     //                         .bodyLarge,
+  //                     //                   ),
+  //                     //                   SizedBox(
+  //                     //                     width: 15.w,
+  //                     //                   ),
+  //                     //                   Text(
+  //                     //                     _dashboardsController
+  //                     //                         .workingEquipmentData["Condem"]!,
+  //                     //                     style: Theme.of(context)
+  //                     //                         .textTheme
+
+                                         
+
+  //                     //                         .bodyLarge!
+  //                     //                   )
+  //                     //                 ],
+  //                     //       ),
+  //                     //     ),
+  //                     //     )
+  //                     //   ],
+  //                     // )
+  //                   ],
+  //                 ),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   static fetchPartsConsumption(BuildContext context) {
     List<CartesianSeries<dynamic, dynamic>> list =
@@ -1325,24 +1017,15 @@ class TitledChartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Column(
-      children: [
-        // Child Widget
-        // child,
-    
-=======
     return 
         // Child Widget
         // child,
 
->>>>>>> 045059f (First Testing Version)
         // Gradient Shadow Container
         GestureDetector(
           onDoubleTap: () {
             _showActionSheet(context);
           },
-<<<<<<< HEAD
           child: Column(
             children: [
               Container(
@@ -1396,71 +1079,7 @@ class TitledChartContainer extends StatelessWidget {
              
             ],
           ),
-        ),
-    
-        // Title Text
-        Column(
-           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            
-          ],
-        ),
-      ],
-    );
-=======
-          child: Container(
-            height: 600.h,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color:
-                      Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
-                  spreadRadius: 0,
-                  blurRadius: 0,
-                  offset: const Offset(6, 5),
-                ),
-              ],
-              color: Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 0, left: 8.0, right: 8.0, bottom: 12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(flex: 11, child: child),
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 0.sp),
-                          child: Text(
-                              textAlign: TextAlign.end,
-                              title.toUpperCase(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                    color: const Color.fromARGB(255, 92, 92, 92),
-                                  )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        )
-
-        // Title Text
-       
-    
-    ;
->>>>>>> 045059f (First Testing Version)
+        );
   }
 
   // This shows a CupertinoModalPopup which hosts a CupertinoActionSheet.

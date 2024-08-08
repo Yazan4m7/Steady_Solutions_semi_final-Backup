@@ -470,10 +470,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                                 lottieBuilder: Lottie.asset(
                                   'assets/json_animations/success_blue.json',
                                   fit: BoxFit.contain,
-<<<<<<< HEAD
-=======
                                    repeat: false
->>>>>>> 045059f (First Testing Version)
                                 ),
                                 customView: Container(
                                   child: Text(
@@ -516,10 +513,7 @@ class _NewAchievementReportFromState extends State<NewAchievementReportFrom> {
                                 lottieBuilder: Lottie.asset(
                                   'assets/json_animations/fail_grey.json',
                                   fit: BoxFit.contain,
-<<<<<<< HEAD
-=======
                                    repeat: false
->>>>>>> 045059f (First Testing Version)
                                 ),
                                 customView: Container(child: Text(response)),
                                 customViewPosition:

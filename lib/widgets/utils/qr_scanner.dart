@@ -13,11 +13,7 @@ import 'package:steady_solutions/screens/work_orders/new_service_wo_form_screen.
 import 'package:steady_solutions/widgets/utils/background.dart';
 import 'package:url_launcher/url_launcher.dart';
 class QRScannerView extends StatefulWidget {
-<<<<<<< HEAD
-   QRScannerView({Key? key,  this.goToKPIScreen    =false}) : super(key: key);
-=======
    QRScannerView({Key? key,  this.goToKPIScreen =true}) : super(key: key);
->>>>>>> 045059f (First Testing Version)
   static List <String> previousURLs = [];
    bool goToKPIScreen;
   @override
@@ -54,33 +50,25 @@ class _QRScannerViewState extends State<QRScannerView> {
   Widget build(BuildContext context) {
 
 
-<<<<<<< HEAD
+
     return Background(
       child: Scaffold(
         body: QRView(
-=======
-    return Scaffold(
-      body: Center(
-        child: QRView(
->>>>>>> 045059f (First Testing Version)
           overlay: QrScannerOverlayShape(
             borderColor: const Color.fromARGB(255, 54, 60, 244),
             borderRadius: 10,
-            borderLength: 30,
             borderWidth: 10,
             cutOutSize: 300,
           ),
           
           key: qrKey,
           onQRViewCreated: _onQRViewCreated,
-<<<<<<< HEAD
+
         )
       ), 
       
-=======
-        ),
-      )
->>>>>>> 045059f (First Testing Version)
+
+      
     );
     
   }
@@ -106,11 +94,7 @@ class _QRScannerViewState extends State<QRScannerView> {
           if(QRScannerView.previousURLs.contains(scanData.code!)){
             log ("already scanned");
           return;}
-<<<<<<< HEAD
-
-=======
           log("scanData.code : ${scanData.code}");
->>>>>>> 045059f (First Testing Version)
           QRScannerView.previousURLs.add(scanData.code!);
       Navigator.push(
                           context,
